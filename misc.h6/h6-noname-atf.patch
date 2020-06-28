@@ -1,0 +1,65 @@
+diff --git a/plat/allwinner/sun50i_h6/sunxi_power.c b/plat/allwinner/sun50i_h6/sunxi_power.c
+index 5b5bad17..07d47f1f 100644
+--- a/plat/allwinner/sun50i_h6/sunxi_power.c
++++ b/plat/allwinner/sun50i_h6/sunxi_power.c
+@@ -46,28 +46,29 @@ int axp_i2c_write(uint8_t chip, uint8_t reg, uint8_t val)
+ 
+ static int axp805_probe(void)
+ {
+-	int ret;
+-	uint8_t val;
+-
+-	ret = axp_i2c_write(AXP805_ADDR, 0xff, 0x0);
+-	if (ret) {
+-		ERROR("PMIC: Cannot put AXP805 to master mode.\n");
+-		return -EPERM;
+-	}
+-
+-	ret = axp_i2c_read(AXP805_ADDR, AXP805_ID, &val);
+-
+-	if (!ret && ((val & 0xcf) == 0x40))
+-		NOTICE("PMIC: AXP805 detected\n");
+-	else if (ret) {
+-		ERROR("PMIC: Cannot communicate with AXP805.\n");
+-		return -EPERM;
+-	} else {
+-		ERROR("PMIC: Non-AXP805 chip attached at AXP805's address.\n");
+-		return -EINVAL;
+-	}
+-
+-	return 0;
++//	int ret;
++//	uint8_t val;
++//
++//	ret = axp_i2c_write(AXP805_ADDR, 0xff, 0x0);
++//	if (ret) {
++//		ERROR("PMIC: Cannot put AXP805 to master mode.\n");
++//		return -EPERM;
++//	}
++//
++//	ret = axp_i2c_read(AXP805_ADDR, AXP805_ID, &val);
++//
++//	if (!ret && ((val & 0xcf) == 0x40))
++//		NOTICE("PMIC: AXP805 detected\n");
++//	else if (ret) {
++//		ERROR("PMIC: Cannot communicate with AXP805.\n");
++//		return -EPERM;
++//	} else {
++//		ERROR("PMIC: Non-AXP805 chip attached at AXP805's address.\n");
++//		return -EINVAL;
++//	}
++//
++//	return 0;
++	return -EPERM;
+ }
+ 
+ int sunxi_pmic_setup(uint16_t socid, const void *fdt)
+@@ -78,7 +79,7 @@ int sunxi_pmic_setup(uint16_t socid, const void *fdt)
+ 	/* initialise mi2cv driver */
+ 	i2c_init((void *)SUNXI_R_I2C_BASE);
+ 
+-	NOTICE("PMIC: Probing AXP805\n");
++//	NOTICE("PMIC: Probing AXP805\n");
+ 	pmic = AXP805;
+ 
+ 	ret = axp805_probe();

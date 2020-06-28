@@ -1,0 +1,32 @@
+arm trusted firmware:
+
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-h6
+cd arm-trusted-firmware-h6
+git checkout v2.3
+# this is a patch which i used at 8ff55a9e14a23d7c7f89f52465bcc6307850aa33 for a certain noname
+# h6 tv box which hung during the axp805 probe - it does not apply to current atp sources anymore
+#patch -p1 < /compile/doc/u-boot-misc/misc.h6/h6-noname-atf.patch
+make realclean
+make PLAT=sun50i_h6 DEBUG=1 bl31
+# result: build/sun50i_h6/debug/bl31.bin
+cd ..
+
+u-boot:
+
+git clone http://git.denx.de/u-boot.git
+mv u-boot u-boot-mainline-h6
+cd u-boot-mainline-h6
+git checkout v2020.04
+# get atf from aft build
+cp ../arm-trusted-firmware-h6/build/sun50i_h6/debug/bl31.bin .
+# add eachlink-h6-mini dtb
+cp /compile/doc/u-boot-misc/misc.h6/sun50i-h6-eachlink-h6-mini.dts arch/arm/dts/sun50i-h6-eachlink-h6-mini.dts
+cp /compile/doc/u-boot-misc/misc.h6/eachlink_h6_mini_defconfig configs/eachlink_h6_mini_defconfig
+patch -p1 < misc.h6/eachlink-dtb.patch
+make eachlink_h6_mini_defconfig
+make
+# result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
+# prepare if for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-allwinner_h6-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h6-aarch64.dd
