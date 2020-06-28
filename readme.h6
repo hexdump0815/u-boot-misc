@@ -14,7 +14,7 @@ cd ..
 
 u-boot:
 
-git clone http://git.denx.de/u-boot.git
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-h6
 cd u-boot-mainline-h6
 git checkout v2020.04

@@ -1,0 +1,23 @@
+arm trusted firmware:
+
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-rk3328
+cd arm-trusted-firmware-rk3328
+git checkout v2.3
+make realclean
+make PLAT=rk3328 DEBUG=1 bl31
+# result: build/rk3328/release/bl31/bl31.elf
+cd ..
+
+u-boot:
+
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-rk3328
+cd u-boot-mainline-rk3328
+git checkout v2020.04
+# get atf from aft build
+cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
+make evb-rk3328_defconfig 
+make
+
+... to be finished
