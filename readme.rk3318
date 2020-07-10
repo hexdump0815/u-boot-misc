@@ -1,0 +1,46 @@
+arm trusted firmware:
+# not sure if this is really used in this scenario - i think this stage is still
+# running from the original boot blocks on emmc - but cannot hurt to have it anyway
+
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-rk3328
+cd arm-trusted-firmware-rk3328
+git checkout v2.2
+make realclean
+make PLAT=rk3328 DEBUG=1 bl31
+# result: build/rk3328/release/bl31/bl31.elf
+cd ..
+
+u-boot:
+
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-rk3318
+cd u-boot-mainline-rk3318
+git checkout v2020.01
+# get atf from aft build
+cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.patch
+cp /compile/doc/u-boot-misc/misc.rk3318/h96max-rk3318_defconfig configs
+cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.dts arch/arm/dts
+cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max-u-boot.dtsi arch/arm/dts
+make h96max-rk3318_defconfig
+make
+# this step for my only worked using the x86 binary of loaderimage on an x86 machine
+loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-h96max-rk3318.img 0x200000
+dd if=u-boot-h96max-rk3318.img of=/dev/sdx seek=16384
+# first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
+# i think it needs to be put there even on an sd card, i.e.
+#   dd if=/dev/emmc of=/dev/sdcard bs=1 skip=24576 seek=24576 count=8192
+# u-boot itself is new then and should best run from sd card (safer than overwriting the original stuff on emmc)
+#
+# i also tried to build the full u-boot including the first stages and atf from mainline, but that failed
+# early in the atf, so the atf from rk3328 did not work and there is no source for a rk3318 atf available
+#
+# my h96max rk3318 only boots with a serial console attached - if none is attached it will stop at u-boot
+# maybe noise on the serial port? - my tries to get this solved:
+# - u-boot built wtth CONFIG_BOOTDELAY=-1 - did not work, its still 2 after boot, meybe read from emmc
+# - u-boot built with CONFIG_BOOTDELAY=0 - still interruptable as still 2 as above
+# - u-boot built with hardcoded to 0 in code - still interruptable as still possible with 0
+# - u-boot built with CONFIG_OF_CONTROL - did not help
+# - u-boot with bootdelay hardcoded to -1 in code - did not help - boot is still interrupted - maybe it happens in the early boot on emmc
+# - u-boot with CONFIG_AUTOBOOT=n - then it always stops :)

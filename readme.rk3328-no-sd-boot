@@ -1,0 +1,41 @@
+arm trusted firmware:
+# not sure if this is really used in this scenario - i think this stage is still
+# running from the original boot blocks on emmc - but cannot hurt to have it anyway
+
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-rk3328
+cd arm-trusted-firmware-rk3328
+git checkout v2.2
+make realclean
+make PLAT=rk3328 DEBUG=1 bl31
+# result: build/rk3328/release/bl31/bl31.elf
+cd ..
+
+u-boot:
+
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-rk3328-no-sd-boot
+cd u-boot-mainline-rk3328-no-sd-boot
+git checkout v2020.01
+# get atf from aft build
+cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3328-no-sd-boot/rk3328-h96max-no-sd-boot.patch
+cp /compile/doc/u-boot-misc/misc.rk3328-no-sd-boot/h96max-rk3328_defconfig configs
+cp /compile/doc/u-boot-misc/misc.rk3328-no-sd-boot/rk3328-h96max.dts arch/arm/dts
+cp /compile/doc/u-boot-misc/misc.rk3328-no-sd-boot/rk3328-h96max-u-boot.dtsi arch/arm/dts
+make h96max-rk3328_defconfig
+make
+# this step for my only worked using the x86 binary of loaderimage on an x86 machine
+loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-image-for-emmc-h96max-rk3328.img 0x200000
+dd if=uboot.img of=/dev/sdx seek=16384
+# first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
+# u-boot itself is new then!
+# write to emmc via:
+# backup old u-boot image - 0x2000 is 8192 but we actually want 16384, but rkdeveloptool has an offset
+# of 0x2000 (at least my version) so 0x2000 actually is 0x4000 = 16384
+rkdeveloptool rl 0x2000 0x2000 u-boot-image-backup-from-emmc-h96max-rk3328.img
+# write the new one - same 0x2000 magic here
+rkdeveloptool wl 0x2000 u-boot-image-for-emmc-h96max-rk3328.img
+# afterwards the new u-boot should be started from the old first level boot stages using the old
+# trust.img coming at 0x6000 (real) = 24576 still being on emmc after the new u-boot ... the new
+# u-boot should boot properly from sd card or usb via extlinux or boot.scr then ...
