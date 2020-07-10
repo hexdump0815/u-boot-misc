@@ -10,21 +10,6 @@ index 820ee9733a..5326efd830 100644
  	rk3328-rock64.dtb
  
  dtb-$(CONFIG_ROCKCHIP_RK3368) += \
-diff --git a/common/autoboot.c b/common/autoboot.c
-index 4ea9be6da9..fb13d9518a 100644
---- a/common/autoboot.c
-+++ b/common/autoboot.c
-@@ -290,6 +290,10 @@ static int abortboot(int bootdelay)
- {
- 	int abort = 0;
- 
-+	// hack to make bootdelay always = 0 - otherwise it must have been read
-+	// from the config in mmc still or whatever even if set to 0 in .config
-+	bootdelay = -1;
-+
- 	if (bootdelay >= 0) {
- 		if (IS_ENABLED(CONFIG_AUTOBOOT_KEYED))
- 			abort = abortboot_key_sequence(bootdelay);
 diff --git a/include/configs/rockchip-common.h b/include/configs/rockchip-common.h
 index b55e09a9ca..ee1a3f69b1 100644
 --- a/include/configs/rockchip-common.h
