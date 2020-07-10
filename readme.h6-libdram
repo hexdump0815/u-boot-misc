@@ -1,0 +1,63 @@
+the allwinner h6 u-boot has routines to calculate the dram timing automatically which
+works well for most boards and tv-boxes, but for me it failed on some still (maybe cheap
+and out-of-spec memory chips?) and it was not possible to get mainline u-boot working
+on those h6 tv boxes. there is a special and very hacky way to build a mainline u-boot
+using an allwinner bsp binary blob for the memory timing calculation instead which so
+far worked on all those tv boxes ... some remarks regarding this method:
+
+- the resulting u-boot cannot be redistrbuted, as it would break the gpl of mainline
+  u-boot as it would mix it with the binary blob into one binary - as a result one
+  will have to build it one-self in order to test if the blob can find a valid memory
+  timing
+- the process to build it is _very_ complicated: one has to build u-boot two times:
+  once on a 32bit arm system and another time on a 64bit arm system using one result
+  of the 32bit from before
+- this setup can only detect up to 2gb or ram, even if the box has more (allwinner h6
+  can address at max 3gb of ram only anyway so one can loose 1gb in the worst case)
+
+# 32bit part - to be done on an armv7l 32bit arm machine
+
+# needed for u-boot compile
+apt-get install swig
+git clone https://github.com/apritzel/u-boot.git
+mv u-boot u-boot-mainline-h6-apritzel-32bit-part
+cd u-boot-mainline-h6-apritzel-32bit-part
+git checkout eachlink-h6-mini-WIP
+patch -p1 < /compile/doc/u-boot-misc/misc.h6-libdram/spl_switch-32bit.patch
+# get bl31.bin and libdram via
+tar xvzf H6-BSP-1.0.tgz lichee/tools/pack/chips/sun50iw6p1/bin/bl31.bin lichee/bootloader/uboot_2014_sunxi_spl/sunxi_spl/dram/sun50iw6p1/dram/libdram
+# BSP from: http://files.pine64.org/os/sdk/H64-ver1.0/H6-BSP-1.0.tgz (via: https://wiki.pine64.org/index.php/PINE_H64_Main_Page#Linux_BSP_SDK)
+cp lichee/tools/pack/chips/sun50iw6p1/bin/bl31.bin .
+cp lichee/bootloader/uboot_2014_sunxi_spl/sunxi_spl/dram/sun50iw6p1/dram/libdram .
+mv libdram libdram-h6
+make eachlink_h6_mini_libdram_spl_defconfig
+make
+# scp spl/sunxi-spl.bin over to 64bit machine for 64bit part as sunxi-spl.bin-arm32
+
+# for pure 32bit u-boot:
+# - use u-boot-sunxi-with-spl.bin
+# - dd if=u-boot-sunxi-with-spl.bin of=/dev/sdx bs=1024 seek=8
+# ==> does not seem to make sense, as it does not seem to include the atf
+
+# alternative libdram - did not work for me
+# from: https://github.com/orangepi-xunlong/OrangePiH6_uboot/blob/master/sunxi_spl/dram/sun50iw6p1/dram/libdram
+# via: https://forum.armbian.com/topic/12372-h6-allwinner-tv-box-need-help/?do=findComment&comment=92503
+
+# 64bit part - to be done on an aarch64 64bit arm machine
+
+# needed for u-boot compile
+apt-get install swig
+git clone https://github.com/apritzel/u-boot.git
+mv u-boot u-boot-mainline-h6-apritzel-64bit-part
+cd u-boot-mainline-h6-apritzel-64bit-part
+make eachlink_h6_mini_defconfig
+make
+# i think this one did not work - too long ago ...
+#cat sunxi-spl.bin-arm32 u-boot.img u-boot.dtb > my-u-boot.dd
+cat sunxi-spl.bin-arm32 u-boot.itb > my-u-boot.dd
+dd my-u-boot.dd of=/dev/sdX bs=1024 seek=8
+
+see also:
+https://forum.armbian.com/topic/10174-since-tanix-tx6-can-boot-from-the-sd-card/?do=findComment&comment=80301
+https://forum.armbian.com/topic/10174-since-tanix-tx6-can-boot-from-the-sd-card/?do=findComment&comment=80354
+https://github.com/apritzel/u-boot/issues/4

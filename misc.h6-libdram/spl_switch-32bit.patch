@@ -1,0 +1,14 @@
+diff --git a/arch/arm/mach-sunxi/spl_switch.c b/arch/arm/mach-sunxi/spl_switch.c
+index 9ae3825841..912a523ce6 100644
+--- a/arch/arm/mach-sunxi/spl_switch.c
++++ b/arch/arm/mach-sunxi/spl_switch.c
+@@ -52,7 +52,8 @@ void __noreturn jump_to_image_no_args(struct spl_image_info *spl_image)
+ 		jump_to_image_native(spl_image);
+ 	} else {
+ 		debug("entering by RMR switch\n");
+-		writel(spl_image->entry_point, CONFIG_SUNXI_RVBAR_ADDRESS);
++		writel(spl_image->entry_point, 0x09010040);
++/*		writel(spl_image->entry_point, CONFIG_SUNXI_RVBAR_ADDRESS); */
+ 		DSB;
+ 		ISB;
+ 		reset_rmr_switch();
