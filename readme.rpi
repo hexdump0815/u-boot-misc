@@ -1,0 +1,28 @@
+u-boot:
+
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-rpi
+cd u-boot-mainline-rpi
+git checkout v2020.07
+# only one of those depending on target
+make rpi_2_defconfig
+make rpi_3_32b_defconfig
+make rpi_3_defconfig
+make rpi_4_32b_defconfig
+make rpi_4_defconfig
+make
+# result: u-boot.bin
+# either rename to
+# - kernel8.img for Raspberry Pi 3 and 4 in 64 bit mode
+# - kernel7l.img for Raspberry Pi 4 in 32bit mode (with LPAE)
+# - kernel7.img for Raspberry Pi 2, 3 and 4 in 32bit mode (no LPAE)
+# - kernel.img for the rest
+# or set kernel=u-boot.bin - maybe in the corresponding section (ex: [pi4]) - in config.txt
+
+u-boot-next - development version:
+
+git clone https://github.com/mbgg/u-boot
+mv u-boot u-boot-next-rpi
+cd u-boot-next-rpi
+git checkout rpi-next
+# everything else see above
