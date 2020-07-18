@@ -1,0 +1,143 @@
+diff --git a/configs/nanopi-k2_defconfig b/configs/nanopi-k2_defconfig
+index 63d486e905..82e858956b 100644
+--- a/configs/nanopi-k2_defconfig
++++ b/configs/nanopi-k2_defconfig
+@@ -39,3 +39,25 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
++CONFIG_DM_VIDEO=y
++CONFIG_VIDEO_MESON=y
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_CONSOLE_MUX=y
++CONFIG_SYS_CONSOLE_IS_IN_ENV=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_CMD_ADC=y
++CONFIG_SARADC_MESON=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
++CONFIG_CMD_USB=y
++CONFIG_MESON_GXBB_USB_PHY=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_DWC2=y
+diff --git a/configs/odroid-c2_defconfig b/configs/odroid-c2_defconfig
+index f62e83a345..25fe213f57 100644
+--- a/configs/odroid-c2_defconfig
++++ b/configs/odroid-c2_defconfig
+@@ -49,3 +49,19 @@ CONFIG_DM_USB=y
+ CONFIG_USB_DWC2=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_SMBIOS_MANUFACTURER="Hardkernel Co., Ltd."
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
++CONFIG_DM_VIDEO=y
++CONFIG_VIDEO_MESON=y
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_SYS_CONSOLE_IS_IN_ENV=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_CMD_ADC=y
++CONFIG_SARADC_MESON=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/configs/p200_defconfig b/configs/p200_defconfig
+index 6e43bea276..9ebb149e53 100644
+--- a/configs/p200_defconfig
++++ b/configs/p200_defconfig
+@@ -38,3 +38,25 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
++CONFIG_DM_VIDEO=y
++CONFIG_VIDEO_MESON=y
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_CONSOLE_MUX=y
++CONFIG_SYS_CONSOLE_IS_IN_ENV=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_CMD_ADC=y
++CONFIG_SARADC_MESON=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
++CONFIG_CMD_USB=y
++CONFIG_MESON_GXBB_USB_PHY=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_DWC2=y
+diff --git a/configs/p201_defconfig b/configs/p201_defconfig
+index 9fc9d188d0..e47094399e 100644
+--- a/configs/p201_defconfig
++++ b/configs/p201_defconfig
+@@ -39,3 +39,25 @@ CONFIG_DEBUG_UART_ANNOUNCE=y
+ CONFIG_DEBUG_UART_SKIP_INIT=y
+ CONFIG_MESON_SERIAL=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_POWER_DOMAIN=y
++CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
++CONFIG_DM_VIDEO=y
++CONFIG_VIDEO_MESON=y
++CONFIG_SYS_WHITE_ON_BLACK=y
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_CONSOLE_MUX=y
++CONFIG_SYS_CONSOLE_IS_IN_ENV=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_CMD_ADC=y
++CONFIG_SARADC_MESON=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
++CONFIG_CMD_USB=y
++CONFIG_MESON_GXBB_USB_PHY=y
++CONFIG_USB=y
++CONFIG_DM_USB=y
++CONFIG_USB_DWC2=y
+diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+index 50707a3197..1ee9d3a8b5 100644
+--- a/include/configs/meson64.h
++++ b/include/configs/meson64.h
+@@ -76,6 +76,7 @@
+ #endif
+ 
+ #ifndef CONFIG_EXTRA_ENV_SETTINGS
++/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"stdin=" STDIN_CFG "\0" \
+ 	"stdout=" STDOUT_CFG "\0" \
+@@ -86,6 +87,16 @@
+ 	"pxefile_addr_r=0x01080000\0" \
+ 	"ramdisk_addr_r=0x13000000\0" \
+ 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
++	"bootenv_addr_r=0x01080000\0" \
++	"preboot=usb start; " \
++		"for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ #endif
+ 

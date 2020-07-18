@@ -1,0 +1,97 @@
+# the following is relevant for gxbb (s905)
+
+
+# building atf - did not get it working with this one in the end
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-gxb
+cd arm-trusted-firmware-gxb
+git checkout v2.3
+make realclean
+make PLAT=gxbb DEBUG=1 bl31
+# result: build/gxbb/debug/bl31.bin
+cd ..
+
+
+# building u-boot
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-gxb
+cd u-boot-mainline-gxb
+git checkout v2020.07
+# add usb kbd and uEnv.txt support
+patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-usb-kbd-and-uenv-txt.patch
+make xyz_todo
+make
+cd ..
+
+
+# boot block creation - all the below cases were trested and verified to work
+# the parts marked with x86_64 binary have to be run on an x86_64 system or
+# maybe even via qemu for x86_64 on arm (not tested, but should be possible)
+
+# getting the trees containing the blobs required to assemble the boot block
+cd /compile/source/u-boot-gxb-blob-sources
+git clone --depth 1 https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 u-boot-amlogic-baylibre-20170606
+git clone --depth 1 https://github.com/hardkernel/u-boot.git -b odroidc2-v2015.01 u-boot-odroid-c2
+git clone --depth 1 https://github.com/friendlyarm/u-boot.git -b nanopi-k2-v2015.01 u-boot-nanopi-k2
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/nanopi-k2_fip_20170412.tar.gz
+
+
+mkdir u-boot-workdir
+cd u-boot-workdir
+
+
+tar xzf /compile/source/u-boot-gxb-blob-sources/nanopi-k2_fip_20170412.tar.gz
+
+cp ../u-boot-mainline-gxb/u-boot.bin .
+
+mkdir build
+export FIPDIR=fip
+cp $FIPDIR/gxb/bl2.bin build/
+cp $FIPDIR/gxb/acs.bin build/
+cp $FIPDIR/gxb/bl21.bin build/
+cp $FIPDIR/gxb/bl30.bin build/
+cp $FIPDIR/gxb/bl301.bin build/
+cp $FIPDIR/gxb/bl31.img build/
+cp u-boot.bin build/bl33.bin
+
+$FIPDIR/blx_fix.sh build/bl30.bin build/zero_tmp build/bl30_zero.bin build/bl301.bin build/bl301_zero.bin build/bl30_new.bin bl30
+
+# x86_64 binary
+$FIPDIR/fip_create --bl30 build/bl30_new.bin --bl31 build/bl31.img --bl33 build/bl33.bin build/fip.bin
+
+# x86_64 binary
+python $FIPDIR/acs_tool.pyc build/bl2.bin build/bl2_acs.bin build/acs.bin 0
+
+$FIPDIR/blx_fix.sh build/bl2_acs.bin build/zero_tmp build/bl2_zero.bin build/bl21.bin build/bl21_zero.bin build/bl2_new.bin bl2
+
+cat build/bl2_new.bin build/fip.bin > build/boot_new.bin
+
+# x86_64 binary
+$FIPDIR/gxb/aml_encrypt_gxb --bootsig --input build/boot_new.bin --output build/u-boot.bin
+
+# write to sd card
+dd if=build/u-boot.bin of=/dev/sd-card conv=fsync,notrunc bs=512 seek=1
+
+# write to emmc (untested)
+dd if=build/u-boot.bin of=/dev/emmc-device conv=fsync,notrunc bs=1 count=446
+dd if=build/u-boot.bin of=/dev/emmc-device conv=fsync,notrunc bs=512 skip=1 seek=1
+
+
+# the below try with the self compiled atf did not work - maybe related: https://freenode.irclog.whitequark.org/linux-amlogic/2018-10-09 ... i guess the bl31.bin from the atf compile needs to somehow be encrypted
+# or signed to work properly ...
+# see also: https://freenode.irclog.whitequark.org/linux-amlogic/2018-09-17#23084770
+# for doing the same with the self built atf instead of the blob one - just replace
+cp $FIPDIR/gxb/bl31.img build/
+# with
+cp ../arm-trusted-firmware-gxb/build/gxbb/debug/bl31.bin build/bl31.img
+# and run everything else like above ...
+# maybe the resulting u-boot.bin needs the bl31.bin part rehashed
+# building tool to rehash bl31.bin in the created bootloader
+# see https://fredericb.info/2016/10/amlogic-s905-soc-bypassing-not-so.html
+git clone https://github.com/frederic/aml_bootloader_tool.git
+cd aml_bootloader_tool
+apt-get install libtomcrypt-dev
+gcc -o aml_bootloader_tool aml_bootloader_tool.c -ltomcrypt
+cd ..
+/compile/source/aml_bootloader_tool/aml_bootloader_tool build/u-boot.bin H 2
+# did not work neither ... giving up for now
