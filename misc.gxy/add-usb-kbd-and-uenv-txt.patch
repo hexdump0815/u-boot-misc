@@ -1,0 +1,42 @@
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index 48e8800ce4..84639ff2ec 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -64,3 +64,8 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+ CONFIG_VIDEO_MESON=y
+ CONFIG_VIDEO_DT_SIMPLEFB=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/include/configs/meson64.h b/include/configs/meson64.h
+index 50707a3197..1ee9d3a8b5 100644
+--- a/include/configs/meson64.h
++++ b/include/configs/meson64.h
+@@ -76,6 +76,7 @@
+ #endif
+ 
+ #ifndef CONFIG_EXTRA_ENV_SETTINGS
++/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"stdin=" STDIN_CFG "\0" \
+ 	"stdout=" STDOUT_CFG "\0" \
+@@ -86,6 +87,16 @@
+ 	"pxefile_addr_r=0x01080000\0" \
+ 	"ramdisk_addr_r=0x13000000\0" \
+ 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
++	"bootenv_addr_r=0x01080000\0" \
++	"preboot=usb start; " \
++		"for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ #endif
+ 
