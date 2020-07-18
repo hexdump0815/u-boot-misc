@@ -1,0 +1,21 @@
+diff --git a/include/configs/sunxi-common.h b/include/configs/sunxi-common.h
+index 5b0bec0561..0e64450e76 100644
+--- a/include/configs/sunxi-common.h
++++ b/include/configs/sunxi-common.h
+@@ -496,6 +496,16 @@ extern int soft_i2c_gpio_scl;
+ 	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
+ 	"partitions=" PARTS_DEFAULT "\0" \
+ 	BOOTCMD_SUNXI_COMPAT \
++	"bootenv_addr_r=" PXEFILE_ADDR_R "\0" \
++	"preboot=usb start; " \
++		"for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ 
+ #else /* ifndef CONFIG_SPL_BUILD */

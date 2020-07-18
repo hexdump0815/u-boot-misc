@@ -23,7 +23,9 @@ cp ../arm-trusted-firmware-h6/build/sun50i_h6/debug/bl31.bin .
 # add eachlink-h6-mini dtb
 cp /compile/doc/u-boot-misc/misc.h6/sun50i-h6-eachlink-h6-mini.dts arch/arm/dts/sun50i-h6-eachlink-h6-mini.dts
 cp /compile/doc/u-boot-misc/misc.h6/eachlink_h6_mini_defconfig configs/eachlink_h6_mini_defconfig
-patch -p1 < misc.h6/eachlink-dtb.patch
+patch -p1 < /compile/doc/u-boot-misc/misc.h6/eachlink-dtb.patch
+# add uEnv.txt support
+patch -p1 < /compile/doc/u-boot-misc/misc.h6/add-uenv-txt.patch
 make eachlink_h6_mini_defconfig
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
