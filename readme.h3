@@ -1,0 +1,26 @@
+git clone http://git.denx.de/u-boot.git
+mv u-boot u-boot-mainline-h3
+cd u-boot-mainline-h3
+git checkout v2020.07
+# add usb kbd and uEnv.txt support
+patch -p1 < /compile/doc/u-boot-misc/misc.h3/add-usb-kbd-and-uenv-txt.patch
+# for the r39 tv box
+# usb keyboard only works if used in the back usb port
+# loading the kernel etc. seems to also only work when connected to that usb port
+# so there is either usb keyboard in u-boot or being able to read the kernel from usb :)
+# maybe some adjustments to the dtb might be required ...
+make libretech_all_h3_cc_h3_defconfig
+# alternatively for the tx1 tv box
+# make beelink_x2_defconfig
+make
+
+# write the boot block to the sd card
+dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblk0 bs=1024 seek=8
+
+# create a boot block for standard dd'ing for the r39 tv box based on the libretech_all_h3_cc_h3_defconfig build
+dd if=/dev/zero of=r39-boot.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> r39-boot.dd
+
+# create a boot block for standard dd'ing for the tx1 tv box based on the beelink_x2_defconfig build
+dd if=/dev/zero of=tx1-boot.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> tx1-boot.dd

@@ -1,0 +1,64 @@
+diff --git a/configs/beelink_x2_defconfig b/configs/beelink_x2_defconfig
+index 7aca82cbd8..1a469c2725 100644
+--- a/configs/beelink_x2_defconfig
++++ b/configs/beelink_x2_defconfig
+@@ -8,3 +8,13 @@ CONFIG_MMC_SUNXI_SLOT_EXTRA=2
+ CONFIG_DEFAULT_DEVICE_TREE="sun8i-h3-beelink-x2"
+ CONFIG_SUN8I_EMAC=y
+ CONFIG_USB_EHCI_HCD=y
++CONFIG_USB_OHCI_HCD=y
++CONFIG_DM_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/configs/libretech_all_h3_cc_h3_defconfig b/configs/libretech_all_h3_cc_h3_defconfig
+index 7175123872..1acf1565ce 100644
+--- a/configs/libretech_all_h3_cc_h3_defconfig
++++ b/configs/libretech_all_h3_cc_h3_defconfig
+@@ -9,3 +9,12 @@ CONFIG_DEFAULT_DEVICE_TREE="sun8i-h3-libretech-all-h3-cc"
+ CONFIG_SUN8I_EMAC=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_OHCI_HCD=y
++CONFIG_DM_VIDEO=y
++# CONFIG_VIDEO_BPP8 is not set
++# CONFIG_VIDEO_BPP16 is not set
++CONFIG_VIDEO_DT_SIMPLEFB=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/include/configs/sunxi-common.h b/include/configs/sunxi-common.h
+index 5b0bec0561..b049dfea99 100644
+--- a/include/configs/sunxi-common.h
++++ b/include/configs/sunxi-common.h
+@@ -484,6 +484,7 @@ extern int soft_i2c_gpio_scl;
+ #define FDTFILE CONFIG_DEFAULT_DEVICE_TREE ".dtb"
+ #endif
+ 
++/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	CONSOLE_ENV_SETTINGS \
+ 	MEM_LAYOUT_ENV_SETTINGS \
+@@ -496,6 +497,16 @@ extern int soft_i2c_gpio_scl;
+ 	"uuid_gpt_system=" UUID_GPT_SYSTEM "\0" \
+ 	"partitions=" PARTS_DEFAULT "\0" \
+ 	BOOTCMD_SUNXI_COMPAT \
++	"bootenv_addr_r=" PXEFILE_ADDR_R "\0" \
++	"preboot=usb start; " \
++		"for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ 
+ #else /* ifndef CONFIG_SPL_BUILD */
