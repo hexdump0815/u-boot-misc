@@ -14,10 +14,20 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-rk3328
 cd u-boot-mainline-rk3328
-git checkout v2020.04
+git checkout v2020.07
+# add uEnv.txt support
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/add-uenv-txt.patch
 # get atf from aft build
 cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
 make evb-rk3328_defconfig 
 make
 
-... to be finished
+
+# boot block writing (untested)
+
+# to sd card according to doc/README.rockchip
+dd if=idbloader.img of=/dev/mmcblk0 seek=64
+dd if=u-boot.itb of=/dev/mmcblk0 seek=16384
+
+# or according to doc/board/rockchip/rockchip.rst
+dd if=u-boot-rockchip.bin of=/dev/sda seek=64
