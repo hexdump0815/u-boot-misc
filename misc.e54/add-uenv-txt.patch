@@ -1,0 +1,30 @@
+diff --git a/configs/odroid-xu3_defconfig b/configs/odroid-xu3_defconfig
+index 1a2183ce19..fcc3b5caa5 100644
+--- a/configs/odroid-xu3_defconfig
++++ b/configs/odroid-xu3_defconfig
+@@ -65,3 +65,5 @@ CONFIG_USB_FUNCTION_THOR=y
+ CONFIG_USB_HOST_ETHER=y
+ CONFIG_VIDEO_BRIDGE=y
+ CONFIG_ERRNO_STR=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/include/configs/odroid_xu3.h b/include/configs/odroid_xu3.h
+index 564319c231..04e69b859b 100644
+--- a/include/configs/odroid_xu3.h
++++ b/include/configs/odroid_xu3.h
+@@ -95,6 +95,15 @@
+ 	EXYNOS_DEVICE_SETTINGS \
+ 	EXYNOS_FDTFILE_SETTING \
+ 	MEM_LAYOUT_ENV_SETTINGS \
++	"bootenv_addr_r=0x51000000\0" \
++	"preboot=for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV \
+ 	"rootfstype=ext4\0" \
+ 	"console=" CONFIG_DEFAULT_CONSOLE \
