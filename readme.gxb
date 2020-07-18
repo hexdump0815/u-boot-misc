@@ -19,8 +19,9 @@ cd u-boot-mainline-gxb
 git checkout v2020.07
 # add usb kbd and uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-usb-kbd-and-uenv-txt.patch
-make xyz_todo
+make p201_defconfig
 make
+cp u-boot.bin gxb-u-boot.bin
 cd ..
 
 
@@ -36,8 +37,8 @@ git clone --depth 1 https://github.com/friendlyarm/u-boot.git -b nanopi-k2-v2015
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/nanopi-k2_fip_20170412.tar.gz
 
 
-mkdir u-boot-workdir
-cd u-boot-workdir
+mkdir u-boot-workdir-gxb
+cd u-boot-workdir-gxb
 
 
 tar xzf /compile/source/u-boot-gxb-blob-sources/nanopi-k2_fip_20170412.tar.gz
@@ -68,6 +69,10 @@ cat build/bl2_new.bin build/fip.bin > build/boot_new.bin
 
 # x86_64 binary
 $FIPDIR/gxb/aml_encrypt_gxb --bootsig --input build/boot_new.bin --output build/u-boot.bin
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-amlogic_gxb-aarch64.dd bs=512 count=1
+cat build/u-boot.bin >> boot-amlogic_gxb-aarch64.dd
 
 # write to sd card
 dd if=build/u-boot.bin of=/dev/sd-card conv=fsync,notrunc bs=512 seek=1

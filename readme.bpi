@@ -15,3 +15,4 @@ dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblk0 bs=1024 seek=8
 # create a boot block for standard dd'ing for the banana pi m1
 dd if=/dev/zero of=bpi-boot.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> bpi-boot.dd
+cp u-boot.bin bpi-u-boot.bin

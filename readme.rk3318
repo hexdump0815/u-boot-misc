@@ -5,10 +5,10 @@ arm trusted firmware:
 git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-rk3328
 cd arm-trusted-firmware-rk3328
-git checkout v2.2
+git checkout v2.3
 make realclean
 make PLAT=rk3328 DEBUG=1 bl31
-# result: build/rk3328/release/bl31/bl31.elf
+# result: build/rk3328/debug/bl31/bl31.elf
 cd ..
 
 u-boot:
@@ -16,9 +16,9 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-rk3318
 cd u-boot-mainline-rk3318
-git checkout v2020.01
+git checkout v2020.07
 # get atf from aft build
-cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
+cp ../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf .
 patch -p1 < /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.patch
 cp /compile/doc/u-boot-misc/misc.rk3318/h96max-rk3318_defconfig configs
 cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.dts arch/arm/dts

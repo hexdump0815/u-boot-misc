@@ -20,7 +20,9 @@ dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblk0 bs=1024 seek=8
 # create a boot block for standard dd'ing for the r39 tv box based on the libretech_all_h3_cc_h3_defconfig build
 dd if=/dev/zero of=r39-boot.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> r39-boot.dd
+cp u-boot.bin r39-u-boot.bin
 
 # create a boot block for standard dd'ing for the tx1 tv box based on the beelink_x2_defconfig build
 dd if=/dev/zero of=tx1-boot.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> tx1-boot.dd
+cp u-boot.bin tx1-u-boot.bin

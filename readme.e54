@@ -8,7 +8,8 @@ git checkout v2020.07
 patch -p1 < /compile/doc/u-boot-misc/misc.e54/add-uenv-txt.patch
 make odroid-xu3_defconfig
 make
-..
+cp u-boot.bin e54-u-boot.bin
+cd ..
 
 # if it is desired the u-boot env could be saved on the sd card - for this
 # change CONFIG_SYS_MMC_ENV_DEV in include/configs/exynos5-common.h

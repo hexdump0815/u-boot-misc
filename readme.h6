@@ -17,7 +17,7 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-h6
 cd u-boot-mainline-h6
-git checkout v2020.04
+git checkout v2020.07
 # get atf from aft build
 cp ../arm-trusted-firmware-h6/build/sun50i_h6/debug/bl31.bin .
 # add eachlink-h6-mini dtb
@@ -29,6 +29,7 @@ patch -p1 < /compile/doc/u-boot-misc/misc.h6/add-uenv-txt.patch
 make eachlink_h6_mini_defconfig
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
-# prepare if for imagebuilder/sonaremin
+# prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-allwinner_h6-aarch64.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h6-aarch64.dd
+cp u-boot.bin h6-u-boot.bin

@@ -6,7 +6,7 @@ cd arm-trusted-firmware-rk3328
 git checkout v2.3
 make realclean
 make PLAT=rk3328 DEBUG=1 bl31
-# result: build/rk3328/release/bl31/bl31.elf
+# result: build/rk3328/debug/bl31/bl31.elf
 cd ..
 
 u-boot:
@@ -18,7 +18,7 @@ git checkout v2020.07
 # add uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/add-uenv-txt.patch
 # get atf from aft build
-cp ../arm-trusted-firmware-rk3328/build/rk3328/release/bl31/bl31.elf .
+cp ../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf .
 make evb-rk3328_defconfig 
 make
 
@@ -29,5 +29,15 @@ make
 dd if=idbloader.img of=/dev/mmcblk0 seek=64
 dd if=u-boot.itb of=/dev/mmcblk0 seek=16384
 
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rockchip_rk3328_idbloader-aarch64.dd bs=512 count=64
+cat idbloader.img >> boot-rockchip_rk3328_idbloader-aarch64.dd
+dd if=u-boot.itb of=boot-rockchip_rk3328_idbloader-aarch64.dd seek=16384
+
 # or according to doc/board/rockchip/rockchip.rst
 dd if=u-boot-rockchip.bin of=/dev/sda seek=64
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rockchip_rk3328_bin-aarch64.dd bs=512 count=64
+cat u-boot-rockchip.bin >> boot-rockchip_rk3328_bin-aarch64.dd
+cp u-boot.bin rk3328-u-boot.bin

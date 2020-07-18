@@ -8,7 +8,8 @@ git checkout v2020.07
 patch -p1 < /compile/doc/u-boot-misc/misc.exy/add-uenv-txt.patch
 make odroid_defconfig
 make
-..
+cp u-boot.bin exy-u-boot.bin
+cd ..
 
 # if it is desired the u-boot env could be saved on the sd card - for this
 # change CONFIG_SYS_MMC_ENV_DEV in include/configs/odroid.h accordingly
@@ -22,7 +23,7 @@ mkdir u-boot-workdir-exy
 cd u-boot-workdir-exy
 tar xzf /compile/doc/u-boot-misc/misc.exy/boot.tar.gz 
 cd boot/
-cp ../../u-boot-mainline-exy/u-boot-dtb.bin
+cp ../../u-boot-mainline-exy/u-boot-dtb.bin .
 rm -f exy-boot.dd
 dd iflag=dsync oflag=dsync if=./E4412_S.bl1.HardKernel.bin of=exy-boot.dd seek=1
 dd iflag=dsync oflag=dsync if=./bl2.signed.bin of=exy-boot.dd seek=31
