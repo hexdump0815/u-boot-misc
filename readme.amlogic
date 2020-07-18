@@ -1,0 +1,56 @@
+# some information relevant for amlogic socs and u-boot in general
+# see readme.gx readme.gxbb and readme.gxy for soc specific info
+
+# maybe interesting links:
+https://fredericb.info/2016/10/amlogic-s905-soc-bypassing-not-so.html
+https://www.codedbearder.com/posts/mainline-linux-on-tx3-mini/
+https://freenode.irclog.whitequark.org/linux-amlogic/2020-06-29
+https://freenode.irclog.whitequark.org/linux-amlogic/2020-07-11
+https://freenode.irclog.whitequark.org/linux-amlogic/2020-07-12
+https://freenode.irclog.whitequark.org/linux-amlogic/2019-01-12#23858813
+https://freenode.irclog.whitequark.org/linux-amlogic/2019-05-17#24620876
+https://docs.khadas.com/vim3/HowtoEraseEMMC.html
+https://forum.armbian.com/topic/9768-amlogic-mainline-u-boot-compilation/
+https://forum.odroid.com/viewtopic.php?t=23044&start=200
+https://github.com/Kwiboo/u-boot/blob/b787b0c205b85d7fe6e7ee1627b6186c310bee71/arch/arm/cpu/armv8/common/firmware/plat/gxb/crypto/secureboot.c
+https://github.com/BayLibre/u-boot
+https://github.com/repk/gxlimg
+https://github.com/repk/gxlimg/issues/6
+
+
+# create a bootable sd card with a recovery image
+# from: https://www.cnx-software.com/2016/11/19/how-to-create-a-bootable-recovery-sd-card-for-amlogic-tv-boxes/
+gcc misc.gx/aml-upgrade-package-extract.c -o aml-upgrade-package-extract
+aml-upgrade-package-extract aml-upgrade-package.img
+
+format sd-card fat 32 (mkfs.vfat -F32 /dev/sd-card-device)
+
+sudo dd if=aml_sdc_burn.UBOOT of=/dev/sd-card-device bs=1 count=442
+sudo dd if=aml_sdc_burn.UBOOT of=/dev/sd-card-device seek=1 skip=1 bs=512
+
+cp aml_sdc_burn.ini aml_sdc_burn.UBOOT [device-mount-point] 
+cp aml-upgrade-package.img [device-mount-point]/aml_upgrade_package.img
+
+boot while pressing the recovery button
+
+
+# amlgic socs usually boot first from emmc if it has a valid boot block and only if the emmc
+# is empty it will boot from sd card ... there is a way to force it to boot from sd card first:
+hdmi boot dongle: https://github.com/superna9999/linux/wiki/Amlogic-HDMI-Boot-Dongle
+
+does not seem to work for usb boot: https://freenode.irclog.whitequark.org/linux-amlogic/2019-12-31#26057468
+
+for sd-card boot a reboot from legacy reboot might be required: https://freenode.irclog.whitequark.org/linux-amlogic/2019-12-31#26057470
+
+"It’s not really « boot from HDMI » the bootROM will fetch 8bytes from the HDMI ddc link from a non-standard i2c address and offset to force a specific boot mode (Usb, sdcard, eMMC, nand, SPI) for debug purposes"
+— Neil Armstrong (@Superna9999) October 5, 2019
+
+
+# bootloader stages order
+see: https://www.codedbearder.com/posts/mainline-linux-on-tx3-mini/
+
+Bootloader stage 1 (BL1) AP Trusted ROM (loaded from flash in the SoC)
+Bootloader stage 2 (BL2) Trusted Boot Firmware
+Bootloader stage 3-1 (BL31) EL3 Runtime Software
+Bootloader stage 3-2 (BL32) Secure-EL1 Payload (optional)
+Bootloader stage 3-3 (BL33) Non-trusted Firmware (this is U-Boot)
