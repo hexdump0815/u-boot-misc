@@ -27,9 +27,17 @@ patch -p1 < /compile/doc/u-boot-misc/misc.h6/eachlink-dtb.patch
 # add uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.h6/add-uenv-txt.patch
 make eachlink_h6_mini_defconfig
+# orangepi one plus
+#make orangepi_one_plus_defconfig
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
+
 # prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-allwinner_h6-aarch64.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h6-aarch64.dd
 cp u-boot.bin h6-u-boot.bin
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-orangepi_one_plus_h6-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-orangepi_one_plus_h6-aarch64.dd
+cp u-boot.bin orangepi_one_plus-u-boot.bin
