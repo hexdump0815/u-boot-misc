@@ -10,6 +10,7 @@ git checkout v2.3
 make realclean
 make PLAT=sun50i_h6 DEBUG=1 bl31
 # result: build/sun50i_h6/debug/bl31.bin
+cp build/sun50i_h6/debug/bl31.bin build/sun50i_h6/debug/h6-bl31.bin
 cd ..
 
 u-boot:

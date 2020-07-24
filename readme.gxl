@@ -14,6 +14,7 @@ git checkout v2.3
 make realclean
 make PLAT=gxl DEBUG=1 bl31
 # result: build/gxl/debug/bl31.bin
+cp build/gxl/debug/bl31.bin build/gxl/debug/gxl-bl31.bin
 cd ..
 
 
