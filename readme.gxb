@@ -1,7 +1,7 @@
 # the following is relevant for gxbb (s905)
 
 
-# building atf - did not get it working with this one in the end
+# building atf
 git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-gxb
 cd arm-trusted-firmware-gxb
@@ -9,6 +9,15 @@ git checkout v2.3
 make realclean
 make PLAT=gxbb DEBUG=1 bl31
 # result: build/gxbb/debug/bl31.bin
+# the below did not work - see way below for a working mainline atf solution
+# # build doimage tool to add the required header to bl31.bin -> bl31.img
+# cd tools/amlogic
+# make
+# cd ../../
+# # see https://freenode.irclog.whitequark.org/linux-amlogic/2020-07-24#27575108
+# tools/amlogic/doimage build/gxbb/debug/bl31.bin build/gxbb/debug/bl31.img
+# cp build/gxbb/debug/bl31.img build/gxbb/debug/gxb-bl31.img
+cp build/gxbb/debug/bl31.bin build/gxbb/debug/gxb-bl31.bin
 cd ..
 
 
@@ -82,21 +91,33 @@ dd if=build/u-boot.bin of=/dev/emmc-device conv=fsync,notrunc bs=1 count=446
 dd if=build/u-boot.bin of=/dev/emmc-device conv=fsync,notrunc bs=512 skip=1 seek=1
 
 
-# the below try with the self compiled atf did not work - maybe related: https://freenode.irclog.whitequark.org/linux-amlogic/2018-10-09 ... i guess the bl31.bin from the atf compile needs to somehow be encrypted
-# or signed to work properly ...
-# see also: https://freenode.irclog.whitequark.org/linux-amlogic/2018-09-17#23084770
+# see https://freenode.irclog.whitequark.org/linux-amlogic/2020-07-24 for below
 # for doing the same with the self built atf instead of the blob one - just replace
-cp $FIPDIR/gxb/bl31.img build/
-# with
-cp ../arm-trusted-firmware-gxb/build/gxbb/debug/bl31.bin build/bl31.img
+#cp $FIPDIR/gxb/bl31.img build/
+# with:
+# take the header from the blob bl31.img
+dd if=$FIPDIR/gxb/bl31.img of=build/bl31.img bs=512 count=1
+# and append out self built atf bl31.bin
+cat ../arm-trusted-firmware-gxb/build/gxbb/debug/bl31.bin >> build/bl31.img
 # and run everything else like above ...
-# maybe the resulting u-boot.bin needs the bl31.bin part rehashed
-# building tool to rehash bl31.bin in the created bootloader
-# see https://fredericb.info/2016/10/amlogic-s905-soc-bypassing-not-so.html
-git clone https://github.com/frederic/aml_bootloader_tool.git
-cd aml_bootloader_tool
-apt-get install libtomcrypt-dev
-gcc -o aml_bootloader_tool aml_bootloader_tool.c -ltomcrypt
-cd ..
-/compile/source/aml_bootloader_tool/aml_bootloader_tool build/u-boot.bin H 2
-# did not work neither ... giving up for now
+# afterwards: just to make clear where certain files in the release section come from
+cp build/bl31.img build/gxb-bl31.img
+cp boot-amlogic_gxb-aarch64.dd boot-amlogic_gxb_atf-aarch64.dd
+
+
+# some older notes which were not relevant in the end
+
+# # maybe the resulting u-boot.bin needs the bl31.bin part rehashed
+# # building tool to rehash bl31.bin in the created bootloader
+# # see https://fredericb.info/2016/10/amlogic-s905-soc-bypassing-not-so.html
+# git clone https://github.com/frederic/aml_bootloader_tool.git
+# cd aml_bootloader_tool
+# apt-get install libtomcrypt-dev
+# gcc -o aml_bootloader_tool aml_bootloader_tool.c -ltomcrypt
+# cd ..
+# /compile/source/aml_bootloader_tool/aml_bootloader_tool build/u-boot.bin H 2
+# # did not work neither ... giving up for now
+
+# # the below try with the self compiled atf did not work - maybe related: https://freenode.irclog.whitequark.org/linux-amlogic/2018-10-09 ... i guess the bl31.bin from the atf compile needs to somehow be encrypted
+# # or signed to work properly ...
+# # see also: https://freenode.irclog.whitequark.org/linux-amlogic/2018-09-17#23084770
