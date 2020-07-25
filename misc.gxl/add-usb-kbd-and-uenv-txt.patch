@@ -1,7 +1,16 @@
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 48e8800ce4..84639ff2ec 100644
+index 48e8800ce4..8cff2392c7 100644
 --- a/configs/libretech-cc_defconfig
 +++ b/configs/libretech-cc_defconfig
+@@ -7,7 +7,7 @@ CONFIG_MESON_GXL=y
+ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+ CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" libretech-cc"
++CONFIG_IDENT_STRING=" hexdump-gxl"
+ CONFIG_DEBUG_UART=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y
 @@ -64,3 +64,8 @@ CONFIG_SYS_WHITE_ON_BLACK=y
  CONFIG_VIDEO_MESON=y
  CONFIG_VIDEO_DT_SIMPLEFB=y
@@ -12,7 +21,7 @@ index 48e8800ce4..84639ff2ec 100644
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index 50707a3197..6c06725e65 100644
+index 50707a3197..4b9455a2ac 100644
 --- a/include/configs/meson64.h
 +++ b/include/configs/meson64.h
 @@ -76,6 +76,9 @@
