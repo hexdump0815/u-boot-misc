@@ -29,7 +29,7 @@ index 50707a3197..1ee9d3a8b5 100644
  	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
 +	"bootenv_addr_r=0x01080000\0" \
 +	"preboot=usb start; " \
-+		"for target in 1 2;do " \
++		"for target in 0 1;do " \
 +		"for prefix in / /boot/;do " \
 +			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
 +				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
