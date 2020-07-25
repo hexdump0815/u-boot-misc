@@ -1,0 +1,24 @@
+diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+index e8348b2728..ef0cfea498 100644
+--- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+@@ -56,16 +56,16 @@
+ 
+ 		system {
+ 			label = "librecomputer:system-status";
+-			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++			gpios = <&gpio GPIODV_19 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 			panic-indicator;
+ 		};
+ 
+-		blue {
++/*		blue {
+ 			label = "librecomputer:blue";
+ 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+-		};
++		}; */
+ 	};
+ 
+ 	memory@0 {
