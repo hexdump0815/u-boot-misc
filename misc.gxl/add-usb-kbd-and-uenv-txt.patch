@@ -12,23 +12,26 @@ index 48e8800ce4..84639ff2ec 100644
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index 50707a3197..1ee9d3a8b5 100644
+index 50707a3197..6c06725e65 100644
 --- a/include/configs/meson64.h
 +++ b/include/configs/meson64.h
-@@ -76,6 +76,7 @@
+@@ -76,6 +76,9 @@
  #endif
  
  #ifndef CONFIG_EXTRA_ENV_SETTINGS
 +/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
++/* the test stdin line is to disable the serial console when a usb kbd is connected as it
++ * might produce noise on the cmdline otherwise in some situations */
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	"stdin=" STDIN_CFG "\0" \
  	"stdout=" STDOUT_CFG "\0" \
-@@ -86,6 +87,16 @@
+@@ -86,6 +89,17 @@
  	"pxefile_addr_r=0x01080000\0" \
  	"ramdisk_addr_r=0x13000000\0" \
  	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
 +	"bootenv_addr_r=0x01080000\0" \
 +	"preboot=usb start; " \
++		"if test ${stdin} = usbkbd,serial; then setenv stdin usbkbd; fi; " \
 +		"for target in 0 1;do " \
 +		"for prefix in / /boot/;do " \
 +			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
