@@ -1,0 +1,26 @@
+diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+index e8348b2728..8a9cd3bc32 100644
+--- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+@@ -14,7 +14,7 @@
+ / {
+ 	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
+ 		     "amlogic,meson-gxl";
+-	model = "Libre Computer AML-S905X-CC";
++	model = "hexdump gxl u-boot";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index 48e8800ce4..8cff2392c7 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -7,7 +7,7 @@ CONFIG_MESON_GXL=y
+ CONFIG_NR_DRAM_BANKS=1
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+ CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" libretech-cc"
++CONFIG_IDENT_STRING=" hexdump-gxl"
+ CONFIG_DEBUG_UART=y
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y

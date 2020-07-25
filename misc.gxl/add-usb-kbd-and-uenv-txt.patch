@@ -2,15 +2,6 @@ diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
 index 48e8800ce4..8cff2392c7 100644
 --- a/configs/libretech-cc_defconfig
 +++ b/configs/libretech-cc_defconfig
-@@ -7,7 +7,7 @@ CONFIG_MESON_GXL=y
- CONFIG_NR_DRAM_BANKS=1
- CONFIG_DEBUG_UART_BASE=0xc81004c0
- CONFIG_DEBUG_UART_CLOCK=24000000
--CONFIG_IDENT_STRING=" libretech-cc"
-+CONFIG_IDENT_STRING=" hexdump-gxl"
- CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_MISC_INIT_R=y
 @@ -64,3 +64,8 @@ CONFIG_SYS_WHITE_ON_BLACK=y
  CONFIG_VIDEO_MESON=y
  CONFIG_VIDEO_DT_SIMPLEFB=y

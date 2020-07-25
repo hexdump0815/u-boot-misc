@@ -23,10 +23,10 @@ git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-gxl
 cd u-boot-mainline-gxl
 git checkout v2020.07
+# set some own string instead of libretech-cc to make clear this is modified
+patch -p1 < /compile/doc/u-boot-misc/misc.gxl/own-strings.patch
 # add usb kbd and uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-and-uenv-txt.patch
-# try to get the led working better on a tv box - gpio taken from android dtb
-patch -p1 < /compile/doc/u-boot-misc/misc.gxl/gxl-tv-box-led.patch
 # the libretech-cc_defconfig works quite well for s905w and s905x and
 # supports hdmi video output well too
 make libretech-cc_defconfig
