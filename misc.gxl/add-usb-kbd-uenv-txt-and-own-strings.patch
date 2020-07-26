@@ -37,7 +37,7 @@ index e8348b2728..b45c2feee9 100644
  
  	memory@0 {
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 48e8800ce4..aea7a0a430 100644
+index 48e8800ce4..ba47358582 100644
 --- a/configs/libretech-cc_defconfig
 +++ b/configs/libretech-cc_defconfig
 @@ -5,10 +5,7 @@ CONFIG_ENV_SIZE=0x2000
@@ -62,7 +62,7 @@ index 48e8800ce4..aea7a0a430 100644
 +# CONFIG_DEBUG_UART is not set
 +# CONFIG_REQUIRE_SERIAL_CONSOLE is not set
 +# CONFIG_SERIAL_PRESENT is not set
-+# CONFIG_CONSOLE_MUX is not set
++CONFIG_CONSOLE_MUX=y
  CONFIG_USB=y
  CONFIG_DM_USB=y
  CONFIG_USB_XHCI_HCD=y
