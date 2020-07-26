@@ -1,5 +1,5 @@
 diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-index e8348b2728..8a9cd3bc32 100644
+index e8348b2728..b45c2feee9 100644
 --- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
 +++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
 @@ -14,7 +14,7 @@
@@ -7,12 +7,37 @@ index e8348b2728..8a9cd3bc32 100644
  	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
  		     "amlogic,meson-gxl";
 -	model = "Libre Computer AML-S905X-CC";
-+	model = "hexdump gxl u-boot";
++	model = "hexdump usbkbd/hdmi u-boot gxl";
  
  	aliases {
  		serial0 = &uart_AO;
+@@ -55,17 +55,18 @@
+ 		compatible = "gpio-leds";
+ 
+ 		system {
+-			label = "librecomputer:system-status";
++//			label = "librecomputer:system-status";
++			label = "system-status";
+ 			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 			panic-indicator;
+ 		};
+ 
+-		blue {
+-			label = "librecomputer:blue";
+-			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
+-		};
++//		blue {
++//			label = "librecomputer:blue";
++//			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
++//			linux,default-trigger = "heartbeat";
++//		};
+ 	};
+ 
+ 	memory@0 {
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 48e8800ce4..8cff2392c7 100644
+index 48e8800ce4..34dee21175 100644
 --- a/configs/libretech-cc_defconfig
 +++ b/configs/libretech-cc_defconfig
 @@ -7,7 +7,7 @@ CONFIG_MESON_GXL=y
@@ -24,3 +49,4 @@ index 48e8800ce4..8cff2392c7 100644
  CONFIG_DEBUG_UART=y
  CONFIG_OF_BOARD_SETUP=y
  CONFIG_MISC_INIT_R=y
+ 
