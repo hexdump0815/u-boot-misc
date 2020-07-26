@@ -1,8 +1,58 @@
+diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+index e8348b2728..b45c2feee9 100644
+--- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
+@@ -14,7 +14,7 @@
+ / {
+ 	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
+ 		     "amlogic,meson-gxl";
+-	model = "Libre Computer AML-S905X-CC";
++	model = "hexdump usbkbd/hdmi u-boot gxl";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
+@@ -55,17 +55,18 @@
+ 		compatible = "gpio-leds";
+ 
+ 		system {
+-			label = "librecomputer:system-status";
++//			label = "librecomputer:system-status";
++			label = "system-status";
+ 			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
+ 			default-state = "on";
+ 			panic-indicator;
+ 		};
+ 
+-		blue {
+-			label = "librecomputer:blue";
+-			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
+-			linux,default-trigger = "heartbeat";
+-		};
++//		blue {
++//			label = "librecomputer:blue";
++//			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
++//			linux,default-trigger = "heartbeat";
++//		};
+ 	};
+ 
+ 	memory@0 {
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 48e8800ce4..34dee21175 100644
+index 48e8800ce4..aea7a0a430 100644
 --- a/configs/libretech-cc_defconfig
 +++ b/configs/libretech-cc_defconfig
-@@ -42,9 +42,9 @@ CONFIG_POWER_DOMAIN=y
+@@ -5,10 +5,7 @@ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+ CONFIG_MESON_GXL=y
+ CONFIG_NR_DRAM_BANKS=1
+-CONFIG_DEBUG_UART_BASE=0xc81004c0
+-CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" libretech-cc"
+-CONFIG_DEBUG_UART=y
++CONFIG_IDENT_STRING=" hexdump-gxl"
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_MISC_INIT_R=y
+ # CONFIG_DISPLAY_CPUINFO is not set
+@@ -42,9 +39,10 @@ CONFIG_POWER_DOMAIN=y
  CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
  CONFIG_DM_REGULATOR_FIXED=y
  CONFIG_DM_RESET=y
@@ -12,10 +62,11 @@ index 48e8800ce4..34dee21175 100644
 +# CONFIG_DEBUG_UART is not set
 +# CONFIG_REQUIRE_SERIAL_CONSOLE is not set
 +# CONFIG_SERIAL_PRESENT is not set
++# CONFIG_CONSOLE_MUX is not set
  CONFIG_USB=y
  CONFIG_DM_USB=y
  CONFIG_USB_XHCI_HCD=y
-@@ -64,3 +64,10 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+@@ -64,3 +62,10 @@ CONFIG_SYS_WHITE_ON_BLACK=y
  CONFIG_VIDEO_MESON=y
  CONFIG_VIDEO_DT_SIMPLEFB=y
  CONFIG_OF_LIBFDT_OVERLAY=y
