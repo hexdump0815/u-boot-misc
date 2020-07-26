@@ -95,7 +95,7 @@ cd u-boot-workdir-gxl
 # getting an emmc/nand boot block dump to extract some blobs from it
 # emmc case
 # dump beginning of emmc into a file
-dd if=/dev/mmcblk0 of=emmc-start-dump.dd bs=512 count=32768
+dd if=/dev/mmcblk0 of=emmc-start-dump.dd bs=512 count=8192
 # strip the first 512 byte from it
 dd if=emmc-start-dump.dd of=dump-in.dd bs=512 skip=1
 
