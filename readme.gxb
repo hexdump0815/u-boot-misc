@@ -26,8 +26,9 @@ git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-gxb
 cd u-boot-mainline-gxb
 git checkout v2020.07
-# add usb kbd and uEnv.txt support
-patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-usb-kbd-and-uenv-txt.patch
+# add usb kbd and uEnv.txt support and set some own string instead
+# of libretech-cc to make clear this is modified
+patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-usb-kbd-uenv-txt-and-own-strings.patch
 make p201_defconfig
 make
 cp u-boot.bin gxb-u-boot.bin
