@@ -123,11 +123,11 @@ bl32 - trusted firmware - usually not used on gxl
 bl33 - u-boot - self compiled from mainline u-boot
 # -> https://gitlab.denx.de/u-boot/u-boot
 
-# extract the boot stages from the dump
+# extract the boot stages from the dump (in misc.gxl/dump-in.dd are some example dumps for testing)
 mkdir images/
 ../gxlimg/gxlimg -e dump-in.dd images
 # the first one can give an error like "error: amlcblk.c(592): Cannot read fd 3: Success"
-# if the dump is too small
+# if the dump is too small, but this is not a problem as we have our own bl33 = u-boot
 ../gxlimg/gxlimg -t bl3x -d ./images/bl33.enc ./images/bl33.bin
 ../gxlimg/gxlimg -t bl3x -d ./images/bl31.enc ./images/bl31.bin
 ../gxlimg/gxlimg -t bl3x -d ./images/bl30.enc ./images/bl30.bin
