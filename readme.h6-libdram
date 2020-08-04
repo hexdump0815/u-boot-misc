@@ -59,7 +59,12 @@ make
 cat sunxi-spl.bin-arm32 u-boot.itb > my-u-boot.dd
 dd my-u-boot.dd of=/dev/sdX bs=1024 seek=8
 
-see also:
+# see also:
 https://forum.armbian.com/topic/10174-since-tanix-tx6-can-boot-from-the-sd-card/?do=findComment&comment=80301
 https://forum.armbian.com/topic/10174-since-tanix-tx6-can-boot-from-the-sd-card/?do=findComment&comment=80354
 https://github.com/apritzel/u-boot/issues/4
+
+# some more interesting read:
+https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-02
+https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-03
+https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-04

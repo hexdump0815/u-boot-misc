@@ -36,3 +36,10 @@ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/odroid-n2_fip_20190220.tar.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/u-boot.bin.odroid-n2_2019.07-rc3-00022-g47bebaa4a3.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/s400_fip_20181003.tar.gz
+
+
+# some interesting links
+https://github.com/repk/gxlimg/blob/master/README.g12a
+https://freenode.irclog.whitequark.org/linux-amlogic/2020-08-03
+https://github.com/angerman/meson64-tools
+https://github.com/wav/nix-odroid-n2/pull/7/files#diff-e467582f02c13aab0c8bbf8db66dd0f1
