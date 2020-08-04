@@ -26,7 +26,9 @@ git checkout eachlink-h6-mini-WIP
 patch -p1 < /compile/doc/u-boot-misc/misc.h6-libdram/spl_switch-32bit.patch
 # get bl31.bin and libdram via
 tar xvzf H6-BSP-1.0.tgz lichee/tools/pack/chips/sun50iw6p1/bin/bl31.bin lichee/bootloader/uboot_2014_sunxi_spl/sunxi_spl/dram/sun50iw6p1/dram/libdram
-# BSP from: http://files.pine64.org/os/sdk/H64-ver1.0/H6-BSP-1.0.tgz (via: https://wiki.pine64.org/index.php/PINE_H64_Main_Page#Linux_BSP_SDK)
+# the old BSP link does not work anymore - see below for a working one
+# no more working link: http://files.pine64.org/os/sdk/H64-ver1.0/H6-BSP-1.0.tgz (via: https://wiki.pine64.org/index.php/PINE_H64_Main_Page#Linux_BSP_SDK)
+# working link: http://dl.linux-sunxi.org/H6/H6-BSP-1.0.tgz
 cp lichee/tools/pack/chips/sun50iw6p1/bin/bl31.bin .
 cp lichee/bootloader/uboot_2014_sunxi_spl/sunxi_spl/dram/sun50iw6p1/dram/libdram .
 mv libdram libdram-h6
