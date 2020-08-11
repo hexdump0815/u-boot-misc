@@ -1,0 +1,52 @@
+see: http://ix.io/26IG
+and: https://forum.armbian.com/topic/12372-h6-allwinner-tv-box-need-help/?do=findComment&comment=92475
+
+diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+index 9375db76a1..bee7a8d3c4 100644
+--- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+@@ -59,7 +59,9 @@ static void mctl_phy_pir_init(u32 val)
+ 
+ 	writel(val, &mctl_phy->pir);
+ 	writel(val | BIT(0), &mctl_phy->pir);	/* Start initialisation. */
++	udelay(1);
+ 	mctl_await_completion(&mctl_phy->pgsr[0], BIT(0), BIT(0));
++	udelay(1);
+ }
+ 
+ enum {
+diff --git a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+index 611eaa3024..eaf3e95cd4 100644
+--- a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
++++ b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+@@ -33,7 +33,7 @@
+  * 	CAS write latency (CWL): 8
+  */
+ static u32 mr_ddr3[7] = {
+-	0x00001c70, 0x00000040, 0x00000018, 0x00000000,
++	0x00001a70, 0x00000040, 0x00000018, 0x00000000,
+ 	0x00000000, 0x00000400, 0x00000848,
+ };
+ 
+@@ -48,10 +48,10 @@ void mctl_set_timing_params(struct dram_para *para)
+ 
+ 	u8 tccd		= 2;			/* JEDEC: 4nCK */
+ 	u8 tfaw		= ns_to_t(50);		/* JEDEC: 30 ns w/ 1K pages */
+-	u8 trrd		= max(ns_to_t(6), 4);	/* JEDEC: max(6 ns, 4nCK) */
++	u8 trrd		= max(ns_to_t(10), 2);	/* JEDEC: max(6 ns, 4nCK) */
+ 	u8 trcd		= ns_to_t(15);		/* JEDEC: 13.5 ns */
+ 	u8 trc		= ns_to_t(53);		/* JEDEC: 49.5 ns */
+-	u8 txp		= max(ns_to_t(6), 3);	/* JEDEC: max(6 ns, 3nCK) */
++	u8 txp		= max(ns_to_t(8), 2);	/* JEDEC: max(6 ns, 3nCK) */
+ 	u8 twtr		= max(ns_to_t(8), 2);	/* JEDEC: max(7.5 ns, 4nCK) */
+ 	u8 trtp		= max(ns_to_t(8), 2);	/* JEDEC: max(7.5 ns, 4nCK) */
+ 	u8 twr		= ns_to_t(15);		/* JEDEC: 15 ns */
+@@ -66,7 +66,7 @@ void mctl_set_timing_params(struct dram_para *para)
+ 	u8 tmrw		= 0;			/* ? */
+ 	u8 tmrd		= 4;			/* JEDEC: 4nCK */
+ 	u8 tmod		= max(ns_to_t(15), 12);	/* JEDEC: max(15 ns, 12nCK) */
+-	u8 tcke		= max(ns_to_t(6), 3);	/* JEDEC: max(5.625 ns, 3nCK) */
++	u8 tcke		= 3;			/* JEDEC: max(5.625 ns, 3nCK) */
+ 	u8 tcksrx	= max(ns_to_t(10), 5);	/* JEDEC: max(10 ns, 5nCK) */
+ 	u8 tcksre	= max(ns_to_t(10), 5);	/* JEDEC: max(10 ns, 5nCK) */
+ 	u8 tckesr	= tcke + 1;		/* JEDEC: tCKE(min) + 1nCK */

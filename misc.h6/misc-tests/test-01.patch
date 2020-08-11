@@ -1,0 +1,28 @@
+see: http://ix.io/26wK
+and: https://forum.armbian.com/topic/12372-h6-allwinner-tv-box-need-help/?do=findComment&comment=92334
+
+diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+index 9375db76a1..af14297af5 100644
+--- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+@@ -639,7 +639,7 @@ unsigned long mctl_calc_size(struct dram_para *para)
+ 	 {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }}
+ #define SUN50I_H6_DDR3_DX_READ_DELAYS					\
+ 	{{  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },	\
+-	 {  4,  4,  4,  4,  4,  4,  4,  4,  4,  0,  0,  0,  0,  0 },	\
++	 {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },	\
+ 	 {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 },	\
+ 	 {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }}
+ 
+diff --git a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+index 611eaa3024..2f74d75756 100644
+--- a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
++++ b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+@@ -33,7 +33,7 @@
+  * 	CAS write latency (CWL): 8
+  */
+ static u32 mr_ddr3[7] = {
+-	0x00001c70, 0x00000040, 0x00000018, 0x00000000,
++	0x00001a70, 0x00000040, 0x00000018, 0x00000000,
+ 	0x00000000, 0x00000400, 0x00000848,
+ };

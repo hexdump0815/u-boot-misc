@@ -1,0 +1,109 @@
+see: http://ix.io/2tPG
+via: https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-10#27693728
+
+
+diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+index 9e34da474798..beee48ebc6a5 100644
+--- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+@@ -528,6 +528,39 @@ static void mctl_channel_init(struct dram_para *para)
+ 		clrbits_le32(&mctl_phy->dx[i].gcr[3], ~0x3ffff);
+ 	udelay(10);
+ 
++	if (readl(&mctl_phy->pgsr[0]) & 0xff00000) {
++		/* Oops! There's something wrong! */
++		debug("PLL = %x\n", readl(0x3001010));
++		debug("DRAM PHY PGSR0 = %x\n", readl(&mctl_phy->pgsr[0]));
++		for (i = 0; i < 4; i++)
++			debug("DRAM PHY DX%dRSR0 = %x\n", i, readl(&mctl_phy->dx[i].rsr[0]));
++		panic("Error while initializing DRAM PHY!\n");
++	}
++
++	if (sunxi_dram_is_lpddr(para->type))
++		clrsetbits_le32(&mctl_phy->dsgcr, 0xc0, 0x40);
++	clrbits_le32(&mctl_phy->pgcr[1], 0x40);
++	clrbits_le32(&mctl_ctl->dfimisc, BIT(0));
++	writel(1, &mctl_ctl->swctl);
++	mctl_await_completion(&mctl_ctl->swstat, 1, 1);
++	clrbits_le32(&mctl_ctl->rfshctl3, BIT(0));
++
++	setbits_le32(&mctl_com->unk_0x014, BIT(31));
++	writel(0xffffffff, &mctl_com->maer0);
++	writel(0x7ff, &mctl_com->maer1);
++	writel(0xffff, &mctl_com->maer2);
++}
++
++static void mctl_auto_detect_rank(struct dram_para *para)
++{
++	struct sunxi_mctl_phy_reg * const mctl_phy =
++			(struct sunxi_mctl_phy_reg *)SUNXI_DRAM_PHY0_BASE;
++
++	para->cols = 8;
++	para->rows = 13;
++
++	mctl_core_init(para);
++
+ 	if (readl(&mctl_phy->pgsr[0]) & 0x400000)
+ 	{
+ 		/* Check for single rank and optionally half DQ. */
+@@ -539,8 +572,6 @@ static void mctl_channel_init(struct dram_para *para)
+ 			    (readl(&mctl_phy->dx[3].rsr[0]) & 0x3) != 2)
+ 				para->bus_full_width = 0;
+ 
+-			/* Restart DRAM initialization from scratch. */
+-			mctl_core_init(para);
+ 			return;
+ 		}
+ 
+@@ -553,42 +584,16 @@ static void mctl_channel_init(struct dram_para *para)
+ 		    (readl(&mctl_phy->dx[1].rsr[0]) & 0x3) == 0) {
+ 			para->bus_full_width = 0;
+ 
+-			/* Restart DRAM initialization from scratch. */
+-			mctl_core_init(para);
+ 			return;
+ 		}
+ 
+ 		panic("This DRAM setup is currently not supported.\n");
+ 	}
+-
+-	if (readl(&mctl_phy->pgsr[0]) & 0xff00000) {
+-		/* Oops! There's something wrong! */
+-		debug("PLL = %x\n", readl(0x3001010));
+-		debug("DRAM PHY PGSR0 = %x\n", readl(&mctl_phy->pgsr[0]));
+-		for (i = 0; i < 4; i++)
+-			debug("DRAM PHY DX%dRSR0 = %x\n", i, readl(&mctl_phy->dx[i].rsr[0]));
+-		panic("Error while initializing DRAM PHY!\n");
+-	}
+-
+-	if (sunxi_dram_is_lpddr(para->type))
+-		clrsetbits_le32(&mctl_phy->dsgcr, 0xc0, 0x40);
+-	clrbits_le32(&mctl_phy->pgcr[1], 0x40);
+-	clrbits_le32(&mctl_ctl->dfimisc, BIT(0));
+-	writel(1, &mctl_ctl->swctl);
+-	mctl_await_completion(&mctl_ctl->swstat, 1, 1);
+-	clrbits_le32(&mctl_ctl->rfshctl3, BIT(0));
+-
+-	setbits_le32(&mctl_com->unk_0x014, BIT(31));
+-	writel(0xffffffff, &mctl_com->maer0);
+-	writel(0x7ff, &mctl_com->maer1);
+-	writel(0xffff, &mctl_com->maer2);
+ }
+ 
+ static void mctl_auto_detect_dram_size(struct dram_para *para)
+ {
+ 	/* TODO: non-(LP)DDR3 */
+-	/* Detect rank number and half DQ by the code in mctl_channel_init. */
+-	mctl_core_init(para);
+ 
+ 	/* detect row address bits */
+ 	para->cols = 8;
+@@ -673,6 +678,8 @@ unsigned long sunxi_dram_init(void)
+ 	setbits_le32(0x7010310, BIT(8));
+ 	clrbits_le32(0x7010318, 0x3f);
+ 
++	mctl_auto_detect_rank(&para);
++
+ 	mctl_auto_detect_dram_size(&para);
+ 
+ 	mctl_core_init(&para);

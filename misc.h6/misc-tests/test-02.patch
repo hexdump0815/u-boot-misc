@@ -1,0 +1,17 @@
+see: http://ix.io/26D9
+and: https://forum.armbian.com/topic/12372-h6-allwinner-tv-box-need-help/?do=findComment&comment=92402
+
+diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+index 9375db76a1..bee7a8d3c4 100644
+--- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+@@ -59,7 +59,9 @@ static void mctl_phy_pir_init(u32 val)
+ 
+ 	writel(val, &mctl_phy->pir);
+ 	writel(val | BIT(0), &mctl_phy->pir);	/* Start initialisation. */
++	udelay(1);
+ 	mctl_await_completion(&mctl_phy->pgsr[0], BIT(0), BIT(0));
++	udelay(1);
+ }
+ 
+ enum {
