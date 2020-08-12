@@ -27,6 +27,8 @@ cp /compile/doc/u-boot-misc/misc.h6/eachlink_h6_mini_defconfig configs/eachlink_
 patch -p1 < /compile/doc/u-boot-misc/misc.h6/eachlink-dtb.patch
 # add uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.h6/add-uenv-txt.patch
+# optional patch to make my noname h6 tv box work
+#patch -p1 < /compile/doc/u-boot-misc/misc.h6/h6-noname-tv-box-hack.patch
 make eachlink_h6_mini_defconfig
 # orangepi one plus
 #make orangepi_one_plus_defconfig
