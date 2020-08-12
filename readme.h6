@@ -4,9 +4,8 @@ git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-h6
 cd arm-trusted-firmware-h6
 git checkout v2.3
-# this is a patch which i used at 8ff55a9e14a23d7c7f89f52465bcc6307850aa33 for a certain noname
-# h6 tv box which hung during the axp805 probe - it does not apply to current atp sources anymore
-#patch -p1 < /compile/doc/u-boot-misc/misc.h6/h6-noname-atf.patch
+# optional patch for my noname h6 tv box which hung during the axp805 probe otherwise
+#patch -p1 < /compile/doc/u-boot-misc/misc.h6/h6-noname-tv-box-atf-hack.patch
 make realclean
 make PLAT=sun50i_h6 DEBUG=1 bl31
 # result: build/sun50i_h6/debug/bl31.bin
