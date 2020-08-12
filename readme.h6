@@ -40,6 +40,10 @@ cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h6-aarch64.dd
 cp u-boot.bin h6-u-boot.bin
 
 # prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-allwinner_h6-aarch64-noname-tv-box.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h6-aarch64-noname-tv-box.dd
+
+# prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-orangepi_one_plus_h6-aarch64.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> boot-orangepi_one_plus_h6-aarch64.dd
 cp u-boot.bin orangepi_one_plus-u-boot.bin
