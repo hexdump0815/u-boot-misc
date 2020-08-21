@@ -4,8 +4,11 @@ git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-exy
 cd u-boot-mainline-exy
 git checkout v2020.07
-# add uEnv.txt support
-patch -p1 < /compile/doc/u-boot-misc/misc.exy/add-uenv-txt.patch
+# add uEnv.txt support and a hack to support the odroid x as well
+# based on: https://patchwork.ozlabs.org/project/uboot/patch/1445297963-24788-1-git-send-email-siarhei.siamashka@gmail.com/
+# via: https://freenode.irclog.whitequark.org/linux-exynos/2017-09-16#20162375
+# see also: https://github.com/archlinuxarm/PKGBUILDs/blob/master/alarm/uboot-odroid/0002-odroid-x-support.patch
+patch -p1 < /compile/doc/u-boot-misc/misc.exy/add-odroid-x-support-and-uenv-txt.patch
 make odroid_defconfig
 make
 cp u-boot.bin exy-u-boot.bin
@@ -30,7 +33,7 @@ dd iflag=dsync oflag=dsync if=./bl2.signed.bin of=exy-boot.dd seek=31
 dd iflag=dsync oflag=dsync if=./u-boot-dtb.bin of=exy-boot.dd seek=63
 dd iflag=dsync oflag=dsync if=./E4412_S.tzsw.signed.bin of=exy-boot.dd seek=2111
 # write final boot block to sd card
-dd if=exy-boot.dd of=/dev/sd-card bs=512 seek=1 skip=1
+#dd if=exy-boot.dd of=/dev/sd-card bs=512 seek=1 skip=1
 
 # write final boot block to emmc
 # odroid emmc module overview: https://wiki.odroid.com/accessory/emmc/reference_chart
@@ -41,9 +44,9 @@ dd if=exy-boot.dd of=/dev/sd-card bs=512 seek=1 skip=1
 # - put the adapter then into an sd-card reader on the linux machine
 # - now you should see a device /dev/mmcblk0boot0 during an fdisk -l - if not stop here
 # - if the device is there, now is a good time to make a backup of the old boot block
-dd if=/dev/mmcblk0boot0 of=old-boot-block.dd iflag=dsync oflag=dsync status=progress
+#dd if=/dev/mmcblk0boot0 of=old-boot-block.dd iflag=dsync oflag=dsync status=progress
 # - now make the device writable via
-echo 0 > /sys/block/mmcblk0boot0/force_ro
+#echo 0 > /sys/block/mmcblk0boot0/force_ro
 # then write the boot block to it - it will take a moment - follow the progress, it should be 1.2mb
-dd if=exy-boot.dd of=/dev/mmcblk0boot0 bs=512 skip=1 iflag=dsync oflag=dsync status=progress
+#dd if=exy-boot.dd of=/dev/mmcblk0boot0 bs=512 skip=1 iflag=dsync oflag=dsync status=progress
 # put the emmc to the odroid and it should boot from it

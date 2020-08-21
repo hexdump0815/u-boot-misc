@@ -1,0 +1,178 @@
+diff --git a/board/samsung/common/board.c b/board/samsung/common/board.c
+index 029a0cc6cd..7f272c60b2 100644
+--- a/board/samsung/common/board.c
++++ b/board/samsung/common/board.c
+@@ -117,14 +117,26 @@ int board_init(void)
+ 	return exynos_init();
+ }
+ 
++static unsigned long get_sdram_bank_size(void)
++{
++	unsigned long sdram_bank_size = SDRAM_BANK_SIZE;
++#ifdef CONFIG_BOARD_TYPES
++	if (strcmp(CONFIG_SYS_BOARD, "odroid") == 0 &&
++	    strcmp(get_board_type(), "x") == 0)
++		sdram_bank_size = SDRAM_BANK_SIZE_ODROIDX;
++#endif
++	return sdram_bank_size;
++}
++
+ int dram_init(void)
+ {
+ 	unsigned int i;
+ 	unsigned long addr;
++	unsigned long sdram_bank_size = get_sdram_bank_size();
+ 
+ 	for (i = 0; i < CONFIG_NR_DRAM_BANKS; i++) {
+-		addr = CONFIG_SYS_SDRAM_BASE + (i * SDRAM_BANK_SIZE);
+-		gd->ram_size += get_ram_size((long *)addr, SDRAM_BANK_SIZE);
++		addr = CONFIG_SYS_SDRAM_BASE + (i * sdram_bank_size);
++		gd->ram_size += get_ram_size((long *)addr, sdram_bank_size);
+ 	}
+ 	return 0;
+ }
+@@ -133,10 +145,11 @@ int dram_init_banksize(void)
+ {
+ 	unsigned int i;
+ 	unsigned long addr, size;
++	unsigned long sdram_bank_size = get_sdram_bank_size();
+ 
+ 	for (i = 0; i < CONFIG_NR_DRAM_BANKS; i++) {
+-		addr = CONFIG_SYS_SDRAM_BASE + (i * SDRAM_BANK_SIZE);
+-		size = get_ram_size((long *)addr, SDRAM_BANK_SIZE);
++		addr = CONFIG_SYS_SDRAM_BASE + (i * sdram_bank_size);
++		size = get_ram_size((long *)addr, sdram_bank_size);
+ 
+ 		gd->bd->bi_dram[i].start = addr;
+ 		gd->bd->bi_dram[i].size = size;
+diff --git a/board/samsung/odroid/odroid.c b/board/samsung/odroid/odroid.c
+index 7d7e722892..72d7f7c9c4 100644
+--- a/board/samsung/odroid/odroid.c
++++ b/board/samsung/odroid/odroid.c
+@@ -31,6 +31,7 @@ DECLARE_GLOBAL_DATA_PTR;
+ enum {
+ 	ODROID_TYPE_U3,
+ 	ODROID_TYPE_X2,
++	ODROID_TYPE_X,
+ 	ODROID_TYPES,
+ };
+ 
+@@ -50,10 +51,15 @@ void set_board_type(void)
+ 	sdelay(200000);
+ 
+ 	/* Check GPC1 pin2 - LED supplied by XCL205 - X2 only */
+-	if (readl(XCL205_STATE_GPIO_DAT) & (1 << XCL205_STATE_GPIO_PIN))
+-		gd->board_type = ODROID_TYPE_X2;
+-	else
+-		gd->board_type = ODROID_TYPE_U3;
++	if (readl(XCL205_STATE_GPIO_DAT) & (1 << XCL205_STATE_GPIO_PIN)) {
++		/* Check the SoC product information ID */
++		if (readl(EXYNOS4_PRO_ID) == 0xE4412211)
++			gd->board_type = ODROID_TYPE_X;
++		else
++			gd->board_type = ODROID_TYPE_X2;
++	} else {
++ 		gd->board_type = ODROID_TYPE_U3;
++	}
+ }
+ 
+ void set_board_revision(void)
+@@ -66,7 +72,7 @@ void set_board_revision(void)
+ 
+ const char *get_board_type(void)
+ {
+-	const char *board_type[] = {"u3", "x2"};
++	const char *board_type[] = {"u3", "x2", "x"};
+ 
+ 	return board_type[gd->board_type];
+ }
+diff --git a/configs/odroid_defconfig b/configs/odroid_defconfig
+index 345cc3b940..f8b9bae969 100644
+--- a/configs/odroid_defconfig
++++ b/configs/odroid_defconfig
+@@ -6,7 +6,7 @@ CONFIG_ARCH_EXYNOS4=y
+ CONFIG_TARGET_ODROID=y
+ CONFIG_ENV_SIZE=0x4000
+ CONFIG_ENV_OFFSET=0x140000
+-CONFIG_NR_DRAM_BANKS=8
++CONFIG_NR_DRAM_BANKS=1
+ CONFIG_DISTRO_DEFAULTS=y
+ # CONFIG_SYS_MALLOC_CLEAR_ON_INIT is not set
+ CONFIG_FIT=y
+@@ -65,3 +65,5 @@ CONFIG_USB_HOST_ETHER=y
+ CONFIG_USB_ETHER_SMSC95XX=y
+ CONFIG_LIB_HW_RAND=y
+ CONFIG_ERRNO_STR=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
+diff --git a/include/configs/odroid.h b/include/configs/odroid.h
+index 03229910b2..32aa8e8c07 100644
+--- a/include/configs/odroid.h
++++ b/include/configs/odroid.h
+@@ -22,7 +22,8 @@
+ #define CONFIG_MACH_TYPE	4289
+ 
+ #define CONFIG_SYS_SDRAM_BASE	0x40000000
+-#define SDRAM_BANK_SIZE		(256 << 20)	/* 256 MB */
++#define SDRAM_BANK_SIZE		((8 * 256) << 20)	/* 8 * 256 MB */
++#define SDRAM_BANK_SIZE_ODROIDX	((4 * 256) << 20)	/* 4 * 256 MB */
+ #define PHYS_SDRAM_1		CONFIG_SYS_SDRAM_BASE
+ /* Reserve the last 1 MiB for the secure firmware */
+ #define CONFIG_SYS_MEM_TOP_HIDE		(1UL << 20UL)
+@@ -59,6 +60,7 @@
+ 	"uInitrd fat 0 1;" \
+ 	"exynos4412-odroidu3.dtb fat 0 1;" \
+ 	"exynos4412-odroidx2.dtb fat 0 1;" \
++	"exynos4412-odroidx.dtb fat 0 1;" \
+ 	""PARTS_BOOT" part 0 1;" \
+ 	""PARTS_ROOT" part 0 2\0" \
+ 
+@@ -96,6 +98,12 @@
+  * 1.  BOOT:  100MiB 2MiB
+  * 2.  ROOT:  -
+ */
++/*
++ * the original upstream addresses below did not work for the
++ * odroid x - the kernel crashed with them on boot - also
++ * initrd_high and fdt_high seem to be required ... all those
++ * values might now be the perfect ones, but at least it works
++ */
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"loadbootscript=load mmc ${mmcbootdev}:${mmcbootpart} ${scriptaddr} " \
+ 		"boot.scr\0" \
+@@ -162,10 +170,21 @@
+ 	"consoleon=set console console=ttySAC1,115200n8; save; reset\0" \
+ 	"consoleoff=set console console=ram; save; reset\0" \
+ 	"initrdname=uInitrd\0" \
+-	"ramdisk_addr_r=0x42000000\0" \
+-	"scriptaddr=0x42000000\0" \
+-	"fdt_addr_r=0x40800000\0" \
+-	"kernel_addr_r=0x41000000\0" \
++	"initrd_high=0xffffffff\0" \
++	"fdt_high=0xffffffff\0" \
++	"ramdisk_addr_r=0x44000000\0" \
++	"scriptaddr=0x41000000\0" \
++	"fdt_addr_r=0x43000000\0" \
++	"kernel_addr_r=0x42000000\0" \
++	"bootenv_addr_r=0x43000000\0" \
++	"preboot=for target in 1 2;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ 
+ /* GPT */
+@@ -177,8 +196,7 @@
+ #define CONFIG_USB_EHCI_EXYNOS
+ 
+ /*
+- * Supported Odroid boards: X3, U3
+- * TODO: Add Odroid X support
++ * Supported Odroid boards: X, X2, U3
+  */
+ #define CONFIG_MISC_COMMON
+ 
