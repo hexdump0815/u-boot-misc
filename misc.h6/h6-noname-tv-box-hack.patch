@@ -1,29 +1,13 @@
 optional patch to make my noname h6 tv box work
 see: https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-11
 
+only the rank=1 part is really needed - looks like there was some problem with earlier testing
+see: https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-28#27817273
+
 diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
 index 9e34da4747..f392312598 100644
 --- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
 +++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
-@@ -62,7 +62,9 @@ static void mctl_phy_pir_init(u32 val)
- 
- 	writel(val, &mctl_phy->pir);
- 	writel(val | BIT(0), &mctl_phy->pir);	/* Start initialisation. */
-+	udelay(1);
- 	mctl_await_completion(&mctl_phy->pgsr[0], BIT(0), BIT(0));
-+	udelay(1);
- }
- 
- enum {
-@@ -430,7 +432,7 @@ static void mctl_channel_init(struct dram_para *para)
- 	setbits_le32(&mctl_ctl->unk_0x00c, BIT(8));
- 	clrsetbits_le32(&mctl_phy->pgcr[1], 0x180, 0xc0);
- 	/* TODO: non-LPDDR3 types */
--	clrsetbits_le32(&mctl_phy->pgcr[2], GENMASK(17, 0), ns_to_t(7800));
-+	clrsetbits_le32(&mctl_phy->pgcr[2], GENMASK(17, 0), ns_to_t(7800 * 2));
- 	clrbits_le32(&mctl_phy->pgcr[6], BIT(0));
- 	clrsetbits_le32(&mctl_phy->dxccr, 0xee0, 0x220);
- 	/* TODO: VT compensation */
 @@ -652,7 +654,7 @@ unsigned long sunxi_dram_init(void)
  			(struct sunxi_mctl_com_reg *)SUNXI_DRAM_COM_BASE;
  	struct dram_para para = {
@@ -33,38 +17,3 @@ index 9e34da4747..f392312598 100644
  		.cols = 11,
  		.rows = 14,
  		.bus_full_width = 1,
-diff --git a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
-index 611eaa3024..eaf3e95cd4 100644
---- a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
-+++ b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
-@@ -33,7 +33,7 @@
-  * 	CAS write latency (CWL): 8
-  */
- static u32 mr_ddr3[7] = {
--	0x00001c70, 0x00000040, 0x00000018, 0x00000000,
-+	0x00001a70, 0x00000040, 0x00000018, 0x00000000,
- 	0x00000000, 0x00000400, 0x00000848,
- };
- 
-@@ -48,10 +48,10 @@ void mctl_set_timing_params(struct dram_para *para)
- 
- 	u8 tccd		= 2;			/* JEDEC: 4nCK */
- 	u8 tfaw		= ns_to_t(50);		/* JEDEC: 30 ns w/ 1K pages */
--	u8 trrd		= max(ns_to_t(6), 4);	/* JEDEC: max(6 ns, 4nCK) */
-+	u8 trrd		= max(ns_to_t(10), 2);	/* JEDEC: max(6 ns, 4nCK) */
- 	u8 trcd		= ns_to_t(15);		/* JEDEC: 13.5 ns */
- 	u8 trc		= ns_to_t(53);		/* JEDEC: 49.5 ns */
--	u8 txp		= max(ns_to_t(6), 3);	/* JEDEC: max(6 ns, 3nCK) */
-+	u8 txp		= max(ns_to_t(8), 2);	/* JEDEC: max(6 ns, 3nCK) */
- 	u8 twtr		= max(ns_to_t(8), 2);	/* JEDEC: max(7.5 ns, 4nCK) */
- 	u8 trtp		= max(ns_to_t(8), 2);	/* JEDEC: max(7.5 ns, 4nCK) */
- 	u8 twr		= ns_to_t(15);		/* JEDEC: 15 ns */
-@@ -66,7 +66,7 @@ void mctl_set_timing_params(struct dram_para *para)
- 	u8 tmrw		= 0;			/* ? */
- 	u8 tmrd		= 4;			/* JEDEC: 4nCK */
- 	u8 tmod		= max(ns_to_t(15), 12);	/* JEDEC: max(15 ns, 12nCK) */
--	u8 tcke		= max(ns_to_t(6), 3);	/* JEDEC: max(5.625 ns, 3nCK) */
-+	u8 tcke		= 3;			/* JEDEC: max(5.625 ns, 3nCK) */
- 	u8 tcksrx	= max(ns_to_t(10), 5);	/* JEDEC: max(10 ns, 5nCK) */
- 	u8 tcksre	= max(ns_to_t(10), 5);	/* JEDEC: max(10 ns, 5nCK) */
- 	u8 tckesr	= tcke + 1;		/* JEDEC: tCKE(min) + 1nCK */
