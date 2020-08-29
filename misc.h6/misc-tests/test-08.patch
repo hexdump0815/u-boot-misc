@@ -1,0 +1,28 @@
+see: http://ix.io/2vwI
+via: https://freenode.irclog.whitequark.org/linux-sunxi/2020-08-28#27817733
+
+diff --git a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+index 611eaa3024c4..cca3089af50b 100644
+--- a/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
++++ b/arch/arm/mach-sunxi/dram_timings/h6_ddr3_1333.c
+@@ -75,9 +75,9 @@ void mctl_set_timing_params(struct dram_para *para)
+ 	u8 txsdll	= 4;			/* JEDEC: 512 nCK */
+ 	u8 txsabort	= 4;			/* ? */
+ 	u8 txsfast	= 4;			/* ? */
+-	u8 tcl		= 6;			/* JEDEC: CL / 2 => 6 */
+-	u8 tcwl		= 4;			/* JEDEC: 8 */
+-	u8 t_rdata_en	= 7;			/* ? */
++	u8 tcl		= 7;			/* JEDEC: CL / 2 => 6 */
++	u8 tcwl		= 5;			/* JEDEC: 8 */
++	u8 t_rdata_en	= 9;			/* ? */
+ 
+ 	u32 tdinit0	= (500 * CONFIG_DRAM_CLK) + 1;	/* 500us */
+ 	u32 tdinit1	= (360 * CONFIG_DRAM_CLK) / 1000 + 1;
+@@ -110,6 +110,7 @@ void mctl_set_timing_params(struct dram_para *para)
+ 	writel((txp + 2) | 0x02020000, &mctl_ctl->dramtmg[6]);
+ 	writel((txsfast << 24) | (txsabort << 16) | (txsdll << 8) | txs,
+ 	       &mctl_ctl->dramtmg[8]);
++	writel(0x00020208, &mctl_ctl->dramtmg[9]);
+ 	writel(txsr, &mctl_ctl->dramtmg[14]);
+ 
+ 	clrsetbits_le32(&mctl_ctl->init[0], (3 << 30), (1 << 30));
