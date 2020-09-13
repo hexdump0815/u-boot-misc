@@ -36,6 +36,19 @@ index e8348b2728..b45c2feee9 100644
  	};
  
  	memory@0 {
+diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+index 27eeab71ec..8390daca67 100644
+--- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
++++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
+@@ -13,7 +13,7 @@
+ 
+ / {
+ 	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
+-	model = "Khadas VIM2";
++	model = "hexdump usbkbd/hdmi u-boot gxl";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
 diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc.dts b/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
 index 444c249863..c2800a9028 100644
 --- a/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
@@ -49,6 +62,46 @@ index 444c249863..c2800a9028 100644
  
  	typec2_vbus: regulator-typec2_vbus {
  		compatible = "regulator-fixed";
+diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
+index 771632c782..ee14f3de75 100644
+--- a/configs/khadas-vim2_defconfig
++++ b/configs/khadas-vim2_defconfig
+@@ -5,10 +5,7 @@ CONFIG_ENV_SIZE=0x2000
+ CONFIG_DM_GPIO=y
+ CONFIG_MESON_GXM=y
+ CONFIG_NR_DRAM_BANKS=1
+-CONFIG_DEBUG_UART_BASE=0xc81004c0
+-CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" khadas-vim2"
+-CONFIG_DEBUG_UART=y
++CONFIG_IDENT_STRING=" hexdump-gxm"
+ CONFIG_OF_BOARD_SETUP=y
+ CONFIG_CONSOLE_MUX=y
+ CONFIG_MISC_INIT_R=y
+@@ -45,9 +42,9 @@ CONFIG_PINCTRL=y
+ CONFIG_PINCTRL_MESON_GXL=y
+ CONFIG_DM_REGULATOR_FIXED=y
+ CONFIG_DM_RESET=y
+-CONFIG_DEBUG_UART_ANNOUNCE=y
+-CONFIG_DEBUG_UART_SKIP_INIT=y
+-CONFIG_MESON_SERIAL=y
++# CONFIG_DEBUG_UART is not set
++# CONFIG_REQUIRE_SERIAL_CONSOLE is not set
++# CONFIG_SERIAL_PRESENT is not set
+ CONFIG_SPI=y
+ CONFIG_DM_SPI=y
+ CONFIG_MESON_SPIFC=y
+@@ -64,3 +61,10 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
+ CONFIG_USB_GADGET_DWC2_OTG=y
+ CONFIG_USB_GADGET_DOWNLOAD=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_DM_KEYBOARD=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
++CONFIG_LED=y
++CONFIG_LED_GPIO=y
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
 index 48e8800ce4..ba47358582 100644
 --- a/configs/libretech-cc_defconfig
