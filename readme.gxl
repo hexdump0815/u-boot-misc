@@ -1,3 +1,14 @@
+# gxm-experiments-branch:
+# see https://github.com/repk/gxlimg/issues/8
+# -initially it was not working as i was testing it with my usb patches in place
+#  - the disable the serial console to avoid input noise from it
+#  - i used a hdmi debug dongle so could not see the hdmi screen
+#  - result: no output - removing my patches made it work on serial console
+#    - vim2 defconfig does not seem to see the sd card (most probably dtb issue)
+#    - libretech-s912-pc defconfig sees both but looks like ethernet is not working in linux then
+#    - the "Unhandled Exception in EL3." error still remains with v2.3 mainline gxl atf
+#    - still to be tested: does it still work with a real hdmi monitor connected?
+
 # the below is relevant for gxl (s905x, s905w, etc.), maybe works on gxm (s912) too (untested)
 # but not for gxbb (s905), g1a (s905x2), g1b (s922x) or sm1 (s905x3)
 # update: gxm (s912): hdmi video output for u-boot and usb keyboard work too with this exact same setup :)
