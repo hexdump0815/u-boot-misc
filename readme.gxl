@@ -29,8 +29,12 @@ patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-uenv-txt-and-own-strin
 # the libretech-cc_defconfig works quite well for s905w and s905x and
 # supports hdmi video output well too
 make libretech-cc_defconfig
+# for gxm
+# make libretech-s912-pc_defconfig
 make
 cp u-boot.bin gxl-u-boot.bin
+# for gxm - but should be about the same as gxl-u-boot.bin and thus could also be ommited
+# cp u-boot.bin gxm-u-boot.bin
 cd ..
 
 # the resulting u-boot.bin can be used to chainload it from a legacy u-boot - example:
@@ -143,7 +147,7 @@ cd images
 dd if=/dev/zero of=boot-amlogic_gxl-aarch64.dd bs=512 count=1
 cat gxl-boot.bin >> boot-amlogic_gxl-aarch64.dd
 
-# in case the self built atf should be used, use the following instead of the last command
+# in case the self built atf should be used, use the following instead of the last gxlimg command above
 cp ../../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
 ../../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
 ../../gxlimg/gxlimg -t fip --bl2 ./bl2.sign --bl30 ./bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-atf
