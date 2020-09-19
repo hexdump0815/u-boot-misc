@@ -1,0 +1,86 @@
+original boot output of the x96 air 2/16g tv box:
+
+boot times 2SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:0;EMMC:0;READ:0;0.0;CHK:0;
+bl2_stage_init 0x01
+bl2_stage_init 0x81
+hw id: 0x0001 - pwm id 0x00
+bl2_stage_init 0xc0
+bl2_stage_init 0x02
+
+L0:00000000
+L1:00000703
+L2:00008067
+L3:15000020
+S1:00000000
+B2:20282000
+B1:a0f83180
+
+TE: 80534
+
+BL2 Built : 20:29:41, Jun 18 2019. g12a ga659aac - luan.yuan@droid15-sz
+
+Board ID = 1
+Set cpu clk to 24M
+Set clk81 to 24M
+Use GP1_pll as DSU clk.
+DSU clk: 1200 Mhz
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+eMMC boot @ 0
+sw8 s
+DDR driver_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:37
+board id: 1
+Load FIP HDR from eMMC, src: 0x00010200, des: 0xfffd0000, size: 0x00004000, part: 0
+fw parse done
+Load ddrfw from eMMC, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Load ddrfw from eMMC, src: 0x00038200, des: 0xfffd0000, size: 0x00004000, part: 0
+PIEI prepare done
+fastboot data load
+00000000
+emmc switch 1 ok
+ddr saved addr:00016000
+Load ddr parameter from eMMC, src: 0x02c00000, des: 0xfffd0000, size: 0x00001000, part: 0
+00000000
+emmc switch 0 ok
+fastboot data verify
+verify result: 255
+Cfg max: 5, cur: 1. Board id: 255. Force loop cfg
+DDR4 probe
+ddr clk to 912MHz
+Load ddrfw from eMMC, src: 0x00014200, des: 0xfffd0000, size: 0x0000c000, part: 0
+
+dmc_version 0001
+Check phy result
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : ERROR : Training has failed!
+1D training failed
+Cfg max: 5, cur: 2. Board id: 255. Force loop cfg
+DDR3 probe
+ddr clk to 792MHz
+Load ddrfw from eMMC, src: 0x0002c200, des: 0xfffd0000, size: 0x0000c000, part: 0
+
+dmc_version 0001
+Check phy result
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : End of read dq deskew training
+INFO : End of MPR read delay center optimization
+INFO : End of Write leveling coarse delay
+INFO : End of write delay center optimization
+INFO : End of read delay center optimization
+INFO : End of max read latency training
+INFO : Training has run successfully!
+1D training succeed
+aml_ddr_fw_vesion: LPDDR4_PHY_V_0_1_15 build time: Jun 18 2019 20:29:43
+auto size-- 65535DDR cs0 size: 2048MB
+DDR cs1 size: 0MB
+DMC_DDR_CTRL: 0000002cDDR size: 2048MB
+cs0 DataBus test pass
+cs0 AddrBus test pass
+
+non-sec scramble use zero key
+ddr scramble enabled
+...

@@ -101,6 +101,7 @@ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20170606.tar.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20180418.tar.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/p212_fip_20170606.tar.gz
+cd ..
 
 
 mkdir u-boot-workdir-gxl

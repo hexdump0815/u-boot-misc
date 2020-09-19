@@ -1,0 +1,78 @@
+boot output of the s10 max plus (most probably = a95x f2) tv box when trying to boot it using a meson64-tools self built boot image:
+
+G12A:BL:0253b8:61aa2d;FEAT:F0F831B0:12020;POC:F;RCY:2;SD?:0;SD:0;READ:0;CHK:1F;EMMC:0;READ:0;0.0;0.0
+                                                                                                    l2_stage_in1
+bl2_stage_init 0x81
+hw id: 0x0001 - pwm id 0x00
+bl2_stage_init 0xc0
+bl2_stage_init 0x02
+
+L0:0000000f
+L1:00000703
+L2:00008067
+L3:04000000
+S1:00000000
+B2:00012020
+B1:f0f831b0
+
+TE: 381236
+
+BL2 Built : 10:28:35, Apr 14 2019. g12a gb1cc8f0 - luan.yuan@droid15-sz
+
+Board ID = 1
+Set cpu clk to 24M
+Set clk81 to 24M
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+eMMC boot @ 0
+sw8 s
+DDR driver_vesion: LPDDR4_PHY_V_0_1_11 build time: Apr 14 2019 10:28:31
+board id: 1
+Load FIP HDR from eMMC, src: 0x00010200, des: 0xfffd0000, size: 0x00004000, part: 0
+fw parse done
+Load ddrfw from eMMC, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Load ddrfw from eMMC, src: 0x00038200, des: 0xfffd0000, size: 0x00004000, part: 0
+PIEI prepare done
+Cfg max: 2, cur: 1. Board id: 255. Force loop cfg
+LPDDR3 probe
+ddr clk to 912MHz
+Load ddrfw from eMMC, src: 0x0006c200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : STREAM 0x00af000 - 0x0000100 
+INFO : STREAM 0x0054000 - 0x0000000 0x0000000 0x0000000 
+INFO : STREAM 0x0055000 - 0x0000000 0x0000000 0x0000100 0x0000000 0x0000000 0x0000072 
+INFO : STREAM 0x005a000 - 0x0000000 0x0000004 0x0000001 0x0000000 0x0000000 
+INFO : End of CA training
+INFO : End of initialization
+INFO : Training has run successfully!
+Check phy result
+INFO : STREAM 0x00af000 - 0x0000100 
+INFO : STREAM 0x0054000 - 0x0000000 0x0000000 0x0000000 
+INFO : STREAM 0x0055000 - 0x0000000 0x0000000 0x0000031 0x0000000 0x0000000 0x0000072 
+INFO : STREAM 0x005a000 - 0x0000000 0x0000004 0x0000001 0x0000000 0x0000000 
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : End of read dq deskew training
+INFO : End of MPR read delay center optimization
+INFO : End of Write leveling coarse delay
+INFO : End of write delay center optimization
+INFO : End of read delay center optimization
+INFO : End of max read latency training
+INFO : Training has run successfully!
+1D training succeed
+auto size-- 65535DDR cs0 size: 2048MB
+DDR cs1 size: 2048MB
+DMC_DDR_CTRL: 00a00024DDR size: 3928MB
+cs0 DataBus test pass
+cs1 DataBus test pass
+cs0 AddrBus test pass
+cs1 AddrBus test pass
+ pre test  bdlr_100_average==507 bdlr_100_min==507 bdlr_100_max==507 bdlr_100_cur==507
+ aft test  bdlr_100_average==507 bdlr_100_min==507 bdlr_100_max==507 bdlr_100_cur==507
+100bdlr_step_size ps== 498
+result report
+boot times 1ddr scramble enabled
+Enable ddr reg access
+00000000
+...
