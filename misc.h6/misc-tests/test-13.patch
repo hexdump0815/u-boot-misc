@@ -1,0 +1,154 @@
+same as test-10.patch with the bus_full_width = 0 tests to first positions - this way it works
+
+output:
+U-Boot SPL 2020.07-dirty (Sep 23 2020 - 18:50:38 +0200)                                   
+DRAM: 1024 MiB                                                                            
+Trying to boot from MMC1                                                                  
+NOTICE:  BL31: v2.3():v2.3-dirty                                                          
+NOTICE:  BL31: Built : 07:21:35, Aug 12 2020                                              
+NOTICE:  BL31: Detected Allwinner H6 SoC (1728)                                           
+NOTICE:  BL31: Found U-Boot DTB at 0xc07ca68, model: Eachlink H6 Mini                     
+INFO:    ARM GICv2 driver initialized                                                     
+INFO:    BL31: Platform setup done                                                        
+INFO:    BL31: Initializing runtime services                                              
+INFO:    BL31: cortex_a53: CPU workaround for 855873 was applied                          
+NOTICE:  PSCI: System suspend is unavailable                                              
+INFO:    BL31: Preparing for EL3 exit to normal world                                     
+INFO:    Entry point address = 0x4a000000                                                 
+INFO:    SPSR = 0x3c9                                                                     
+                                                                                          
+                                                                                          
+U-Boot 2020.07-dirty (Sep 23 2020 - 18:50:38 +0200) Allwinner Technology
+
+CPU:   Allwinner H6 (SUN50I)
+Model: Eachlink H6 Mini
+DRAM:  1 GiB
+
+wrong memory size again (1gb instead of 2gb)
+
+diff --git a/arch/arm/mach-sunxi/dram_sun50i_h6.c b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+index 9e34da4747..cff1282adf 100644
+--- a/arch/arm/mach-sunxi/dram_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/dram_sun50i_h6.c
+@@ -37,9 +37,9 @@
+ 
+ static void mctl_sys_init(struct dram_para *para);
+ static void mctl_com_init(struct dram_para *para);
+-static void mctl_channel_init(struct dram_para *para);
++static bool mctl_channel_init(struct dram_para *para);
+ 
+-static void mctl_core_init(struct dram_para *para)
++static bool mctl_core_init(struct dram_para *para)
+ {
+ 	mctl_sys_init(para);
+ 	mctl_com_init(para);
+@@ -51,7 +51,7 @@ static void mctl_core_init(struct dram_para *para)
+ 	default:
+ 		panic("Unsupported DRAM type!");
+ 	};
+-	mctl_channel_init(para);
++	return mctl_channel_init(para);
+ }
+ 
+ /* PHY initialisation */
+@@ -411,7 +411,7 @@ static void mctl_bit_delay_set(struct dram_para *para)
+ 	}
+ }
+ 
+-static void mctl_channel_init(struct dram_para *para)
++static bool mctl_channel_init(struct dram_para *para)
+ {
+ 	struct sunxi_mctl_com_reg * const mctl_com =
+ 			(struct sunxi_mctl_com_reg *)SUNXI_DRAM_COM_BASE;
+@@ -529,37 +529,7 @@ static void mctl_channel_init(struct dram_para *para)
+ 	udelay(10);
+ 
+ 	if (readl(&mctl_phy->pgsr[0]) & 0x400000)
+-	{
+-		/* Check for single rank and optionally half DQ. */
+-		if ((readl(&mctl_phy->dx[0].rsr[0]) & 0x3) == 2 &&
+-		    (readl(&mctl_phy->dx[1].rsr[0]) & 0x3) == 2) {
+-			para->ranks = 1;
+-
+-			if ((readl(&mctl_phy->dx[2].rsr[0]) & 0x3) != 2 ||
+-			    (readl(&mctl_phy->dx[3].rsr[0]) & 0x3) != 2)
+-				para->bus_full_width = 0;
+-
+-			/* Restart DRAM initialization from scratch. */
+-			mctl_core_init(para);
+-			return;
+-		}
+-
+-		/*
+-		 * Check for dual rank and half DQ. NOTE: This combination
+-		 * is highly unlikely and was not tested. Condition is the
+-		 * same as in libdram, though.
+-		 */
+-		if ((readl(&mctl_phy->dx[0].rsr[0]) & 0x3) == 0 &&
+-		    (readl(&mctl_phy->dx[1].rsr[0]) & 0x3) == 0) {
+-			para->bus_full_width = 0;
+-
+-			/* Restart DRAM initialization from scratch. */
+-			mctl_core_init(para);
+-			return;
+-		}
+-
+-		panic("This DRAM setup is currently not supported.\n");
+-	}
++		return false;
+ 
+ 	if (readl(&mctl_phy->pgsr[0]) & 0xff00000) {
+ 		/* Oops! There's something wrong! */
+@@ -567,7 +537,7 @@ static void mctl_channel_init(struct dram_para *para)
+ 		debug("DRAM PHY PGSR0 = %x\n", readl(&mctl_phy->pgsr[0]));
+ 		for (i = 0; i < 4; i++)
+ 			debug("DRAM PHY DX%dRSR0 = %x\n", i, readl(&mctl_phy->dx[i].rsr[0]));
+-		panic("Error while initializing DRAM PHY!\n");
++		printf("Error while initializing DRAM PHY!\n");
+ 	}
+ 
+ 	if (sunxi_dram_is_lpddr(para->type))
+@@ -582,6 +552,35 @@ static void mctl_channel_init(struct dram_para *para)
+ 	writel(0xffffffff, &mctl_com->maer0);
+ 	writel(0x7ff, &mctl_com->maer1);
+ 	writel(0xffff, &mctl_com->maer2);
++
++	return true;
++}
++
++static void mctl_auto_detect_rank_width(struct dram_para *para)
++{
++	/* strategy here is to try from most demanding combination to least */
++
++	para->bus_full_width = 0;
++	para->ranks = 2;
++	if (mctl_core_init(para))
++		return;
++
++	para->bus_full_width = 0;
++	para->ranks = 1;
++	if (mctl_core_init(para))
++		return;
++
++	para->bus_full_width = 1;
++	para->ranks = 2;
++	if (mctl_core_init(para))
++		return;
++
++	para->bus_full_width = 1;
++	para->ranks = 1;
++	if (mctl_core_init(para))
++		return;
++
++	panic("This DRAM setup is currently not supported.\n");
+ }
+ 
+ static void mctl_auto_detect_dram_size(struct dram_para *para)
+@@ -673,6 +672,7 @@ unsigned long sunxi_dram_init(void)
+ 	setbits_le32(0x7010310, BIT(8));
+ 	clrbits_le32(0x7010318, 0x3f);
+ 
++	mctl_auto_detect_rank_width(&para);
+ 	mctl_auto_detect_dram_size(&para);
+ 
+ 	mctl_core_init(&para);
