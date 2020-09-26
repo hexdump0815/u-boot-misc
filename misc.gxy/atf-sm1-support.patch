@@ -1,0 +1,45 @@
+see: https://freenode.irclog.whitequark.org/linux-amlogic/2020-09-26#28001113
+
+diff --git a/plat/amlogic/g12a/platform.mk b/plat/amlogic/g12a/platform.mk
+index b0c91b063..f204b792f 100644
+--- a/plat/amlogic/g12a/platform.mk
++++ b/plat/amlogic/g12a/platform.mk
+@@ -22,7 +22,7 @@ GIC_SOURCES		:=	drivers/arm/gic/common/gic_common.c		\
+ 				drivers/arm/gic/v2/gicv2_helpers.c		\
+ 				plat/common/plat_gicv2.c
+ 
+-BL31_SOURCES		+=	lib/cpus/aarch64/cortex_a53.S			\
++BL31_SOURCES		+=	lib/cpus/aarch64/cortex_a55.S			\
+ 				plat/common/plat_psci_common.c			\
+ 				drivers/amlogic/console/aarch64/meson_console.S	\
+ 				${AML_PLAT_SOC}/${PLAT}_bl31_setup.c		\
+@@ -52,19 +52,22 @@ endif
+ # Build config flags
+ # ------------------
+ 
+-# Enable all errata workarounds for Cortex-A53
+-ERRATA_A53_855873		:= 1
+-ERRATA_A53_819472		:= 1
+-ERRATA_A53_824069		:= 1
+-ERRATA_A53_827319		:= 1
++# Enable all errata workarounds for Cortex-A55
++ERRATA_A55_768277		:= 1
++ERRATA_A55_778703		:= 1
++ERRATA_A55_798797		:= 1
++ERRATA_A55_846532		:= 1
++ERRATA_A55_903758		:= 1
++ERRATA_A55_1221012		:= 1
+ 
+ WORKAROUND_CVE_2017_5715	:= 0
+ 
+ # Have different sections for code and rodata
+ SEPARATE_CODE_AND_RODATA	:= 1
+ 
+-# Use Coherent memory
+-USE_COHERENT_MEM		:= 1
++# Use Hardware Assisted Coherency instead of Coherent Memory
++HW_ASSISTED_COHERENCY		:= 1
++USE_COHERENT_MEM		:= 0
+ 
+ # Verify build config
+ # -------------------
