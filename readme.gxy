@@ -64,7 +64,7 @@ cd u-boot-workdir-gxy
 git clone https://github.com/LibreELEC/amlogic-boot-fip
 mkdir data
 # for s905x3 = sm1 ... other options would be odroid-c4, khadas-vim3l - failing the memory training - see misc.gxy/debug-info/sm1-non-working-ddr.txt vs. sm1-working-ddr.txt for the original boot blocks)
-cp -r amlogic-boot-fip/odroid-c4/* data
+# cp -r amlogic-boot-fip/odroid-c4/* data
 # alternative s905x3 = sm1 optioni
 # cp -r amlogic-boot-fip/sei610/* data
 # alternatively for s905x2 = g12a (not booting properly if built as below - see misc.gxy/debug-info/g12a-non-working-boot.txt)
@@ -73,6 +73,8 @@ cp -r amlogic-boot-fip/odroid-c4/* data
 # assemble the u-boot boot image - original atf case
 cp amlogic-boot-fip/odroid-c4/* data
 cp acs-x96-air-2-16.bin.gz data/acs.bin.gz
+# for g12a instead
+# cp acs-x96-max-2-16.bin.gz data/acs.bin.gz
 gunzip data/acs.bin.gz
 ../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
 ../meson64-tools/pkg --type bl2 --output bl2.pkg data/bl2.bin data/acs.bin
@@ -82,17 +84,21 @@ gunzip data/acs.bin.gz
 ../meson64-tools/bl3sig --input ../u-boot-mainline-gxy/u-boot-dtb.bin --output bl33.3sig
 ../meson64-tools/bl2sig --input bl2.pkg --output bl2.2sig
 ../meson64-tools/bootmk --output gxy-boot.bin --bl2 bl2.2sig --bl30 bl30.3sig --bl31 bl31.3sig --bl33 bl33.3sig --ddrfw1 data/ddr4_1d.fw --ddrfw2 data/ddr4_2d.fw --ddrfw3 data/ddr3_1d.fw --ddrfw4 data/piei.fw --ddrfw5 data/lpddr4_1d.fw --ddrfw6 data/lpddr4_2d.fw --ddrfw7 data/diag_lpddr4.fw --ddrfw8 data/lpddr3_1d.fw --ddrfw9 data/aml_ddr.fw
+
+# prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-amlogic_gxy-aarch64.dd bs=512 count=1
 cat gxy-boot.bin >> boot-amlogic_gxy-aarch64.dd
 
 # mainline atf case
+cp amlogic-boot-fip/odroid-c4/* data
 cp ../arm-trusted-firmware-gxy/build/g12a/debug/bl31.bin data/bl31.bin-atf
 rm -f data/bl31.img-atf
 # use the header of he original bl31.img
 dd if=data/bl31.img of=data/bl31.img-atf bs=512 count=1
 cat data/bl31.bin-atf >> data/bl31.img-atf
-cp amlogic-boot-fip/odroid-c4/* data
 cp acs-x96-air-2-16.bin.gz data/acs.bin.gz
+# for g12a instead
+# cp acs-x96-max-2-16.bin.gz data/acs.bin.gz
 gunzip data/acs.bin.gz
 ../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
 ../meson64-tools/pkg --type bl2 --output bl2.pkg data/bl2.bin data/acs.bin
@@ -102,8 +108,6 @@ gunzip data/acs.bin.gz
 ../meson64-tools/bl3sig --input ../u-boot-mainline-gxy/u-boot-dtb.bin --output bl33.3sig
 ../meson64-tools/bl2sig --input bl2.pkg --output bl2.2sig
 ../meson64-tools/bootmk --output gxy-boot.bin --bl2 bl2.2sig --bl30 bl30.3sig --bl31 bl31.3sig-atf --bl33 bl33.3sig --ddrfw1 data/ddr4_1d.fw --ddrfw2 data/ddr4_2d.fw --ddrfw3 data/ddr3_1d.fw --ddrfw4 data/piei.fw --ddrfw5 data/lpddr4_1d.fw --ddrfw6 data/lpddr4_2d.fw --ddrfw7 data/diag_lpddr4.fw --ddrfw8 data/lpddr3_1d.fw --ddrfw9 data/aml_ddr.fw
-dd if=/dev/zero of=boot-amlogic_gxy-aarch64.dd bs=512 count=1
-cat gxy-boot.bin >> boot-amlogic_gxy-aarch64.dd
 
 # prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-amlogic_gxy-aarch64.dd bs=512 count=1
