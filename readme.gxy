@@ -1,5 +1,12 @@
-# the below is relevant for g1a (s905x2), g1b (s922x) or sm1 (s905x3)
-# this is still wip
+# the below is relevant for g12a (s905x2), g12b (s922x) or sm1 (s905x3)
+# this is still wip - current status (tested on s905x2 / g12a - s10 max plus = a95x f2 tv box):
+# - fully native u-boot via meson64-toots and mainline atf works for s905x3 = sm1
+# - hdmi output / usb kbd input experiments (not yet fully working)
+#   - hdmi video works ok
+#   - some strange mmc error (maybe remove mmc2 and/or mmc0 from BOOT_TARGET_DEVICES in meson64.h?)
+#   - preboot is for some reason not running (maybe related to mmc issue above?)
+#   - when usb start is done via serial by hand a key needs to be pressed on the kbd for it to get recognized
+#   - all above works the same way for chainloaded u-boot.bin too
 
 
 # building atf
@@ -7,6 +14,8 @@ git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-gxy
 cd arm-trusted-firmware-gxy
 git checkout v2.3
+# by default the result will be for g12a, for sm1 (instead) the following patch is needed
+patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-sm1-support.patch
 make realclean
 make PLAT=g12a DEBUG=1 bl31
 # result: build/g12a/debug/bl31.bin
@@ -17,11 +26,21 @@ cd ..
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-gxy
 cd u-boot-mainline-gxy
-git checkout v2020.07
+git checkout v2020.10-rc4
 # add usb kbd and uEnv.txt support
-patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt.patch
-make xyz_todo
+#patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt.patch
+# s905x3 = sm1
+make sei610_defconfig
+# alternatively for s905x2 = g12a
+# make sei510_defconfig
 make
+cd ..
+
+
+# get and install the meson64-tools
+git clone https://github.com/angerman/meson64-tools
+cd meson64-tools
+make all
 cd ..
 
 
@@ -36,10 +55,100 @@ wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/odroid-n2_fip_20190220.tar.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/u-boot.bin.odroid-n2_2019.07-rc3-00022-g47bebaa4a3.gz
 wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/s400_fip_20181003.tar.gz
+cd ..
 
+mkdir u-boot-workdir-gxy
+cd u-boot-workdir-gxy
+
+# get the amlogic boot fip blobs and prepare them
+git clone https://github.com/LibreELEC/amlogic-boot-fip
+mkdir data
+# for s905x3 = sm1 ... other options would be odroid-c4, khadas-vim3l - failing the memory training - see misc.gxy/debug-info/sm1-non-working-ddr.txt vs. sm1-working-ddr.txt for the original boot blocks)
+# cp -r amlogic-boot-fip/odroid-c4/* data
+# alternative s905x3 = sm1 optioni
+# cp -r amlogic-boot-fip/sei610/* data
+# alternatively for s905x2 = g12a (not booting properly if built as below - see misc.gxy/debug-info/g12a-non-working-boot.txt)
+# cp -r amlogic-boot-fip/sei510/* data
+
+# assemble the u-boot boot image - original atf case
+cp amlogic-boot-fip/odroid-c4/* data
+cp acs-x96-air-2-16.bin.gz data/acs.bin.gz
+# for g12a instead
+# cp acs-x96-max-2-16.bin.gz data/acs.bin.gz
+gunzip data/acs.bin.gz
+../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
+../meson64-tools/pkg --type bl2 --output bl2.pkg data/bl2.bin data/acs.bin
+../meson64-tools/bl30sig --input bl30.pkg --output bl30.30sig
+../meson64-tools/bl3sig --input bl30.30sig --output bl30.3sig
+../meson64-tools/bl3sig --input data/bl31.img --output bl31.3sig
+../meson64-tools/bl3sig --input ../u-boot-mainline-gxy/u-boot-dtb.bin --output bl33.3sig
+../meson64-tools/bl2sig --input bl2.pkg --output bl2.2sig
+../meson64-tools/bootmk --output gxy-boot.bin --bl2 bl2.2sig --bl30 bl30.3sig --bl31 bl31.3sig --bl33 bl33.3sig --ddrfw1 data/ddr4_1d.fw --ddrfw2 data/ddr4_2d.fw --ddrfw3 data/ddr3_1d.fw --ddrfw4 data/piei.fw --ddrfw5 data/lpddr4_1d.fw --ddrfw6 data/lpddr4_2d.fw --ddrfw7 data/diag_lpddr4.fw --ddrfw8 data/lpddr3_1d.fw --ddrfw9 data/aml_ddr.fw
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-amlogic_gxy-aarch64.dd bs=512 count=1
+cat gxy-boot.bin >> boot-amlogic_gxy-aarch64.dd
+
+# mainline atf case
+cp amlogic-boot-fip/odroid-c4/* data
+cp ../arm-trusted-firmware-gxy/build/g12a/debug/bl31.bin data/bl31.bin-atf
+rm -f data/bl31.img-atf
+# use the header of he original bl31.img
+dd if=data/bl31.img of=data/bl31.img-atf bs=512 count=1
+cat data/bl31.bin-atf >> data/bl31.img-atf
+cp acs-x96-air-2-16.bin.gz data/acs.bin.gz
+# for g12a instead
+# cp acs-x96-max-2-16.bin.gz data/acs.bin.gz
+gunzip data/acs.bin.gz
+../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
+../meson64-tools/pkg --type bl2 --output bl2.pkg data/bl2.bin data/acs.bin
+../meson64-tools/bl30sig --input bl30.pkg --output bl30.30sig
+../meson64-tools/bl3sig --input bl30.30sig --output bl30.3sig
+../meson64-tools/bl3sig --input data/bl31.img-atf --output bl31.3sig-atf
+../meson64-tools/bl3sig --input ../u-boot-mainline-gxy/u-boot-dtb.bin --output bl33.3sig
+../meson64-tools/bl2sig --input bl2.pkg --output bl2.2sig
+../meson64-tools/bootmk --output gxy-boot.bin --bl2 bl2.2sig --bl30 bl30.3sig --bl31 bl31.3sig-atf --bl33 bl33.3sig --ddrfw1 data/ddr4_1d.fw --ddrfw2 data/ddr4_2d.fw --ddrfw3 data/ddr3_1d.fw --ddrfw4 data/piei.fw --ddrfw5 data/lpddr4_1d.fw --ddrfw6 data/lpddr4_2d.fw --ddrfw7 data/diag_lpddr4.fw --ddrfw8 data/lpddr3_1d.fw --ddrfw9 data/aml_ddr.fw
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-amlogic_gxy-aarch64.dd bs=512 count=1
+cat gxy-boot.bin >> boot-amlogic_gxy-aarch64.dd
+
+# some notes from along the way
+the blobs used in my x96 air 2/16 box are (based on the compile data stamps from the boot logs):
+
+bl2: odroid c4
+bl30: vim3l (later update: odroid c4 works here too and this thus used now)
+bl31: odroid c4
+
+the .fw files are identical to the odroid c4 ones (found out by hexdump compare of original boot blocks and meson64-tools assembled odroid-c4 one - search for 40 44 46 4d and f1 c0 d1 c0 in hexdump -C)
+
+lpddr3_1d fw is in the original fw as last of the ddr ones and not in the odroid c4 case.
+
+the original boot blocks seems to read ddr timinigs from emmc (maybe from boot0?):
+
+...
+fastboot data load
+00000000
+emmc switch 1 ok
+ddr saved addr:00016000
+Load ddr parameter from eMMC, src: 0x02c00000, des: 0xfffd0000, size: 0x00001000, part: 0
+00000000
+emmc switch 0 ok
+fastboot data verify
+verify result: 255
+...
+
+in the odroid c4 case this is not done - to get those memory timings dump /dev/mmcblkXboot0 and dd edit out the part which looks like the regular acs.bin in hexdump -C
+
+example: some x96 air 2g/16g tv box
+dd if=mmcblk2boot0.dd of=tmp.dd bs=1 skip=61952 status=progress
+dd if=tmp.dd of=acs-x96-air-2-16.bin bs=1 count=4112 status=progress
+rm -f tmp.dd
 
 # some interesting links
 https://github.com/repk/gxlimg/blob/master/README.g12a
 https://freenode.irclog.whitequark.org/linux-amlogic/2020-08-03
 https://github.com/angerman/meson64-tools
 https://github.com/wav/nix-odroid-n2/pull/7/files#diff-e467582f02c13aab0c8bbf8db66dd0f1
+https://github.com/repk/gxlimg/issues/7
+https://freenode.irclog.whitequark.org/linux-amlogic/2020-09-26#28000408

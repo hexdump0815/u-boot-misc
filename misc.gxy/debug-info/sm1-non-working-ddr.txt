@@ -1,0 +1,112 @@
+self built boot image boot output of the x96 air 2/16g tv box:
+
+SM1:BL:511f6b:81ca2f;FEAT:A0F83180:20282000;POC:F;RCY:2;SD?:0;SD:0;READ:0;0.0;CHK:0;
+bl2_stage_init 0x01
+bl2_stage_init 0x81
+hw id: 0x0001 - pwm id 0x00
+bl2_stage_init 0xc0
+bl2_stage_init 0x02
+
+no sdio debug board detected 
+L0:00000000
+L1:00000703
+L2:00008067
+L3:15000020
+S1:00000000
+B2:20282000
+B1:a0f83180
+
+TE: 260129
+
+BL2 Built : 10:15:09, Sep  5 2019. g12a ga536e8b - luan.yuan@droid15-sz
+
+Board ID = 1
+Set cpu clk to 24M
+Set clk81 to 24M
+Use GP1_pll as DSU clk.
+DSU clk: 1200 Mhz
+CPU clk: 1200 MHz
+Set clk81 to 166.6M
+DDR driver_vesion: LPDDR4_PHY_V_0_1_11 build time: Sep  5 2019 10:15:06
+board id: 1
+Load FIP HDR from SD, src: 0x00010200, des: 0xfffd0000, size: 0x00004000, part: 0
+fw parse done
+Load ddrfw from SD, src: 0x00060200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Load ddrfw from SD, src: 0x00038200, des: 0xfffd0000, size: 0x00004000, part: 0
+PIEI prepare done
+Cfg max: 5, cur: 1. Board id: 255. Force loop cfg
+DDR4 probe
+ddr clk to 1200MHz
+Load ddrfw from SD, src: 0x00014200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : End of initialization
+INFO : End of read enable training
+INFO : End of fine write leveling
+INFO : STREAM 0x00490002 - 0x00000000 0x00000000 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+1D training failed
+Cfg max: 5, cur: 2. Board id: 255. Force loop cfg
+DDR3 probe
+ddr clk to 912MHz
+Load ddrfw from SD, src: 0x0002c200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : End of initialization
+INFO : STREAM 0x00670000 - 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+1D training failed
+Cfg max: 5, cur: 3. Board id: 255. Force loop cfg
+LPDDR4 probe
+ddr clk to 1392MHz
+Load ddrfw from SD, src: 0x0003c200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : STREAM 0x00b00001 - 0x00001000 
+INFO : STREAM 0x00a70001 - 0x0000001c 
+INFO : STREAM 0x00540003 - 0x00000004 0x00000008 0x0000000a 
+INFO : STREAM 0x00560006 - 0x00000003 0x00000003 0x00001001 0x0000000a 0x00000000 0x00000ae0 
+INFO : STREAM 0x005b0005 - 0x00000000 0x00000054 0x000000ad 0x00000033 0x00000000 
+INFO : STREAM 0x00a10000 - 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+Check phy result
+INFO : STREAM 0x00b00001 - 0x00001000 
+INFO : STREAM 0x00a70001 - 0x0000001c 
+INFO : STREAM 0x00540003 - 0x00000004 0x00000008 0x0000000a 
+INFO : STREAM 0x00560006 - 0x00000003 0x00000003 0x0000031f 0x0000000a 0x00000000 0x00000ae0 
+INFO : STREAM 0x005b0005 - 0x00000000 0x00000054 0x000000ad 0x00000033 0x00000000 
+INFO : End of initialization
+INFO : STREAM 0x00670000 - 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+1D training failed
+Cfg max: 5, cur: 4. Board id: 255. Force loop cfg
+LPDDR4 probe
+ddr clk to 1392MHz
+Load ddrfw from SD, src: 0x0003c200, des: 0xfffd0000, size: 0x0000c000, part: 0
+Check phy result
+INFO : STREAM 0x00b00001 - 0x00001000 
+INFO : STREAM 0x00a70001 - 0x0000001c 
+INFO : STREAM 0x00540003 - 0x00000004 0x00000008 0x0000000a 
+INFO : STREAM 0x00560006 - 0x00000001 0x00000001 0x00001001 0x0000000a 0x00000000 0x00000ae0 
+INFO : STREAM 0x005b0005 - 0x00000000 0x00000054 0x000000ad 0x00000033 0x00000000 
+INFO : STREAM 0x00a10000 - 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+Check phy result
+INFO : STREAM 0x00b00001 - 0x00001000 
+INFO : STREAM 0x00a70001 - 0x0000001c 
+INFO : STREAM 0x00540003 - 0x00000004 0x00000008 0x0000000a 
+INFO : STREAM 0x00560006 - 0x00000001 0x00000001 0x0000031f 0x0000000a 0x00000000 0x00000ae0 
+INFO : STREAM 0x005b0005 - 0x00000000 0x00000054 0x000000ad 0x00000033 0x00000000 
+INFO : End of initialization
+INFO : STREAM 0x00670000 - 
+INFO : STREAM 0x04020000 - 
+INFO : ERROR : Training has failed!
+1D training failed
+Cfg max: 5, cur: 5. Board id: 255. Force loop cfg
+LPDDR3 probe
+Firmware does not exist!
+All ddr config failed...
+Reset...
+...
