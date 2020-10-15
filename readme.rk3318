@@ -25,7 +25,7 @@ cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.dts arch/arm/dts
 cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max-u-boot.dtsi arch/arm/dts
 make h96max-rk3318_defconfig
 make
-# this step for my only worked using the x86 binary of loaderimage on an x86 machine
+# this step for me only worked using the x86 binary of loaderimage on an x86 machine
 loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-h96max-rk3318.img 0x200000
 dd if=u-boot-h96max-rk3318.img of=/dev/sdx seek=16384
 # first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
