@@ -46,5 +46,9 @@ cp u-boot.bin rk3328-u-boot.bin
 # tested to be working on a t9 rk3328 tv box using the legacy emmc loader
 # this step for me only worked using the x86 binary of loaderimage on an x86 machine
 loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-rk3328.img 0x200000
-# write it at the proper location to the sd card
+# first dump the boot blocks from emmc to the sd card so that we have everything
+# around which the boot might need - do not overwrite the partition table on sd
+# (the seek/skip part)
+dd if=/dev/mmcblkemmc of=/dev/sdx bs=512 count=32767 seek=1 skip=1
+# now write the prepared mainline u-boot at the proper location to the sd card
 dd if=u-boot-rk3328.img of=/dev/sdx seek=16384
