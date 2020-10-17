@@ -44,3 +44,22 @@ dd if=u-boot-h96max-rk3318.img of=/dev/sdx seek=16384
 # - u-boot built with CONFIG_OF_CONTROL - did not help
 # - u-boot with bootdelay hardcoded to -1 in code - did not help - boot is still interrupted - maybe it happens in the early boot on emmc
 # - u-boot with CONFIG_AUTOBOOT=n - then it always stops :)
+
+# full mainline boot block writing (untested)
+
+# to sd card according to doc/README.rockchip
+dd if=idbloader.img of=/dev/mmcblkx seek=64
+dd if=u-boot.itb of=/dev/mmcblkx seek=16384
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-h96max-rk3318-idbloader-aarch64.dd bs=512 count=64
+cat idbloader.img >> boot-h96max-rk3318-idbloader-aarch64.dd
+dd if=u-boot.itb of=boot-h96max-rk3318-idbloader-aarch64.dd seek=16384
+
+# or according to doc/board/rockchip/rockchip.rst
+dd if=u-boot-rockchip.bin of=/dev/sdx seek=64
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-h96max-rk3318-bin-aarch64.dd bs=512 count=64
+cat u-boot-rockchip.bin >> boot-h96max-rk3318-bin-aarch64.dd
+cp u-boot.bin rk3318-u-boot.bin

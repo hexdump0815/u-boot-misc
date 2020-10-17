@@ -1,27 +1,12 @@
 diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 820ee9733a..5326efd830 100644
+index 9900b44274..8524d791f5 100644
 --- a/arch/arm/dts/Makefile
 +++ b/arch/arm/dts/Makefile
-@@ -104,6 +104,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3308) += \
+@@ -105,6 +105,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3308) += \
+ 	rk3308-roc-cc.dtb
  
  dtb-$(CONFIG_ROCKCHIP_RK3328) += \
- 	rk3328-evb.dtb \
 +	rk3318-h96max.dtb \
- 	rk3328-rock64.dtb
- 
- dtb-$(CONFIG_ROCKCHIP_RK3368) += \
-diff --git a/include/configs/rockchip-common.h b/include/configs/rockchip-common.h
-index b55e09a9ca..ee1a3f69b1 100644
---- a/include/configs/rockchip-common.h
-+++ b/include/configs/rockchip-common.h
-@@ -17,8 +17,8 @@
- /* First try to boot from SD (index 0), then eMMC (index 1) */
- #if CONFIG_IS_ENABLED(CMD_MMC)
- 	#define BOOT_TARGET_MMC(func) \
--		func(MMC, mmc, 0) \
--		func(MMC, mmc, 1)
-+		func(MMC, mmc, 1) \
-+		func(MMC, mmc, 0)
- #else
- 	#define BOOT_TARGET_MMC(func)
- #endif
+ 	rk3328-evb.dtb \
+ 	rk3328-roc-cc.dtb \
+ 	rk3328-rock64.dtb \
