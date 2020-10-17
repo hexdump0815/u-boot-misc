@@ -10,7 +10,7 @@ make Bananapi_defconfig
 make
 
 # write the boot block to the sd card
-dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblk0 bs=1024 seek=8
+dd if=u-boot-sunxi-with-spl.bin of=/dev/mmcblkx bs=1024 seek=8
 
 # create a boot block for standard dd'ing for the banana pi m1
 dd if=/dev/zero of=bpi-boot.dd bs=1024 count=8
