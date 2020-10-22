@@ -33,6 +33,12 @@ dd if=uboot.img of=/dev/sdx seek=16384
 # write to emmc via:
 # backup old u-boot image - 0x2000 is 8192 but we actually want 16384, but rkdeveloptool has an offset
 # of 0x2000 (at least my version) so 0x2000 actually is 0x4000 = 16384
+# update: it looks like this offset is in place when using the rkdeveloptool in loader mode - in this
+# mode the first 8192 sectors are not visible/accessible result ing in that 0x2000 offset ... if it
+# is used in maskrom mode then everything is visible/accessible starting from 0x0 ... please keep
+# this in mind for the rkdeveloptool usage below - that assume loader mode and thus the 0x2000 offset
+# for maskrom mode this would mean: 0x2000 -> 0x4000 and 0x6000 -> 0x8000 below, the second 0x2000
+# of the rkdeveloptool rl command is a length and stays the same in that case
 rkdeveloptool rl 0x2000 0x2000 u-boot-image-backup-from-emmc-h96max-rk3328.img
 # write the new one - same 0x2000 magic here
 rkdeveloptool wl 0x2000 u-boot-image-for-emmc-h96max-rk3328.img
