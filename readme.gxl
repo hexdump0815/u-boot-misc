@@ -37,6 +37,8 @@ git checkout v2020.07
 # add usb kbd and uEnv.txt support and set some own string instead
 # of libretech-cc to make clear this is modified
 patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-uenv-txt-and-own-strings.patch
+# use this patch instead if serial console is wanted instead of hdmi/usbkbd
+#patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-uenv-txt-and-own-strings.patch
 # the libretech-cc_defconfig works quite well for s905w and s905x and
 # supports hdmi video output well too
 make libretech-cc_defconfig
