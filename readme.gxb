@@ -27,8 +27,10 @@ mv u-boot u-boot-mainline-gxb
 cd u-boot-mainline-gxb
 git checkout v2020.07
 # add usb kbd and uEnv.txt support and set some own string instead
-# of libretech-cc to make clear this is modified
+# of p201 to make clear this is modified
 patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-usb-kbd-uenv-txt-and-own-strings.patch
+# use this patch instead if serial console is wanted instead of hdmi/usbkbd
+#patch -p1 < /compile/doc/u-boot-misc/misc.gxb/add-uenv-txt-and-own-strings.patch
 make p201_defconfig
 make
 cp u-boot.bin gxb-u-boot.bin
