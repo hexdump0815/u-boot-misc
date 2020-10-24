@@ -15,7 +15,7 @@ mv arm-trusted-firmware arm-trusted-firmware-gxy
 cd arm-trusted-firmware-gxy
 git checkout v2.3
 # by default the result will be for g12a, for sm1 (instead) the following patch is needed
-patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-sm1-support.patch
+patch -p1 < /compile/doc/u-boot-misc/misc.gxy/atf-sm1-support.patch
 make realclean
 make PLAT=g12a DEBUG=1 bl31
 # result: build/g12a/debug/bl31.bin
