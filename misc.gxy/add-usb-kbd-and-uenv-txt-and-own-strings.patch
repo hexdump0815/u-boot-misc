@@ -96,7 +96,7 @@ index c895a24eca..d997352489 100644
 +		"usb start; " \
 +		"mmc dev 1; " \
 +		"setenv stdin usbkbd; " \
-+		"for target in 0 1;do " \
++		"for target in 1 2;do " \
 +		"for prefix in / /boot/;do " \
 +			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
 +				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \

@@ -26,9 +26,11 @@ cd ..
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-gxy
 cd u-boot-mainline-gxy
-git checkout v2020.10-rc4
+git checkout v2020.10
 # add usb kbd and uEnv.txt support
-#patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt.patch
+#patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt-and-own-strings.patch
+# add only uEnv.txt support
+patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-uenv-txt-and-own-strings.patch
 # s905x3 = sm1
 make sei610_defconfig
 # alternatively for s905x2 = g12a
@@ -65,9 +67,9 @@ git clone https://github.com/LibreELEC/amlogic-boot-fip
 mkdir data
 # for s905x3 = sm1 ... other options would be odroid-c4, khadas-vim3l - failing the memory training - see misc.gxy/debug-info/sm1-non-working-ddr.txt vs. sm1-working-ddr.txt for the original boot blocks)
 # cp -r amlogic-boot-fip/odroid-c4/* data
-# alternative s905x3 = sm1 optioni
+# alternative s905x3 = sm1 option
 # cp -r amlogic-boot-fip/sei610/* data
-# alternatively for s905x2 = g12a (not booting properly if built as below - see misc.gxy/debug-info/g12a-non-working-boot.txt)
+# alternatively for s905x2 = g12a
 # cp -r amlogic-boot-fip/sei510/* data
 
 # assemble the u-boot boot image - original atf case
