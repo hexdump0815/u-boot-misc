@@ -27,9 +27,7 @@ make h96max-rk3328_defconfig
 make
 # this step for my only worked using the x86 binary of loaderimage on an x86 machine
 loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-image-for-emmc-h96max-rk3328.img 0x200000
-dd if=uboot.img of=/dev/sdx seek=16384
-# first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
-# u-boot itself is new then!
+
 # write to emmc via:
 # backup old u-boot image - 0x2000 is 8192 but we actually want 16384, but rkdeveloptool has an offset
 # of 0x2000 (at least my version) so 0x2000 actually is 0x4000 = 16384
