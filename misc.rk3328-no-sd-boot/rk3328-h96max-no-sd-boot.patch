@@ -1,13 +1,13 @@
 diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index 0127a91a82..80435c4f96 100644
+index 9900b44274..46a0ac42e4 100644
 --- a/arch/arm/dts/Makefile
 +++ b/arch/arm/dts/Makefile
-@@ -104,6 +104,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3308) += \
- 
- dtb-$(CONFIG_ROCKCHIP_RK3328) += \
+@@ -108,6 +108,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3328) += \
  	rk3328-evb.dtb \
+ 	rk3328-roc-cc.dtb \
+ 	rk3328-rock64.dtb \
 +	rk3328-h96max.dtb \
- 	rk3328-rock64.dtb
+ 	rk3328-rock-pi-e.dtb
  
  dtb-$(CONFIG_ROCKCHIP_RK3368) += \
 diff --git a/include/configs/rockchip-common.h b/include/configs/rockchip-common.h
