@@ -25,13 +25,3 @@ index 68e1105a4b..4b733ac356 100644
  #else
  	#define BOOT_TARGET_MMC(func)
  #endif
-@@ -39,8 +39,8 @@
- #endif
- 
- #define BOOT_TARGET_DEVICES(func) \
--	BOOT_TARGET_MMC(func) \
- 	BOOT_TARGET_USB(func) \
-+	BOOT_TARGET_MMC(func) \
- 	BOOT_TARGET_PXE(func) \
- 	BOOT_TARGET_DHCP(func)
- 
