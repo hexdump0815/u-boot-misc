@@ -1,3 +1,11 @@
+IMPORTANT: all the below is not finished and not working yet - for a working version
+           based on an older version of ayufans rockchip u-boot see misc.rk3328-no-sd-boot/rockchip-u-boot
+
+           to make this work with mainline the changes from there would have to be adjusted to mainline,
+           mainly the mmc entries in the dtb would have to be changed accordingly to use the ext
+           version of sdmmc like in my h96max-rk3328 linux mainline kernel dtb and its surrounding
+           patches ...
+
 arm trusted firmware:
 # not sure if this is really used in this scenario - i think this stage is still
 # running from the original boot blocks on emmc - but cannot hurt to have it anyway

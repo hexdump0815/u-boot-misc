@@ -1,0 +1,17 @@
+write to emmc via:
+
+first: gunzip u-boot-image-backup-from-emmc-h96max-rk3328.img.gz
+
+loader mode of rkdeveloptool:
+
+# backup old u-boot image
+rkdeveloptool rl 0x2000 0x2000 u-boot-image-backup-from-emmc-h96max-rk3328.img
+# write the new one
+rkdeveloptool wl 0x2000 u-boot-image-for-emmc-h96max-rk3328.img
+
+maskrom mode of rkdeveloptool:
+
+# backup old u-boot image
+rkdeveloptool rl 0x4000 0x2000 u-boot-image-backup-from-emmc-h96max-rk3328.img
+# write the new one
+rkdeveloptool wl 0x4000 u-boot-image-for-emmc-h96max-rk3328.img
