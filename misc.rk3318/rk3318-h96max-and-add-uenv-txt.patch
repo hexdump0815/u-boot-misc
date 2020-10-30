@@ -10,6 +10,26 @@ index 9900b44274..8524d791f5 100644
  	rk3328-evb.dtb \
  	rk3328-roc-cc.dtb \
  	rk3328-rock64.dtb \
+diff --git a/include/configs/rk3328_common.h b/include/configs/rk3328_common.h
+index 407e5d2931..04e2157474 100644
+--- a/include/configs/rk3328_common.h
++++ b/include/configs/rk3328_common.h
+@@ -44,6 +44,15 @@
+ 	ENV_MEM_LAYOUT_SETTINGS \
+ 	"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
+ 	"partitions=" PARTS_DEFAULT \
++	"bootenv_addr_r=0x00600000\0" \
++	"preboot=for target in 1 0;do " \
++		"for prefix in / /boot/;do " \
++			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
++				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
++				"env import -t ${bootenv_addr_r} ${filesize}; " \
++			"fi; " \
++		"done; " \
++	"done\0" \
+ 	BOOTENV
+ 
+ #endif
 diff --git a/include/configs/rockchip-common.h b/include/configs/rockchip-common.h
 index 68e1105a4b..4b733ac356 100644
 --- a/include/configs/rockchip-common.h

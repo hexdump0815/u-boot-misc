@@ -1,5 +1,6 @@
 arm trusted firmware:
-
+# atf is only used in case the full mainline bootblocks are written to disk
+# otherwise the legacy atf from emmc will be used
 git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-rk3328
 cd arm-trusted-firmware-rk3328
@@ -21,34 +22,44 @@ patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/add-uenv-txt.patch
 cp ../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf .
 make evb-rk3328_defconfig 
 make
+cp u-boot.bin rk3328-u-boot.bin
 
+# creating a u-boot on an sd card which is called from the loader on emmc
+# tested to be working on a t9 rk3328 tv box using the legacy emmc loader
+# this step for me only worked using the x86 binary of loaderimage on an x86 machine
+loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-rk3328.img 0x200000
+# this is for the case that it is written directly to sd card
+# first dump the boot blocks from emmc to the sd card so that we have everything
+# around which the boot might need - do not overwrite the partition table on sd
+# (the seek/skip part)
+dd if=/dev/emmc of=/dev/sdcard bs=512 skip=1 seek=1 count=32767
+# then write the new mainline u-boot in the proper format to the right place
+dd if=u-boot-rk3328.img of=/dev/sdcard bs=512 seek=16384
 
-# boot block writing (untested)
+# see misc.rk3328-no-sd-boot/rockchip-u-boot/readme.txt for some notes on
+# writing the mainline u-boot image to emmc via rkdeveloptool if desired
+
+# below are old notes about writing the trust.img from emmc to sd card, which is
+# done automatically in the approach from above to just dump everythinf from emmc to sd card
+# first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
+# i think it needs to be put there even on an sd card, i.e.
+#   dd if=/dev/emmc of=/dev/sdcard bs=1 skip=24576 seek=24576 count=8192
+# u-boot itself is new then and should best run from sd card (safer than overwriting the original stuff on emmc)
+
+# full mainline boot block writing (untested)
 
 # to sd card according to doc/README.rockchip
 dd if=idbloader.img of=/dev/mmcblkx seek=64
 dd if=u-boot.itb of=/dev/mmcblkx seek=16384
 
 # prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rockchip-rk3328-idbloader-aarch64.dd bs=512 count=64
-cat idbloader.img >> boot-rockchip-rk3328-idbloader-aarch64.dd
-dd if=u-boot.itb of=boot-rockchip-rk3328-idbloader-aarch64.dd seek=16384
+dd if=/dev/zero of=boot-rk3328-idbloader-aarch64.dd bs=512 count=64
+cat idbloader.img >> boot-rk3328-idbloader-aarch64.dd
+dd if=u-boot.itb of=boot-rk3328-idbloader-aarch64.dd seek=16384
 
-# or according to doc/board/rockchip/rockchip.rst
+# or according to doc/board/rockchip/rockchip.rst - should give the same result as above
 dd if=u-boot-rockchip.bin of=/dev/sdx seek=64
 
 # prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rockchip-rk3328-bin-aarch64.dd bs=512 count=64
-cat u-boot-rockchip.bin >> boot-rockchip-rk3328-bin-aarch64.dd
-cp u-boot.bin rk3328-u-boot.bin
-
-# or creating a u-boot on an sd card which is called from the loader on emmc
-# tested to be working on a t9 rk3328 tv box using the legacy emmc loader
-# this step for me only worked using the x86 binary of loaderimage on an x86 machine
-loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-rk3328.img 0x200000
-# first dump the boot blocks from emmc to the sd card so that we have everything
-# around which the boot might need - do not overwrite the partition table on sd
-# (the seek/skip part)
-dd if=/dev/mmcblkemmc of=/dev/sdx bs=512 count=32767 seek=1 skip=1
-# now write the prepared mainline u-boot at the proper location to the sd card
-dd if=u-boot-rk3328.img of=/dev/sdx seek=16384
+dd if=/dev/zero of=boot-rk3328-bin-aarch64.dd bs=512 count=64
+cat u-boot-rockchip.bin >> boot-rk3328-bin-aarch64.dd
