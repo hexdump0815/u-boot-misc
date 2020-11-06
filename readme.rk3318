@@ -29,14 +29,14 @@ cp u-boot.bin h96max-rk3318-u-boot.bin
 # creating a u-boot on an sd card which is called from the loader on emmc
 # tested to be working on a h86max rk3318 tv box using the legacy emmc loader
 # this step for me only worked using the x86 binary of loaderimage on an x86 machine
-loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-rk3318.img 0x200000
+loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-h96max-rk3318.img 0x200000
 # this is for the case that it is written directly to sd card
 # first dump the boot blocks from emmc to the sd card so that we have everything
 # around which the boot might need - do not overwrite the partition table on sd
 # (the seek/skip part)
 dd if=/dev/emmc of=/dev/sdcard bs=512 skip=1 seek=1 count=32767
 # then write the new mainline u-boot in the proper format to the right place
-dd if=u-boot-rk3318.img of=/dev/sdcard bs=512 seek=16384
+dd if=u-boot-h96max-rk3318.img of=/dev/sdcard bs=512 seek=16384
 
 # see misc.rk3328-no-sd-boot/rockchip-u-boot/readme.txt for some notes on
 # writing the mainline u-boot image to emmc via rkdeveloptool if desired
