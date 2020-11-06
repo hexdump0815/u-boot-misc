@@ -1,0 +1,23 @@
+diff --git a/arch/arm/mach-rockchip/rk3328/Kconfig b/arch/arm/mach-rockchip/rk3328/Kconfig
+index d13a169022..d9d0de9ad2 100644
+--- a/arch/arm/mach-rockchip/rk3328/Kconfig
++++ b/arch/arm/mach-rockchip/rk3328/Kconfig
+@@ -10,6 +10,11 @@ config TARGET_EVB_RK3328
+ 	  with full function and phisical connectors support like
+ 	  usb2.0 host ports, LVDS, JTAG, MAC, SDcard, HDMI, USB-2-serial...
+ 
++config TARGET_H96MAX_RK3318
++	bool "H96Max RK3318 board"
++	help
++	  H96Max RK3318 tv box
++
+ endchoice
+ 
+ config ROCKCHIP_BOOT_MODE_REG
+@@ -41,4 +46,6 @@ config TPL_STACK
+ 
+ source "board/rockchip/evb_rk3328/Kconfig"
+ 
++source "board/rockchip/h96max_rk3318/Kconfig"
++
+ endif

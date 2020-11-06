@@ -22,6 +22,8 @@ patch -p1 < /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max-and-add-uenv-txt.
 cp /compile/doc/u-boot-misc/misc.rk3318/h96max-rk3318_defconfig configs
 cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max.dts arch/arm/dts
 cp /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max-u-boot.dtsi arch/arm/dts
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3318/rk3318-h96max-add-eth-mac-addr.patch
+cp -r /compile/doc/u-boot-misc/misc.rk3318/h96max_rk3318 board/rockchip
 make h96max-rk3318_defconfig
 make
 cp u-boot.bin h96max-rk3318-u-boot.bin
