@@ -1,0 +1,29 @@
+# this is all very much work in progress - trying to get the orangepi
+# zero 2 u-boot sources to compile and maybe later adjust them here
+# and there until we have some working mainline u-boot for the h616
+#
+# important: although we are building for a 64bit aarch64 architecture
+# u-boot seems to be built in 32bit and thus a 32bit (armv7l) system
+# is required for the below compilation
+
+boot0 etc. blobs and tools:
+
+git clone https://github.com/orangepi-xunlong/orangepi-build.git
+# blobs are then in orangepi-build/external/packages/pack-uboot/sun50iw9/bin
+# tools are then in orangepi-build/external/packages/pack-uboot/sun50iw9/tools
+# tools are x86_64 binaries
+# a copy of those blobs and tools is in misc.h616/sdk-files
+# some info about them: https://linux-sunxi.org/SDK_build_howto#Manual_Build_of_Separate_Components
+# a dump of it can be found at misc.h616/sdk-info/SDK-build-howto-from-linux-sunxi.org.html
+
+u-boot:
+
+git clone https://github.com/orangepi-xunlong/u-boot-orangepi.git
+cd u-boot-orangepi
+git checkout v2018.05-sun50iw9
+make orangepi_zero2_defconfig
+make
+# result: u-boot-sun50iw9p1.bin (?)
+
+# prepare it for imagebuilder/sonaremin
+???

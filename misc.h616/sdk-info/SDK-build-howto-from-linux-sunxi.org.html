@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html dir="ltr" class="client-js" lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>SDK build howto - linux-sunxi.org</title>
+<meta charset="UTF-8">
+<meta name="generator" content="MediaWiki 1.20.8">
+<link rel="shortcut icon" href="https://linux-sunxi.org/favicon.ico">
+<link rel="search" type="application/opensearchdescription+xml" href="https://linux-sunxi.org/opensearch_desc.php" title="linux-sunxi.org (en)">
+<link rel="EditURI" type="application/rsd+xml" href="https://linux-sunxi.org/api.php?action=rsd">
+<link rel="copyright" href="https://creativecommons.org/licenses/by/3.0/">
+<link rel="alternate" type="application/atom+xml" title="linux-sunxi.org Atom feed" href="https://linux-sunxi.org/index.php?title=Special:RecentChanges&amp;feed=atom">
+<link rel="stylesheet" href="SDK-build-howto-from-linux-sunxi.org_files/load_002.css">
+<style>.mw-collapsible-toggle{float:right} li .mw-collapsible-toggle{float:none} .mw-collapsible-toggle-li{list-style:none}
+/* cache key: sunxi-mw:resourceloader:filter:minify-css:7:4250852ed2349a0d4d0fc6509a3e7d4c */.suggestions{overflow:hidden;position:absolute;top:0;left:0;width:0;border:none;z-index:1099;padding:0;margin:-1px -1px 0 0} html > body .suggestions{margin:-1px 0 0 0}.suggestions-special{position:relative;background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0;margin-top:-2px;display:none;padding:0.25em 0.25em;line-height:1.25em}.suggestions-results{background-color:white;cursor:pointer;border:solid 1px #aaaaaa;padding:0;margin:0}.suggestions-result{color:black;margin:0;line-height:1.5em;padding:0.01em 0.25em;text-align:left}.suggestions-result-current{background-color:#4C59A6;color:white}.suggestions-special .special-label{color:gray;text-align:left}.suggestions-special .special-query{color:black;font-style:italic;text-align:left}.suggestions-special .special-hover{background-color:silver}.suggestions-result-current .special-label,.suggestions-result-current .special-query{color:white}.autoellipsis-matched,.highlight{font-weight:bold}
+/* cache key: sunxi-mw:resourceloader:filter:minify-css:7:9780324491b653a3780e2d029bdc140c */#tooltip{position:absolute;z-index:3000;border:1px solid #111;background-color:#eee;padding:5px;opacity:0.85}#tooltip h3,#tooltip div{margin:0}
+/* cache key: sunxi-mw:resourceloader:filter:minify-css:7:c67f6722c9ab75d61ca7edf2e8328002 */</style><meta name="ResourceLoaderDynamicStyles" content="">
+<link rel="stylesheet" href="SDK-build-howto-from-linux-sunxi.org_files/load.css">
+<style>a:lang(ar),a:lang(ckb),a:lang(fa),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}
+/* cache key: sunxi-mw:resourceloader:filter:minify-css:7:f6f6fbf144bfb028308ae6b408cdb5d1 */</style>
+
+<script src="SDK-build-howto-from-linux-sunxi.org_files/load.php"></script><script src="SDK-build-howto-from-linux-sunxi.org_files/load_006.php"></script>
+<script>if(window.mw){
+mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"SDK_build_howto","wgTitle":"SDK build howto","wgCurRevisionId":16913,"wgArticleId":1676,"wgIsArticle":true,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Software","Tutorial"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"SDK_build_howto","wgRestrictionEdit":[],"wgRestrictionMove":[],"wgWikiEditorEnabledModules":{"toolbar":true,"dialogs":true,"hidesig":true,"templateEditor":false,"templates":false,"preview":true,"previewDialog":false,"publish":false,"toc":false},"wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}"});
+}</script><script>if(window.mw){
+mw.loader.implement("user.options",function(){mw.user.options.set({"ccmeonemails":0,"cols":80,"date":"default","diffonly":0,"disablemail":0,"disablesuggest":0,"editfont":"default","editondblclick":0,"editsection":1,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":0,"extendwatchlist":0,"externaldiff":0,"externaleditor":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"imagesize":2,"justify":0,"math":0,"minordefault":0,"newpageshidepatrolled":0,"nocache":0,"noconvertlink":0,"norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"quickbar":5,"rcdays":7,"rclimit":50,"rememberpassword":0,"rows":25,"searchlimit":20,"showhiddencats":0,"showjumplinks":1,"shownumberswatching":1,"showtoc":1,"showtoolbar":1,"skin":"vector","stubthreshold":0,"thumbsize":2,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":0,"watchdefault":0,"watchdeletion":0,"watchlistdays":3,
+"watchlisthideanons":0,"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"wllimit":250,"usebetatoolbar":1,"usebetatoolbar-cgd":1,"wikieditor-preview":1,"variant":"en","language":"en","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false});;},{},{});mw.loader.implement("user.tokens",function(){mw.user.tokens.set({"editToken":"+\\","watchToken":false});;},{},{});
+/* cache key: sunxi-mw:resourceloader:filter:minify-js:7:7946f03af3782603db0ba9e475496170 */
+}</script>
+<script>if(window.mw){
+mw.loader.load(["mediawiki.page.startup","mediawiki.legacy.wikibits","mediawiki.legacy.ajax"]);
+}</script><script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/load_003.php"></script>
+<link rel="canonical" href="https://linux-sunxi.org/SDK_build_howto">
+<!--[if lt IE 7]><style type="text/css">body{behavior:url("/skins/vector/csshover.min.htc")}</style><![endif]--></head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-SDK_build_howto skin-vector action-view vector-animateLayout">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<!-- content -->
+		<div id="content" class="mw-body">
+			<a id="top"></a>
+			<div id="mw-js-message" style="display:none;"></div>
+						<!-- firstHeading -->
+			<h1 id="firstHeading" class="firstHeading"><span dir="auto">SDK build howto</span></h1>
+			<!-- /firstHeading -->
+			<!-- bodyContent -->
+			<div id="bodyContent">
+								<!-- tagline -->
+				<div id="siteSub">From linux-sunxi.org</div>
+				<!-- /tagline -->
+								<!-- subtitle -->
+				<div id="contentSub"></div>
+				<!-- /subtitle -->
+																<!-- jumpto -->
+				<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-head">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<!-- /jumpto -->
+								<!-- bodycontent -->
+				<div id="mw-content-text" dir="ltr" class="mw-content-ltr" lang="en"><p>Allwinner usually provides device manufacturers with a complete SDK
+that includes the matching u-boot and kernel sources (with some odd binaries),
+Android packages, buildroot, build  scripts and a matching Linaro toolchain.
+</p><p>Development board vendors share the SDK with hardware owners to customize.
+This howto assumes you have such an SDK. This document is based on the A23 and
+A80 SDKs. If you have one for an earlier SoC, some names may vary.
+</p>
+<table id="toc" class="toc"><tbody><tr><td><div id="toctitle"><h2>Contents</h2><span class="toctoggle">&nbsp;[<a href="#" class="internal" id="togglelink">hide</a>]&nbsp;</span></div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Warning"><span class="tocnumber">1</span> <span class="toctext">Warning</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Contents_of_the_SDK"><span class="tocnumber">2</span> <span class="toctext">Contents of the SDK</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#Basic_Full_Build"><span class="tocnumber">3</span> <span class="toctext">Basic Full Build</span></a>
+<ul>
+<li class="toclevel-2 tocsection-4"><a href="#Configuring_the_Build"><span class="tocnumber">3.1</span> <span class="toctext">Configuring the Build</span></a></li>
+<li class="toclevel-2 tocsection-5"><a href="#Running_the_Build"><span class="tocnumber">3.2</span> <span class="toctext">Running the Build</span></a>
+<ul>
+<li class="toclevel-3 tocsection-6"><a href="#Linux_Build_Specifics"><span class="tocnumber">3.2.1</span> <span class="toctext">Linux Build Specifics</span></a></li>
+<li class="toclevel-3 tocsection-7"><a href="#Android_Build_Specifics"><span class="tocnumber">3.2.2</span> <span class="toctext">Android Build Specifics</span></a></li>
+</ul>
+</li>
+<li class="toclevel-2 tocsection-8"><a href="#Packing_the_Image"><span class="tocnumber">3.3</span> <span class="toctext">Packing the Image</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-9"><a href="#Manual_Build_of_Separate_Components"><span class="tocnumber">4</span> <span class="toctext">Manual Build of Separate Components</span></a>
+<ul>
+<li class="toclevel-2 tocsection-10"><a href="#boot0"><span class="tocnumber">4.1</span> <span class="toctext">boot0</span></a></li>
+<li class="toclevel-2 tocsection-11"><a href="#U-Boot"><span class="tocnumber">4.2</span> <span class="toctext">U-Boot</span></a>
+<ul>
+<li class="toclevel-3 tocsection-12"><a href="#Fixing_update_uboot"><span class="tocnumber">4.2.1</span> <span class="toctext">Fixing update_uboot</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toclevel-1 tocsection-13"><a href="#Installing_onto_Storage"><span class="tocnumber">5</span> <span class="toctext">Installing onto Storage</span></a>
+<ul>
+<li class="toclevel-2 tocsection-14"><a href="#SD_card"><span class="tocnumber">5.1</span> <span class="toctext">SD card</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></tbody></table>
+<h1> <span class="mw-headline" id="Warning"> Warning </span></h1>
+<p><b>This howto is not complete.</b>
+</p>
+<h1> <span class="mw-headline" id="Contents_of_the_SDK"> Contents of the SDK </span></h1>
+<p>The SDK is split into several parts, but the build scripts requires them to be complete.
+</p>
+<ul><li> <tt>android-4.4</tt>
+</li><li> <tt>lichee</tt>
+<ul><li> <tt>build.sh</tt> -- main build script
+</li><li> <tt>buildroot</tt> -- rootfs, toolchain, and build scripts
+</li><li> <tt>linux-3.4</tt> -- linux kernel
+</li><li> <tt>brandy</tt> -- boot related stuff
+<ul><li> <tt>build.sh</tt> -- simple build script for u-boot
+</li><li> <tt>u-boot-2011.09</tt> -- Allwinner's port of u-Boot
+</li></ul>
+</li><li> <tt>out</tt> -- build intermediaries and results. toolchain is also in here
+</li><li> <tt>tools</tt>
+<ul><li> <tt>tools_win</tt> -- LiveSuit/PhoenixSuit tools and drivers
+</li><li> <tt>pack</tt> -- tools and configuration related to firmware packing
+<ul><li> <tt>chips</tt> -- chip specific files (boot0/u-boot binaries, fex files)
+</li><li> <tt>common</tt> -- common config files and tools
+</li><li> <tt>out</tt> -- work directory for firmware packing
+</li><li> <tt>pack</tt> -- firmware packing script
+</li></ul>
+</li></ul>
+</li></ul>
+</li></ul>
+<h1> <span class="mw-headline" id="Basic_Full_Build"> Basic Full Build </span></h1>
+<p>Once you have unpacked the SDK (the <i>lichee</i> directory in particular),
+you can go in a do a straight full build, which results in a <a href="https://linux-sunxi.org/LiveSuite" title="LiveSuite" class="mw-redirect">LiveSuite</a> image.
+</p>
+<h2> <span class="mw-headline" id="Configuring_the_Build"> Configuring the Build </span></h2>
+<p>The SDK can build android or linux flavor images,
+and may target different boards.
+</p>
+<pre>lichee$ ./build.sh config
+
+Welcome to mkscript setup progress
+All available chips:
+   0. sun9iw1p1
+Choice: 0
+All available platforms:
+   0. android
+   1. dragonboard
+   2. linux
+Choice: 0
+All available kernel:
+   0. linux-3.4
+Choice: 0
+All available boards:
+   0. optimus
+   1. p1
+   2. perf
+   3. perf5
+   4. perf-lpddr3
+Choice: 0
+</pre>
+<h2> <span class="mw-headline" id="Running_the_Build"> Running the Build </span></h2>
+<p>Running <i>build.sh</i> will produce binaries and images under <i>out/&lt;platform&gt;/{linux,android}</i>.
+These will be used to generate the firmware image in the next step.
+</p>
+<pre>lichee$ ./build.sh
+</pre>
+<p>This will prepare the toolchain (or build buildroot if you're building for Linux),
+the kernel, and the rootfs (if not Android).
+</p>
+<h3> <span class="mw-headline" id="Linux_Build_Specifics"> Linux Build Specifics </span></h3>
+<p>Building the Linux platform will build the whole buildroot tree. As the buildroot version bundled
+in the SDK is rather old, errors are bound to happen. Please use an older host toolchain.
+</p>
+<h3> <span class="mw-headline" id="Android_Build_Specifics"> Android Build Specifics </span></h3>
+<p>(This section requires additional work.)
+The Android image is built from the android directory in the SDK.
+</p>
+<h2> <span class="mw-headline" id="Packing_the_Image"> Packing the Image </span></h2>
+<p>Run the following command to pack the final <a href="https://linux-sunxi.org/LiveSuit" title="LiveSuit">LiveSuit</a> image.
+</p>
+<pre>lichee$ ./build.sh pack
+</pre>
+<p><br>
+</p>
+<h1> <span class="mw-headline" id="Manual_Build_of_Separate_Components"> Manual Build of Separate Components </span></h1>
+<p>The following section explains how to build the various components from the SDK,
+so you can use them on your system.
+</p>
+<h2> <span class="mw-headline" id="boot0"> boot0 </span></h2>
+<p>Most SDKs only ship a binary version of boot0. This is a pristine version, and needs to be
+seeded with information such as the debug UART, DRAM clock rates, NAND/MMC ports.
+Normally this is done during the packing process. This section goes through the process
+manually.
+</p><p>The boot0 binary can be found under
+</p>
+<pre>lichee/tools/pack/chips/CHIP/bin/
+</pre>
+<p>Replace <b>CHIP</b> with whatever chip you have.
+</p><p>There are 2 flavors of boot0: 1 for NAND, and 1 for SD/MMC.
+One will not work with the other, as boot0 loads the next stage bootloader (U-Boot)
+from the respective supported storage.
+Also, there is a special boot0 for FEL mode.
+</p><p>The following is a series of commands to properly prepare boot0 for usage.
+</p>
+<pre># Using sun9iw1p1 A80 Optimus Board as an example
+# Under lichee/tools/pack
+
+# Copy fex file
+cp -fv chips/sun9iw1p1/configs/optimus/sys_config.fex out/sys_config.fex
+
+# Copy boot0
+cp -fv chips/sun9iw1p1/bin/boot0_nand_sun9iw1p1.bin out/boot0_nand.fex
+cp -fv chips/sun9iw1p1/bin/boot0_sdcard_sun9iw1p1.bin out/boot0_sdcard.fex
+cp -fv chips/sun9iw1p1/bin/fes1_sun9iw1p1.bin out/fes1.fex
+
+# Fex file compiler requires fex file in CRLF format
+unix2dos out/sys_config.fex
+
+# Compile fex file
+pctools/linux/mod_update/script out/sys_config.fex
+
+# Patch sdcard boot0
+pctools/linux/mod_update/update_boot0 out/boot0_sdcard.fex out/sys_config.bin SDMMC_CARD
+
+# Patch nand boot0
+pctools/linux/mod_update/update_boot0 out/boot0_nand.fex out/sys_config.bin NAND
+
+# Patch FEL boot0
+pctools/linux/mod_update/update_fes1 out/fes1.fex out/sys_config.bin
+</pre>
+<p>You can then dd the boot0 image onto an SD card, or load the FEL mode boot0 over usb.
+</p>
+<h2> <span class="mw-headline" id="U-Boot"> U-Boot </span></h2>
+<p>Building U-Boot is fairly straightforward.
+</p><p>First build the U-Boot binary:
+</p>
+<pre>lichee$ cd brandy/u-boot-2011.09
+
+u-boot-2011.09$ make sun9iw1p1_config # replace sun9iw1p1 with whatever platform you have
+
+u-boot-2011.09$ make
+[...]
+arm-linux-gnueabi-objcopy --gap-fill=0xff -O binary u-boot u-boot.bin
+'u-boot-sun9iw1p1.bin' -&gt; '../../tools/pack/chips/sun9iw1p1/bin/u-boot-sun9iw1p1.bin'
+</pre>
+<p>The last line shows the U-Boot binary being copied to the packing directory.
+This is because the binary still needs to be seeded with information from the fex file.
+</p><p>The following is an example to manually patch u-boot:
+</p>
+<pre># Using sun9iw1p1 A80 Optimus Board as an example
+# Under lichee/tools/pack
+
+# Copy fex file
+cp -fv chips/sun9iw1p1/configs/optimus/sys_config.fex out/sys_config.fex
+
+# Copy U-Boot
+cp -fv chips/sun9iw1p1/bin/u-boot-sun9iw1p1.bin out/u-boot.fex
+
+# Fex file compiler requires fex file in CRLF format
+unix2dos out/sys_config.fex
+
+# Compile fex file
+pctools/linux/mod_update/script out/sys_config.fex
+
+# Patch U-Boot
+pctools/linux/mod_update/update_uboot out/u-boot.fex out/sys_config.bin
+</pre>
+<h3> <span class="mw-headline" id="Fixing_update_uboot"> Fixing update_uboot </span></h3>
+<p>If you get memory corruption when using <i>update_uboot</i>, use the following to build a working one. You will only hit this bug when trying to update an u-boot.fex that stores a <i>source_length</i> equal to a multiple of <i>align_size</i> inside the original u-boot header.
+</p>
+<pre>git clone https://github.com/longsleep/sunxi-pack-tools
+cd sunxi-pack-tools
+unix2dos &lt;&lt;EOF | patch --binary -l -p1 &amp;&amp; make
+diff --git a/update_uboot/check.c b/update_uboot/check.c
+index 4dae372..4987f14 100644
+--- a/update_uboot/check.c
++++ b/update_uboot/check.c
+@@ -27,6 +27,7 @@
+ *
+ ************************************************************************************************************************
+ */
++#include &lt;string.h&gt;
+ #include "check.h"
+ #include "spare_head.h"
+ 
+diff --git a/update_uboot/check.h b/update_uboot/check.h
+index ff1ac42..35e0291 100644
+--- a/update_uboot/check.h
++++ b/update_uboot/check.h
+@@ -36,6 +36,7 @@
+ #define CHECK_IS_CORRECT           0
+ 
+ 
++__s32 check_magic( __u32 *mem_base, const char *magic );
+ extern __s32 check_file   ( __u32 *mem_base, __u32 size, const char *magic );
+ extern __s32 gen_check_sum( void *boot_buf );
+ 
+diff --git a/update_uboot/update_uboot.c b/update_uboot/update_uboot.c
+index 2bb929f..cd5ccc7 100644
+--- a/update_uboot/update_uboot.c
++++ b/update_uboot/update_uboot.c
+@@ -10,7 +10,7 @@
+ #include &lt;ctype.h&gt;
+ #include &lt;unistd.h&gt;
+ 
+-#define  MAX_PATH             (260)
++#define  MAX_PATH             (1024)
+ 
+ 
+ int  script_length;
+@@ -19,6 +19,7 @@ int  align_size;
+ void *script_file_decode(char *script_name);
+ int merge_uboot(char *source_uboot_name, char *script_name);
+ 
++int align_uboot(char *source_uboot_name);
+ int update_for_uboot(char *uboot_name);
+ //------------------------------------------------------------------------------------------------------------
+ //
+@@ -685,6 +686,7 @@ int merge_uboot(char *source_uboot_name, char *script_file_name)
+        {
+                total_length = (total_length + align_size) &amp; (~(align_size - 1));
+        }
++       printf("u-boot+script total length =&nbsp;%d\n", total_length);
+ 
+        pbuf_source = (char *)malloc(total_length);
+        if(!pbuf_source)
+@@ -753,14 +755,15 @@ int align_uboot(char *source_uboot_name)
+        rewind(uboot_file);
+ 
+        head = (struct spare_boot_ctrl_head *)buffer;
+-       source_length = head-&gt;uboot_length;
++       total_length = source_length = head-&gt;uboot_length;
+        align_size = head-&gt;align_size;
+        if(source_length &amp; (align_size - 1))
+        {
+                total_length = (source_length + align_size) &amp; (~(align_size - 1));
+        }
+-       //printf("source length =&nbsp;%d\n", source_length);
+-       //printf("total length =&nbsp;%d\n", total_length);
++       printf("u-boot align size =&nbsp;%d\n", align_size);
++       printf("u-boot source length =&nbsp;%d\n", source_length);
++       printf("u-boot total length =&nbsp;%d\n", total_length);
+        uboot_buf = (char *)malloc(total_length);
+        if(!uboot_buf)
+        {
+EOF
+</pre>
+<h1> <span class="mw-headline" id="Installing_onto_Storage"> Installing onto Storage </span></h1>
+<h2> <span class="mw-headline" id="SD_card"> SD card </span></h2>
+<p>Allwinner SoCs have a specific boot process, as described in the <a href="https://linux-sunxi.org/EGON" title="EGON"> boot loader</a> page.
+The on-chip <a href="https://linux-sunxi.org/BROM" title="BROM">BROM</a> loads boot0 starting from sector 16, or 8 KiB. boot0 then loads boot1
+starting from sector 38192, or 19096 KiB. boot1 then loads u-boot from the first partiion (FAT).
+If the SoC SDK has done away with boot1, then u-boot is loaded from boot1's original place.
+</p><p>Each of these binaries have a specific header, which includes a magic string and a checksum. 
+Both must be correct for the binary to be accepted and executed by the previous stage.
+</p><p>The following shows the process of installing boot0 and u-boot built from the A80 SDK to an
+SD card in /dev/mmcblk0. Note you must leave enough unused space before the first partition,
+or u-boot may be overwritten by filesystem usage.
+</p>
+<pre># write boot0
+dd if=boot0_sdcard.fex of=/dev/mmcblk0 bs=1k seek=8
+
+# write u-boot
+dd if=u-boot.fex of=/dev/mmcblk0 bs=1k seek=19096
+</pre>
+<p>The SDK default config for u-boot only supports FAT filesystems, so you will need have a small
+FAT boot partition to store your kernel and other boot files.
+</p>
+<!-- Tidy found serious XHTML errors -->
+
+<!-- 
+NewPP limit report
+Preprocessor visited node count: 121/1000000
+Preprocessor generated node count: 220/1000000
+Post‐expand include size: 0/2097152 bytes
+Template argument size: 0/2097152 bytes
+Highest expansion depth: 2/40
+Expensive parser function count: 0/100
+-->
+
+<!-- Saved in parser cache with key sunxi-mw:pcache:idhash:1676-0!*!0!!en!*!* and timestamp 20201108161337 -->
+</div>				<!-- /bodycontent -->
+								<!-- printfooter -->
+				<div class="printfooter">
+				Retrieved from "<a href="https://linux-sunxi.org/index.php?title=SDK_build_howto&amp;oldid=16913">http://linux-sunxi.org/index.php?title=SDK_build_howto&amp;oldid=16913</a>"				</div>
+				<!-- /printfooter -->
+												<!-- catlinks -->
+				<div id="catlinks" class="catlinks"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="https://linux-sunxi.org/Special:Categories" title="Special:Categories">Categories</a>: <ul><li><a href="https://linux-sunxi.org/Category:Software" title="Category:Software">Software</a></li><li><a href="https://linux-sunxi.org/Category:Tutorial" title="Category:Tutorial">Tutorial</a></li></ul></div></div>				<!-- /catlinks -->
+												<div class="visualClear"></div>
+				<!-- debughtml -->
+								<!-- /debughtml -->
+			</div>
+			<!-- /bodyContent -->
+		</div>
+		<!-- /content -->
+		<!-- header -->
+		<div id="mw-head" class="noprint">
+			
+<!-- 0 -->
+<div id="p-personal" class="">
+	<h5>Personal tools</h5>
+	<ul>
+		<li id="pt-createaccount"><a href="https://linux-sunxi.org/index.php?title=Special:UserLogin&amp;returnto=SDK+build+howto&amp;type=signup">Create account</a></li>
+		<li id="pt-login"><a href="https://linux-sunxi.org/index.php?title=Special:UserLogin&amp;returnto=SDK+build+howto" title="You are encouraged to log in; however, it is not mandatory [alt-shift-o]" accesskey="o">Log in</a></li>
+	</ul>
+</div>
+
+<!-- /0 -->
+			<div id="left-navigation">
+				
+<!-- 0 -->
+<div id="p-namespaces" class="vectorTabs">
+	<h5>Namespaces</h5>
+	<ul>
+					<li id="ca-nstab-main" class="selected"><span><a href="https://linux-sunxi.org/SDK_build_howto" title="View the content page [alt-shift-c]" accesskey="c">Page</a></span></li>
+					<li id="ca-talk" class="new"><span><a href="https://linux-sunxi.org/index.php?title=Talk:SDK_build_howto&amp;action=edit&amp;redlink=1" title="Discussion about the content page [alt-shift-t]" accesskey="t">Discussion</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-variants" class="vectorMenu emptyPortlet">
+	<h4>
+		</h4>
+	<h5><span>Variants</span><a href="#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+			</div>
+			<div id="right-navigation">
+				
+<!-- 0 -->
+<div id="p-views" class="vectorTabs">
+	<h5>Views</h5>
+	<ul>
+					<li id="ca-view" class="selected"><span><a href="https://linux-sunxi.org/SDK_build_howto">Read</a></span></li>
+					<li id="ca-viewsource"><span><a href="https://linux-sunxi.org/index.php?title=SDK_build_howto&amp;action=edit" title="This page is protected.
+You can view its source [alt-shift-e]" accesskey="e">View source</a></span></li>
+					<li id="ca-history" class="collapsible"><span><a href="https://linux-sunxi.org/index.php?title=SDK_build_howto&amp;action=history" title="Past revisions of this page [alt-shift-h]" accesskey="h">View history</a></span></li>
+			</ul>
+</div>
+
+<!-- /0 -->
+
+<!-- 1 -->
+<div id="p-cactions" class="vectorMenu emptyPortlet">
+	<h5><span>Actions</span><a href="#"></a></h5>
+	<div class="menu">
+		<ul>
+					</ul>
+	</div>
+</div>
+
+<!-- /1 -->
+
+<!-- 2 -->
+<div id="p-search">
+	<h5><label for="searchInput">Search</label></h5>
+	<form action="/index.php" id="searchform">
+				<div>
+			<input type="search" name="search" title="Search linux-sunxi.org [alt-shift-f]" accesskey="f" id="searchInput" autocomplete="off" placeholder="Search">			<input type="submit" name="go" value="Go" title="Go to a page with this exact name if exists" id="searchGoButton" class="searchButton">			<input type="submit" name="fulltext" value="Search" title="Search the pages for this text" id="mw-searchButton" class="searchButton">					<input type="hidden" name="title" value="Special:Search">
+		</div>
+	</form>
+</div>
+
+<!-- /2 -->
+			</div>
+		</div>
+		<!-- /header -->
+		<!-- panel -->
+			<div id="mw-panel" class="noprint">
+				<!-- logo -->
+					<div id="p-logo"><a style="background-image: url(//linux-sunxi.org/images/c/c5/Logo-155x155.png);" href="https://linux-sunxi.org/Main_Page" title="Visit the main page"></a></div>
+				<!-- /logo -->
+				
+<!-- navigation -->
+<div class="portal" id="p-navigation">
+	<h5>Navigation</h5>
+	<div class="body">
+		<ul>
+			<li id="n-mainpage-description"><a href="https://linux-sunxi.org/Main_Page" title="Visit the main page [alt-shift-z]" accesskey="z">Main page</a></li>
+			<li id="n-portal"><a href="https://linux-sunxi.org/sunxi:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+			<li id="n-recentchanges"><a href="https://linux-sunxi.org/Special:RecentChanges" title="A list of recent changes in the wiki [alt-shift-r]" accesskey="r">Recent changes</a></li>
+			<li id="n-randompage"><a href="https://linux-sunxi.org/Special:Random" title="Load a random page [alt-shift-x]" accesskey="x">Random page</a></li>
+			<li id="n-help"><a href="https://linux-sunxi.org/Help:Contents" title="The place to find out">Help</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- /navigation -->
+
+<!-- SEARCH -->
+
+<!-- /SEARCH -->
+
+<!-- TOOLBOX -->
+<div class="portal" id="p-tb">
+	<h5>Tools</h5>
+	<div class="body">
+		<ul>
+			<li id="t-whatlinkshere"><a href="https://linux-sunxi.org/Special:WhatLinksHere/SDK_build_howto" title="A list of all wiki pages that link here [alt-shift-j]" accesskey="j">What links here</a></li>
+			<li id="t-recentchangeslinked"><a href="https://linux-sunxi.org/Special:RecentChangesLinked/SDK_build_howto" title="Recent changes in pages linked from this page [alt-shift-k]" accesskey="k">Related changes</a></li>
+			<li id="t-specialpages"><a href="https://linux-sunxi.org/Special:SpecialPages" title="A list of all special pages [alt-shift-q]" accesskey="q">Special pages</a></li>
+			<li id="t-print"><a href="https://linux-sunxi.org/index.php?title=SDK_build_howto&amp;printable=yes" rel="alternate" title="Printable version of this page [alt-shift-p]" accesskey="p">Printable version</a></li>
+			<li id="t-permalink"><a href="https://linux-sunxi.org/index.php?title=SDK_build_howto&amp;oldid=16913" title="Permanent link to this revision of the page">Permanent link</a></li>
+		</ul>
+	</div>
+</div>
+
+<!-- /TOOLBOX -->
+
+<!-- LANGUAGES -->
+
+<!-- /LANGUAGES -->
+			</div>
+		<!-- /panel -->
+		<!-- footer -->
+		<div id="footer">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last modified on 18 April 2016, at 02:28.</li>
+											<li id="footer-info-viewcount">This page has been accessed 32,619 times.</li>
+											<li id="footer-info-copyright">Content is available under <a class="external" href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution</a> unless otherwise noted.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="https://linux-sunxi.org/sunxi:Privacy_policy" title="sunxi:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="https://linux-sunxi.org/sunxi:About" title="sunxi:About">About linux-sunxi.org</a></li>
+											<li id="footer-places-disclaimer"><a href="https://linux-sunxi.org/sunxi:General_disclaimer" title="sunxi:General disclaimer">Disclaimers</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+					<li id="footer-copyrightico">
+						<a href="https://creativecommons.org/licenses/by/3.0/"><img src="SDK-build-howto-from-linux-sunxi.org_files/cc-by.png" alt="Creative Commons Attribution" width="88" height="31"></a>
+					</li>
+					<li id="footer-poweredbyico">
+						<a href="https://www.mediawiki.org/"><img src="SDK-build-howto-from-linux-sunxi.org_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" width="88" height="31"></a>
+					</li>
+				</ul>
+						<div style="clear:both"></div>
+		</div>
+		<!-- /footer -->
+		<script>if(window.mw){
+mw.loader.state({"site":"loading","user":"missing","user.groups":"ready"});
+}</script>
+<script src="SDK-build-howto-from-linux-sunxi.org_files/load_004.php"></script>
+<script>if(window.mw){
+mw.loader.load(["mediawiki.user","mediawiki.page.ready","mediawiki.searchSuggest","ext.cite"], null, true);
+}</script><script src="SDK-build-howto-from-linux-sunxi.org_files/load_005.php" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="SDK-build-howto-from-linux-sunxi.org_files/shCore.css">
+<link rel="stylesheet" type="text/css" href="SDK-build-howto-from-linux-sunxi.org_files/shThemeDefault.css">
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/XRegExp.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shCore.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushBash.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushDiff.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushIni.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushXml.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushJava.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushCpp.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushPlain.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushPhp.js"></script>
+<script type="text/javascript" src="SDK-build-howto-from-linux-sunxi.org_files/shBrushPython.js"></script>
+<script type="text/javascript">SyntaxHighlighter.all();</script>
+<script src="SDK-build-howto-from-linux-sunxi.org_files/load_002.php"></script>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="SDK-build-howto-from-linux-sunxi.org_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-33223122-1");
+pageTracker._trackPageview();
+</script><!-- Served in 0.093 secs. -->
+	
+
+<div id="tooltip" style="display: none;"><h3></h3><div class="body"></div><div class="url"></div></div><div style="display: none; font-size: 14.6667px;" class="suggestions"><div class="suggestions-results"></div><div class="suggestions-special"></div></div></body></html>
