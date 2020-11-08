@@ -23,7 +23,32 @@ cd u-boot-orangepi
 git checkout v2018.05-sun50iw9
 make orangepi_zero2_defconfig
 make
-# result: u-boot-sun50iw9p1.bin (?)
+# result: u-boot.bin = u-boot-sun50iw9p1.bin
+
+legacy h616 u-boot assembly:
+
+# based on: (from https://github.com/orangepi-xunlong/orangepi-build.git)
+# - scripts/pack-uboot.sh
+# - external/config/sources/families/include/sunxi64_common.inc
+# to be done on an x86_64 machine!
+
+mkdir u-boot-workdir-orangepi
+cd u-boot-workdir-orangepi
+git clone https://github.com/hexdump0815/u-boot-misc.git
+# get the u-boot.bin from the build on the armv7l machine here
+scp armv7lmachine:/compile/source/u-boot-orangepi/u-boot.bin u-boot.fex
+cp u-boot-misc/misc.h616/sdk-files/bin/* .
+u-boot-misc/misc.h616/sdk-files/tools/dtc -p 2048 -W no-unit_address_vs_reg -@ -O dtb -o orangepizero2-u-boot.dtb -b 0 orangepizero2-u-boot.dts
+unix2dos sys_config.fex
+u-boot-misc/misc.h616/sdk-files/tools/script sys_config.fex
+cp orangepizero2-u-boot.dtb sunxi.fex
+u-boot-misc/misc.h616/sdk-files/tools/update_dtb sunxi.fex 4096
+u-boot-misc/misc.h616/sdk-files/tools/update_boot0 boot0_sdcard.fex sys_config.bin SDMMC_CARD
+u-boot-misc/misc.h616/sdk-files/tools/update_uboot -no_merge u-boot.fex sys_config.bin
+unix2dos boot_package.cfg
+u-boot-misc/misc.h616/sdk-files/tools/dragonsecboot -pack boot_package.cfg
 
 # prepare it for imagebuilder/sonaremin
-???
+dd if=/dev/zero of=boot-h616-legacy.dd bs=8k count=1
+cat boot0_sdcard.fex >> boot-h616-legacy.dd
+dd if=boot_package.fex of=boot-h616-legacy.dd bs=8k seek=2050
