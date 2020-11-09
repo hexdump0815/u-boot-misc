@@ -5248,7 +5248,8 @@
 			opp-hz = <0x0 0x4d3f6400>;
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
-			opp-supported-hw = <0x2>;
+//			opp-supported-hw = <0x2>;
+			opp-supported-hw = <0x4>;
 		};
 
 		opp@1344000000 {
@@ -5262,7 +5263,8 @@
 			opp-hz = <0x0 0x5a1f4a00>;
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
-			opp-supported-hw = <0x1>;
+//			opp-supported-hw = <0x1>;
+			opp-supported-hw = <0x4>;
 		};
 	};
 
