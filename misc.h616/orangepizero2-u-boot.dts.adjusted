@@ -746,6 +746,7 @@
 			clock-output-names = "spi0";
 			linux,phandle = <0x7d>;
 			phandle = <0x7d>;
+			status = "disabled";
 		};
 
 		spi1 {
@@ -754,6 +755,7 @@
 			clock-output-names = "spi1";
 			linux,phandle = <0x81>;
 			phandle = <0x81>;
+			status = "disabled";
 		};
 
 		ephy_25m {
@@ -1592,6 +1594,7 @@
 				allwinner,pull = <0x0>;
 				linux,phandle = <0x7e>;
 				phandle = <0x7e>;
+				status = "disabled";
 			};
 
 			spi0@1 {
@@ -1603,6 +1606,7 @@
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x7f>;
 				phandle = <0x7f>;
+				status = "disabled";
 			};
 
 			spi0@2 {
@@ -1613,6 +1617,7 @@
 				allwinner,pull = <0x0>;
 				linux,phandle = <0x80>;
 				phandle = <0x80>;
+				status = "disabled";
 			};
 
 			spi1@0 {
@@ -3216,7 +3221,7 @@
 			pinctrl-1 = <0x80>;
 			spi0_cs_number = <0x1>;
 			spi0_cs_bitmap = <0x1>;
-			status = "okay";
+			status = "disabled";
 			spi_slave_mode = <0x0>;
 			linux,phandle = <0x142>;
 			phandle = <0x142>;
@@ -3380,7 +3385,8 @@
 			sd-uhs-ddr50;
 			sd-uhs-sdr104;
 			sunxi-dis-signal-vol-sw;
-			sdio-used-1v8;
+//			sdio-used-1v8;
+// was not set in android
 			cap-sdio-irq;
 			ignore-pm-notify;
 			ctl-spec-caps = <0x8>;
