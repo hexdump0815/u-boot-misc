@@ -1,6 +1,7 @@
 /dts-v1/;
 
 /memreserve/   0x0000000048000000 0x0000000001000000;
+// was not in android dts
 / {
 	compatible = "allwinner,h616", "arm,sun50iw9p1";
 	#size-cells = <0x2>;
@@ -1303,11 +1304,12 @@
 
 	box_start_os0 {
 		led_state = <0x0>;
-		pinctrl-0 = <0xde>;
+//		pinctrl-0 = <0xde>;
 		compatible = "allwinner,box_start_os";
 		start_type = <0x1>;
 		pmukey_num = <0x0>;
-		pinctrl-1 = <0xdf>;
+//		pinctrl-1 = <0xdf>;
+// both were in android dts - they seem to be realted to standby
 		pmukey_used = <0x0>;
 		irkey_used = <0x0>;
 		led_power = <0x0>;
@@ -2011,7 +2013,8 @@
 			dac_type0 = <0x0>;
 			interface = <0x1>;
 			phandle = <0x155>;
-			status = "okay";
+			status = "disabled";
+// was in android	status = "okay";
 			dac_src0 = <0x0>;
 			pinctrl-names = "active", "sleep";
 		};
@@ -2164,7 +2167,8 @@
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x106>;
 				allwinner,pins = "PH5", "PH6", "PH2", "PH3", "PH4";
-				allwinner,function = "io_disabled";
+				allwinner,function = "sim";
+// was in adnroid		allwinner,function = "io_disabled";
 				phandle = <0x106>;
 				allwinner,pname = "scr1_rst", "scr1_det", "scr1_vccen", "scr1_sck", "scr1_sda";
 				allwinner,drive = <0x1>;
@@ -2658,6 +2662,7 @@
 			};
 
 			uart2@0 {
+// this one still semms to be different
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x30>;
 				allwinner,pins = "PH5", "PH6", "PH7", "PH8";
@@ -2840,6 +2845,8 @@
 			};
 
 			twi3@0 {
+// this one still differs between android and opi
+// looks like maybe @0 and @1 are swapped
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x45>;
 				allwinner,pins = "PA10", "PA11";
@@ -3054,11 +3061,10 @@
 		};
 
 		card2_boot_para {
-			sdc_tm4_win_th = <0xa>;
-// opi zero 2 has the above line removed
+//			sdc_tm4_win_th = <0xa>;
+// the above line was there in android dts
 			sdc_ex_dly_used = <0x2>;
 			pinctrl-0 = <0x18f 0x190>;
-//			pinctrl-0 = <0x182 0x183>;
 			card_high_speed = <0x1>;
 			device_type = "card2_boot_para";
 			sdc_io_1v8 = <0x1>;
@@ -3080,6 +3086,7 @@
 		};
 
 		gpio_para {
+// this one differes still ab bit between android and opi
 			compatible = "allwinner,sunxi-init-gpio";
 			gpio_pin_1 = <0x53 0x7 0x6 0x1 0xffffffff 0xffffffff 0x0>;
 			normal_led = "gpio_pin_1";
@@ -3272,6 +3279,7 @@
 			phandle = <0x158>;
 		};
 
+// this was not in the android dts
 		boot_init_gpio {
 			device_type = "boot_init_gpio";
 			gpio0 = <0x53 0x2 0xc 0x1 0xffffffff 0xffffffff 0x1>;
@@ -3468,6 +3476,8 @@
 			pinctrl-names = "default", "sleep";
 			cap-sd-highspeed;
 			sd-uhs-ddr50;
+//			sdio-used-1v8;
+// this one is only in opi dts
 		};
 
 		dram_para6 {
@@ -3568,9 +3578,10 @@
 		};
 
 		jtag_para {
-			pinctrl-0 = <0x186>;
+			pinctrl-0 = <0x193>;
 			device_type = "jtag_para";
 			jtag_enable = <0x0>;
+// was enabled in android dts
 		};
 
 		key_boot_recovery {
@@ -3578,6 +3589,7 @@
 			device_type = "key_boot_recovery";
 			short_press_mode = <0x0>;
 			recovery_key;
+// was in android	recovery_key = <0x53 0x7 0x9 0x0 0xffffffff 0xffffffff 0xffffffff>;
 			key_work_mode = <0x0>;
 			long_press_mode = <0x1>;
 			press_mode_enable = <0x0>;
@@ -3857,6 +3869,7 @@
 			logical_start = <0xa000>;
 			device_type = "card_boot";
 			sprite_gpio0;
+// was in android	sprite_gpio0 = <0x53 0x7 0x6 0x1 0xffffffff 0xffffffff 0x1>;
 		};
 
 		usbc0@0 {
@@ -3981,7 +3994,8 @@
 			reg = <0x0 0x5011000 0x0 0x1000>;
 			pinctrl-1 = <0x84>;
 			phandle = <0x150>;
-			status = "disable";
+			status = "disabled";
+// was a typo in android dts with missing d at the end
 			#address-cells = <0x1>;
 			spi1_cs_bitmap = <0x1>;
 			clock-frequency = <0x5f5e100>;
@@ -4016,7 +4030,8 @@
 			reg = <0x0 0x5002800 0x0 0x400>;
 			pinctrl-1 = <0x43>;
 			phandle = <0x124>;
-			status = "disable";
+			status = "disabled";
+// was in android	status = "disable";
 			#address-cells = <0x1>;
 			clock-frequency = <0x30d40>;
 			pinctrl-names = "default", "sleep";
@@ -4354,7 +4369,8 @@
 			reg = <0x0 0x5002000 0x0 0x400>;
 			pinctrl-1 = <0x3d>;
 			phandle = <0x122>;
-			status = "disable";
+			status = "disabled";
+// was in android	status = "disable";
 			#address-cells = <0x1>;
 			clock-frequency = <0x61a80>;
 			pinctrl-names = "default", "sleep";
@@ -4363,7 +4379,8 @@
 		ir_boot_recovery {
 			ir_addr_code3 = <0xfe01>;
 			ir_addr_code2 = <0xfe01>;
-			ir_work_mode = <0x0>;
+			ir_work_mode = <0x1>;
+// was disabled in android dts
 			ir_press_times = <0x2>;
 			ir_recovery_key_code2 = <0x4c>;
 			device_type = "ir_boot_recovery";
@@ -4992,11 +5009,11 @@
 			screen1_output_type = <0x2>;
 			dev1_screen_id = <0x1>;
 			compatible = "allwinner,sunxi-disp";
-			boot_disp1 = <0x1010000>;
+//			boot_disp1 = <0x1010000>;
 			screen1_output_cs = <0x104>;
-			boot_disp = <0x40a>;
-//			boot_disp = <0x0>;
-// and boot_disp1, boot_disp2, boot_fb0 are removed in opi zero 2
+			boot_disp = <0x0>;
+// was in android	boot_disp = <0x40a>;
+// and boot_disp1, boot_disp2, boot_fb0 were in android dts
 			interrupts = <0x0 0x58 0x4 0x0 0x40 0x4 0x0 0x41 0x4 0x0 0x42 0x4 0x0 0x43 0x4>;
 			linux,phandle = <0x154>;
 			chn_cfg_mode = <0x1>;
@@ -5026,17 +5043,18 @@
 			fb1_format = <0x0>;
 			screen0_output_bits = <0x0>;
 			screen0_output_dvi_hdmi = <0x2>;
-			boot_disp2 = <0x4>;
+//			boot_disp2 = <0x4>;
 			dev0_output_type = <0x4>;
 			screen1_output_eotf = <0x4>;
 			dev0_output_mode = <0xa>;
 			dev1_output_mode = <0xb>;
-			boot_fb0 = "bbf2d900,500,2d0,20,1400,0,0,500,2d0";
+//			boot_fb0 = "bbf2d900,500,2d0,20,1400,0,0,500,2d0";
 			screen0_output_format = <0x0>;
 			iommus = <0x28 0x0 0x0>;
 			disp_mode = <0x0>;
 			screen1_output_aspect_ratio = <0x8>;
-			tv_vdid = <0xbbe83938>;
+//			tv_vdid = <0xbbe83938>;
+// not in the opi dts
 			screen0_output_scan = <0x0>;
 			screen1_output_scan = <0x0>;
 			screen0_output_range = <0x2>;
@@ -5071,7 +5089,8 @@
 			reg = <0x0 0x5002400 0x0 0x400>;
 			pinctrl-1 = <0x40>;
 			phandle = <0x123>;
-			status = "disable";
+			status = "disabled";
+// was in android	status = "disable";
 			#address-cells = <0x1>;
 			clock-frequency = <0x30d40>;
 			pinctrl-names = "default", "sleep";
@@ -5373,6 +5392,7 @@
 		bootargs = "earlyprintk=sunxi-uart,0x05000000 loglevel=8 initcall_debug=1 console=ttyS0 init=/init";
 		linux,initrd-end = <0x0 0x0>;
 		linux,initrd-start = <0x0 0x0>;
+// all three were different in android dts
 	};
 
 	sunxi-sid@03006000 {
