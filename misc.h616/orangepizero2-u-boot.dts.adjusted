@@ -3394,6 +3394,19 @@
 			phandle = <0x147>;
 		};
 
+		sprd-marlin3 {
+			adma-tx;
+			sdhci-name = <0xd3>;
+			sprd,btwf-file-name = "/vendor/etc/firmware/wcnmodem.bin";
+			adma-rx;
+			compatible = "sprd,marlin3";
+			enable-gpios = <0x53 0x6 0x12 0x1 0xffffffff 0xffffffff 0x0>;
+			reset-gpios = <0x53 0x6 0x13 0x1 0xffffffff 0xffffffff 0x0>;
+			data-irq;
+			m2-to-ap-irq-gpios = <0x53 0x6 0x10 0x6 0xffffffff 0xffffffff 0x0>;
+			sprd,gnss-file-name = "/vendor/etc/firmware/gnssmodem.bin";
+		};
+
 		disp@01000000 {
 			compatible = "allwinner,sunxi-disp";
 			reg = <0x0 0x1000000 0x0 0x1400000 0x0 0x6510000 0x0 0x200 0x0 0x6511000 0x0 0x1000 0x0 0x6512000 0x0 0x1000 0x0 0x6515000 0x0 0x1000 0x0 0x6516000 0x0 0x1000>;
@@ -4277,6 +4290,7 @@
 			gmac-power1;
 			gmac-power2;
 			status = "okay";
+			use_ephy25m = <0x1>;
 			linux,phandle = <0x175>;
 			phandle = <0x175>;
 		};
@@ -5907,5 +5921,6 @@
 		mmu_aw = "/iommu@030f0000";
 		gpu = "/gpu@0x01800000";
 		ipa_dvfs = "/gpu@0x01800000/ipa_dvfs";
+		sprd_marlin3 = "/soc@03000000/sprd-marlin3";
 	};
 };
