@@ -70,3 +70,45 @@ hexdump of boot block binary (from x96q-max tv box 648mhz according to boot outp
 00002480  0e 0e 0e 0e 1c 1c 00 00  01 00 00 00 fb 30 00 00  |.............0..|
 00002490  00 00 00 00 40 08 00 00  04 00 00 00 08 00 00 00  |....@...........|
 000024a0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+
+
+... and there is an even easier way to get the timing info on allwinner devices: it is usually also included in the device-tree (dtb/dts) - see the device-tree-copy for an option of how to extract the device tree from a running android device even without root access
+
+example excerpt from a dts file:
+
+...
+                dram_para1 {
+                        dram_tpr2 = <0x0>;
+                        dram_mr14 = <0x0>;
+                        dram_tpr13 = <0x40>;
+                        dram_clk = <0x258>;
+                        dram_tpr12 = <0xeddc7564>;
+                        dram_mr12 = <0x0>;
+                        dram_tpr6 = <0x33808080>;
+                        dram_tpr10 = <0x2f0006>;
+                        dram_para2 = <0x0>;
+                        dram_para1 = <0x30fb>;
+                        dram_mr1 = <0x4>;
+                        dram_mr16 = <0x0>;
+                        dram_mr6 = <0x0>;
+                        dram_mr13 = <0x0>;
+                        dram_ca_dri = <0x1c12>;
+                        device_type = "dram_para1";
+                        dram_mr11 = <0x0>;
+                        dram_mr3 = <0x0>;
+                        dram_mr5 = <0x0>;
+                        dram_mr22 = <0x0>;
+                        dram_odt_en = <0x1>;
+                        dram_tpr0 = <0xc0000a05>;
+                        dram_mr0 = <0x840>;
+                        dram_mr17 = <0x0>;
+                        dram_type = <0x3>;
+                        dram_mr4 = <0x0>;
+                        dram_tpr11 = <0xddddcccc>;
+                        dram_tpr1 = <0x0>;
+                        dram_tpr3 = <0x0>;
+                        dram_mr2 = <0x8>;
+                        dram_dx_dri = <0xe0e0e0e>;
+                        dram_dx_odt = <0x3030303>;
+                };
+...
