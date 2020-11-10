@@ -5,6 +5,12 @@
 # important: although we are building for a 64bit aarch64 architecture
 # u-boot seems to be built in 32bit and thus a 32bit (armv7l) system
 # is required for the below compilation
+#
+# some notes about comparing the android dts to the opi zero 2 one:
+# - dtc -I dts -O dts -s x96q-android.dts | sed 's,phandle\ =.*,phandle,g' > /tmp/a
+# - dtc -I dts -O dts -s orangepizero2-u-boot.dts.adjusted | sed 's,phandle\ =.*,phandle,g' > /tmp/b
+# - diff -u /tmp/a /tmp/b # to see the differences, leaving out the not relevant changed phandles
+# - adjust what makes sense from the android dts in the opi zero 2 dts
 
 boot0 etc. blobs and tools:
 
