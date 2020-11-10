@@ -746,7 +746,6 @@
 			clock-output-names = "spi0";
 			linux,phandle = <0x7d>;
 			phandle = <0x7d>;
-			status = "disabled";
 		};
 
 		spi1 {
@@ -755,7 +754,6 @@
 			clock-output-names = "spi1";
 			linux,phandle = <0x81>;
 			phandle = <0x81>;
-			status = "disabled";
 		};
 
 		ephy_25m {
@@ -1375,7 +1373,7 @@
 			};
 
 			uart2@0 {
-				allwinner,pins = "PG15", "PG16", "PG17", "PG18";
+				allwinner,pins = "PH5", "PH6", "PH7", "PH8";
 				allwinner,pname = "uart2_tx", "uart2_rx", "uart2_rts", "uart2_cts";
 				allwinner,function = "uart2";
 				allwinner,muxsel = <0x2>;
@@ -1386,7 +1384,7 @@
 			};
 
 			uart2@1 {
-				allwinner,pins = "PG15", "PG16", "PG17", "PG18";
+				allwinner,pins = "PH5", "PH6", "PH7", "PH8";
 				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x7>;
 				allwinner,drive = <0x1>;
@@ -1522,10 +1520,10 @@
 			};
 
 			twi3@0 {
-				allwinner,pins = "PH4", "PH5";
+				allwinner,pins = "PA10", "PA11";
 				allwinner,pname = "twi3_scl", "twi3_sda";
 				allwinner,function = "twi3";
-				allwinner,muxsel = <0x5>;
+				allwinner,muxsel = <0x2>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x45>;
@@ -1533,7 +1531,7 @@
 			};
 
 			twi3@1 {
-				allwinner,pins = "PH4", "PH5";
+				allwinner,pins = "PA10", "PA11";
 				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x7>;
 				allwinner,drive = <0x1>;
@@ -1586,44 +1584,41 @@
 			};
 
 			spi0@0 {
-				allwinner,pins = "PC0", "PC2", "PC4";
-				allwinner,pname = "spi0_sclk", "spi0_mosi", "spi0_miso";
+				allwinner,pins = "PC0", "PC2", "PC4", "PC15", "PC16";
+				allwinner,pname = "spi0_sclk", "spi0_mosi", "spi0_miso", "spi0_wp", "spi0_hold";
 				allwinner,function = "spi0";
 				allwinner,muxsel = <0x4>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x0>;
 				linux,phandle = <0x7e>;
 				phandle = <0x7e>;
-				status = "disabled";
 			};
 
 			spi0@1 {
-				allwinner,pins = "PC3";
-				allwinner,pname = "spi0_cs0";
+				allwinner,pins = "PC3", "PC7";
+				allwinner,pname = "spi0_cs0", "spi0_cs1";
 				allwinner,function = "spi0";
 				allwinner,muxsel = <0x4>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x1>;
 				linux,phandle = <0x7f>;
 				phandle = <0x7f>;
-				status = "disabled";
 			};
 
 			spi0@2 {
-				allwinner,pins = "PC0", "PC2", "PC3", "PC4";
+				allwinner,pins = "PC0", "PC2", "PC3", "PC4", "PC7", "PC15", "PC16";
 				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x7>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x0>;
 				linux,phandle = <0x80>;
 				phandle = <0x80>;
-				status = "disabled";
 			};
 
 			spi1@0 {
 				allwinner,pins = "PH6", "PH7", "PH8";
 				allwinner,pname = "spi1_sclk", "spi1_mosi", "spi1_miso";
-				allwinner,function = "spi1";
+				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x4>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x0>;
@@ -1632,9 +1627,9 @@
 			};
 
 			spi1@1 {
-				allwinner,pins = "PH9";
-				allwinner,pname = "spi1_cs1";
-				allwinner,function = "spi1";
+				allwinner,pins = "PH5", "PH9";
+				allwinner,pname = "spi1_cs0", "spi1_cs1";
+				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x4>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x1>;
@@ -1643,7 +1638,7 @@
 			};
 
 			spi1@2 {
-				allwinner,pins = "PH6", "PH7", "PH8", "PH9";
+				allwinner,pins = "PH5", "PH6", "PH7", "PH8", "PH9";
 				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x7>;
 				allwinner,drive = <0x1>;
@@ -1733,21 +1728,23 @@
 			};
 
 			spdif@0 {
-				allwinner,pins = "PH2", "PH3", "PH4";
-				allwinner,function = "spdif";
-				allwinner,muxsel = <0x3>;
-				allwinner,drive = <0x1>;
-				allwinner,pull = <0x0>;
+//				allwinner,pins = "PH2", "PH3", "PH4";
+//				allwinner,function = "spdif";
+//				allwinner,muxsel = <0x3>;
+//				allwinner,drive = <0x1>;
+//				allwinner,pull = <0x0>;
+// all not set in x96q dts
 				linux,phandle = <0x62>;
 				phandle = <0x62>;
 			};
 
 			spdif_sleep@0 {
-				allwinner,pins = "PH2", "PH3", "PH4";
-				allwinner,function = "io_disabled";
-				allwinner,muxsel = <0x7>;
-				allwinner,drive = <0x1>;
-				allwinner,pull = <0x0>;
+//				allwinner,pins = "PH2", "PH3", "PH4";
+//				allwinner,function = "io_disabled";
+//				allwinner,muxsel = <0x7>;
+//				allwinner,drive = <0x1>;
+//				allwinner,pull = <0x0>;
+// all not set in x96q dts
 				linux,phandle = <0x63>;
 				phandle = <0x63>;
 			};
@@ -1813,7 +1810,7 @@
 			};
 
 			ahub_daudio2@0 {
-				allwinner,pins = "PG11", "PG12", "PG13", "PG14";
+				allwinner,pins = "PG10", "PG11", "PG12", "PG13", "PG14";
 				allwinner,function = "h_pcm2";
 				allwinner,muxsel = <0x2>;
 				allwinner,drive = <0x1>;
@@ -1823,7 +1820,7 @@
 			};
 
 			ahub_daudio2_sleep@0 {
-				allwinner,pins = "PG11", "PG12", "PG13", "PG14";
+				allwinner,pins = "PG10", "PG11", "PG12", "PG13", "PG14";
 				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x7>;
 				allwinner,drive = <0x1>;
@@ -1997,7 +1994,7 @@
 			scr1@0 {
 				allwinner,pins = "PH5", "PH6", "PH2", "PH3", "PH4";
 				allwinner,pname = "scr1_rst", "scr1_det", "scr1_vccen", "scr1_sck", "scr1_sda";
-				allwinner,function = "sim1";
+				allwinner,function = "io_disabled";
 				allwinner,muxsel = <0x5>;
 				allwinner,drive = <0x1>;
 				allwinner,pull = <0x1>;
@@ -3223,18 +3220,20 @@
 			spi0_cs_number = <0x1>;
 			spi0_cs_bitmap = <0x1>;
 			status = "disabled";
-			spi_slave_mode = <0x0>;
+//			spi_slave_mode = <0x0>;
+// not set in x96q dts
 			linux,phandle = <0x142>;
 			phandle = <0x142>;
 
-			spi_board0 {
-				device_type = "spi_board0";
-				compatible = "rohm,dh2228fv";
-				spi-max-frequency = <0x1000000>;
-				reg = <0x0>;
-				spi-rx-bus-width = <0x1>;
-				spi-tx-bus-width = <0x1>;
-			};
+//			spi_board0 {
+//				device_type = "spi_board0";
+//				compatible = "rohm,dh2228fv";
+//				spi-max-frequency = <0x1000000>;
+//				reg = <0x0>;
+//				spi-rx-bus-width = <0x1>;
+//				spi-tx-bus-width = <0x1>;
+//			};
+// not defined in x96q dts
 		};
 
 		spi@05011000 {
@@ -3251,7 +3250,7 @@
 			pinctrl-1 = <0x84>;
 			spi1_cs_number = <0x2>;
 			spi1_cs_bitmap = <0x2>;
-			status = "okay";
+			status = "disabled";
 			spi_slave_mode = <0x0>;
 			linux,phandle = <0x143>;
 			phandle = <0x143>;
@@ -3259,8 +3258,8 @@
 			spi_board1 {
 				device_type = "spi_board1";
 				compatible = "rohm,dh2228fv";
-				spi-max-frequency = <0x1000000>;
-				reg = <0x1>;
+				spi-max-frequency = <0x5f5e100>;
+				reg = <0x0>;
 				spi-rx-bus-width = <0x1>;
 				spi-tx-bus-width = <0x1>;
 			};
@@ -4260,14 +4259,15 @@
 			pinctrl-1 = <0xce>;
 			pinctrl-names = "default", "sleep";
 			phy-mode = "rgmii";
-			tx-delay = <0x6>;
-			rx-delay = <0x0>;
+			tx-delay = <0x7>;
+			rx-delay = <0x1f>;
 			phy-rst;
 			gmac-power0;
 			gmac-power1;
 			gmac-power2;
 			status = "disabled";
-			use_ephy25m = <0x0>;
+//			use_ephy25m = <0x0>;
+// the original opi dts is setting this
 			linux,phandle = <0x174>;
 			phandle = <0x174>;
 		};
@@ -4482,7 +4482,7 @@
 
 		jtag_para {
 			device_type = "jtag_para";
-			jtag_enable = <0x0>;
+			jtag_enable = <0x1>;
 			pinctrl-0 = <0x186>;
 		};
 
@@ -5390,7 +5390,7 @@
 
 	memory@40000000 {
 		device_type = "memory";
-		reg = <0x0 0x40000000 0x0 0x20000000>;
+		reg = <0x0 0x40000000 0x0 0x80000000>;
 	};
 
 	interrupt-controller@03020000 {
