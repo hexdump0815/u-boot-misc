@@ -5,7 +5,7 @@
 	interrupt-parent = <0x1>;
 	#address-cells = <0x2>;
 	#size-cells = <0x2>;
-	model = "Orange Pi Zero 2";
+	model = "X96Q TV Box";
 	compatible = "allwinner,h616", "arm,sun50iw9p1";
 
 	clocks {
