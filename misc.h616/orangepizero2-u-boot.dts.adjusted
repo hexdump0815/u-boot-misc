@@ -2595,7 +2595,8 @@
 			pinctrl-1 = <0x3a>;
 			uart5_port = <0x5>;
 			uart5_type = <0x2>;
-			status = "okay";
+			status = "disabled";
+// this one is disabled in the x96q dts, so lets disable it here too
 			linux,phandle = <0x120>;
 			phandle = <0x120>;
 		};
@@ -4290,7 +4291,8 @@
 			gmac-power1;
 			gmac-power2;
 			status = "okay";
-			use_ephy25m = <0x1>;
+//			use_ephy25m = <0x1>;
+// this one is neither set in the original opi dts nor in the x96q dts
 			linux,phandle = <0x175>;
 			phandle = <0x175>;
 		};
