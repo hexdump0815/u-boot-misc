@@ -52,8 +52,9 @@ cp sun50iw9p1-u-boot.dtb sunxi.fex
 u-boot-misc/misc.h616/sdk-files/tools/update_dtb sunxi.fex 4096
 u-boot-misc/misc.h616/sdk-files/tools/update_boot0 boot0_sdcard.fex sys_config.bin SDMMC_CARD
 u-boot-misc/misc.h616/sdk-files/tools/update_uboot -no_merge u-boot.fex sys_config.bin
-unix2dos boot_package.cfg
-u-boot-misc/misc.h616/sdk-files/tools/dragonsecboot -pack boot_package.cfg
+grep -v dtbo boot_package.cfg > boot_package.cfg.no-dtbo
+unix2dos boot_package.cfg.no-dtbo
+u-boot-misc/misc.h616/sdk-files/tools/dragonsecboot -pack boot_package.cfg.no-dtbo
 
 # prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-h616-legacy.dd bs=8k count=1
