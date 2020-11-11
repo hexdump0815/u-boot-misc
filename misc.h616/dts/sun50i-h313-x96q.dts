@@ -4573,13 +4573,6 @@
 			sprite_gpio0;
 		};
 
-		boot_init_gpio {
-			device_type = "boot_init_gpio";
-			status = "okay";
-			gpio0 = <0x53 0x2 0xc 0x1 0xffffffff 0xffffffff 0x1>;
-			gpio1 = <0x53 0x2 0xd 0x1 0xffffffff 0xffffffff 0x0>;
-		};
-
 		ir_boot_recovery {
 			device_type = "ir_boot_recovery";
 			status = "okay";
