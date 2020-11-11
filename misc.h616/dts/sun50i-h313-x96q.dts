@@ -3142,8 +3142,6 @@
 			linein_gain = <0x3>;
 			digital_vol = <0x0>;
 			lineout_vol = <0x1a>;
-			pa_ctl_level = <0x1>;
-			pa_msleep_time = <0x64>;
 			ramp_func_used = <0x1>;
 			avcc-supply = <0x68>;
 			vcc33_audio-supply = <0x69>;
