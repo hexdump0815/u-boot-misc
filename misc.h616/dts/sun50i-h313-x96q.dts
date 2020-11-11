@@ -3298,7 +3298,7 @@
 			compatible = "allwinner,sunxi-daudio0-machine";
 			sunxi,cpudai-controller = <0x71>;
 			device_type = "snddaudio0";
-			status = "disabled";
+			status = "okay";
 			linux,phandle = <0x13a>;
 			phandle = <0x13a>;
 		};
@@ -3413,8 +3413,8 @@
 			pinctrl-names = "default", "sleep";
 			pinctrl-0 = <0x82 0x83>;
 			pinctrl-1 = <0x84>;
-			spi1_cs_number = <0x2>;
-			spi1_cs_bitmap = <0x2>;
+			spi1_cs_number = <0x1>;
+			spi1_cs_bitmap = <0x1>;
 			status = "disabled";
 			spi_slave_mode = <0x0>;
 			linux,phandle = <0x143>;
