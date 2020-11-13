@@ -1,0 +1,9 @@
+for details how to use it see: https://github.com/armbian/build/blob/37b50f154af402fbe2930be5ed23a9923292f2d4/config/sources/families/rk322x.conf#L60-L62
+
+tools/mkimage -n rk322x -T rksd -d rk3328_ddr_333MHz_v1.15.bin u-boot-rk3328-with-spl.bin
+cat spl/u-boot-spl.bin >> u-boot-rk3328-with-spl.bin
+dd if=u-boot.itb of=u-boot-rk3328-with-spl.bin seek=$((0x200 - 0x40)) conv=notrunc
+
+see also: https://forum.armbian.com/topic/12656-csc-armbian-for-rk322x-tv-boxes/?do=findComment&comment=112540
+
+... then write the resulting binary at location 0x40 on the sdcard. Don't do this directly on the eMMC because in case something goes wrong you brick the box and will need the unbrick procedure!
