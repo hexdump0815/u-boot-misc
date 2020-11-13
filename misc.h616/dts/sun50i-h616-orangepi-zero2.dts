@@ -5407,6 +5407,33 @@
 			clock-latency-ns = <0x3b9b0>;
 			opp-supported-hw = <0x1>;
 		};
+
+		opp@1608000000 {
+			opp-hz = <0x0 0x5fd82200>;
+			opp-microvolt = <0x10c8e0>;
+			clock-latency-ns = <0x3b9b0>;
+//			opp-supported-hw = <0x1>;
+			opp-supported-hw = <0x4>;
+			status = "disabled";
+		};
+
+		opp-1704000000 {
+			opp-hz = <0x0 0x6590fa00>;
+			opp-microvolt = <0x10c8e0>;
+			clock-latency-ns = <0x3b9b0>;
+//			opp-supported-hw = <0x1>;
+			opp-supported-hw = <0x4>;
+			status = "disabled";
+		};
+
+		opp-1800000000 {
+			opp-hz = <0x0 0x6b49d200>;
+			opp-microvolt = <0x10c8e0>;
+			clock-latency-ns = <0x3b9b0>;
+//			opp-supported-hw = <0x1>;
+			opp-supported-hw = <0x4>;
+			status = "disabled";
+		};
 	};
 
 	psci {
