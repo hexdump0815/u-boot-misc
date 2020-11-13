@@ -5220,28 +5220,26 @@
 	};
 
 	chosen {
-		bootargs = "earlyprintk=sunxi-uart,0x05000000 loglevel=8 initcall_debug=1 console=ttyS0 init=/init";
-		linux,initrd-start = <0x0 0x0>;
-		linux,initrd-end = <0x0 0x0>;
+		bootargs = "earlyprintk=sunxi-uart,0x05000000 earlycon=uart,mmio32,0x5000000 console=tty1 console=ttyS0,115200 root=/dev/mmcblk1p2 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1";
 	};
 
-	firmware {
-
-		android {
-			compatible = "android,firmware";
-			boot_devices = "soc/sdc0,soc/sdc2,soc";
-
-			vbmeta {
-				compatible = "android,vbmeta";
-				parts = "vbmeta,vbmeta_system,vbmeta_vendor,boot,super,recovery";
-			};
-		};
-
-		optee {
-			compatible = "linaro,optee-tz";
-			method = "smc";
-		};
-	};
+//	firmware {
+//
+//		android {
+//			compatible = "android,firmware";
+//			boot_devices = "soc/sdc0,soc/sdc2,soc";
+//
+//			vbmeta {
+//				compatible = "android,vbmeta";
+//				parts = "vbmeta,vbmeta_system,vbmeta_vendor,boot,super,recovery";
+//			};
+//		};
+//
+//		optee {
+//			compatible = "linaro,optee-tz";
+//			method = "smc";
+//		};
+//	};
 
 	cpus {
 		#address-cells = <0x2>;

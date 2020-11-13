@@ -1,6 +1,7 @@
 /dts-v1/;
 
 /memreserve/	0x0000000048000000 0x0000000001000000;
+// not sure if the above is required
 / {
 	interrupt-parent = <0x1>;
 	#address-cells = <0x2>;
@@ -3576,6 +3577,10 @@
 			interrupts = <0x0 0x58 0x4 0x0 0x40 0x4 0x0 0x41 0x4 0x0 0x42 0x4 0x0 0x43 0x4>;
 			clocks = <0xb 0x98 0x12 0x13 0x14 0x15 0x16>;
 			boot_disp = <0x0>;
+//			boot_disp = <0x40a>;
+//			boot_disp1 = <0x1010001>;
+//			boot_disp2 = <0x04>;
+// those seem to be not required
 			fb_base = <0x0>;
 			iommus = <0x28 0x0 0x0>;
 			status = "okay";
@@ -3620,6 +3625,8 @@
 			fb1_height = <0x0>;
 			chn_cfg_mode = <0x1>;
 			disp_para_zone = <0x1>;
+//			tv_vdid = <0xbbe86940>;
+// this seems to be not required
 			linux,phandle = <0x148>;
 			phandle = <0x148>;
 		};
@@ -5236,28 +5243,28 @@
 	};
 
 	chosen {
-		bootargs = "earlyprintk=sunxi-uart,0x05000000 loglevel=8 initcall_debug=1 console=ttyS0 init=/init";
-		linux,initrd-start = <0x0 0x0>;
-		linux,initrd-end = <0x0 0x0>;
+		bootargs = "earlyprintk=sunxi-uart,0x05000000 earlycon=uart,mmio32,0x5000000 console=tty1 console=ttyS0,115200 root=/dev/mmcblk1p2 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1";
+//		linux,initrd-end = <0x00 0x49fff358>;
+//		linux,initrd-start = <0x00 0x4943a000>;
 	};
 
-	firmware {
-
-		android {
-			compatible = "android,firmware";
-			boot_devices = "soc/sdc0,soc/sdc2,soc";
-
-			vbmeta {
-				compatible = "android,vbmeta";
-				parts = "vbmeta,vbmeta_system,vbmeta_vendor,boot,super,recovery";
-			};
-		};
-
-		optee {
-			compatible = "linaro,optee-tz";
-			method = "smc";
-		};
-	};
+//	firmware {
+//
+//		android {
+//			compatible = "android,firmware";
+//			boot_devices = "soc/sdc0,soc/sdc2,soc";
+//
+//			vbmeta {
+//				compatible = "android,vbmeta";
+//				parts = "vbmeta,vbmeta_system,vbmeta_vendor,boot,super,recovery";
+//			};
+//		};
+//
+//		optee {
+//			compatible = "linaro,optee-tz";
+//			method = "smc";
+//		};
+//	};
 
 	cpus {
 		#address-cells = <0x2>;
