@@ -1,0 +1,15 @@
+diff --git a/configs/orangepi_zero2_defconfig b/configs/orangepi_zero2_defconfig
+index 294c7844..a7f9137b 100644
+--- a/configs/orangepi_zero2_defconfig
++++ b/configs/orangepi_zero2_defconfig
+@@ -19,6 +19,10 @@ CONFIG_CMD_PXE=y
+ CONFIG_DISTRO_DEFAULTS=y
+ CONFIG_ENV_VARS_UBOOT_CONFIG=y
+ 
++CONFIG_SYS_BOOT_GET_CMDLINE=y
++CONFIG_USE_BOOTARGS=y
++CONFIG_BOOTARGS="Please use defined boot"
++
+ CONFIG_EXT4_WRITE=y
+ CONFIG_CMD_EXT4_WRITE=y
+ CONFIG_ENV_IS_IN_FAT=y

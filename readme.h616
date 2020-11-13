@@ -29,6 +29,8 @@ cd u-boot-orangepi
 git checkout v2018.05-sun50iw9
 # add a hack to load the dtb from the default fdt_addr_r instead of the u-boot internal one
 patch -p1 < /compile/doc/u-boot-misc/misc.h616/load-dtb-from-default-fdt-addr.patch
+# add some more defconfig options
+patch -p1 < /compile/doc/u-boot-misc/misc.h616/add-some-more-defconfig-options.patch
 make orangepi_zero2_defconfig
 make
 # result: u-boot.bin = u-boot-sun50iw9p1.bin
