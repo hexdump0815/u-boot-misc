@@ -1,0 +1,14 @@
+diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c
+index b207d348..b20a018e 100644
+--- a/arch/arm/lib/bootm.c
++++ b/arch/arm/lib/bootm.c
+@@ -391,6 +391,9 @@ static void boot_jump_linux(bootm_headers_t *images, int flag)
+ 		r2 = (unsigned long)images->ft_addr;
+ 	else
+ 		r2 = gd->bd->bi_boot_params;
++
++	/* hack: set the fdt addr fixed to the proper one */
++	r2 = 0x43000000;
+ 		
+ 	printf("## Linux machid: %08lx, FDT addr: %08lx\n", machid, r2);
+ 	announce_and_cleanup(fake);
