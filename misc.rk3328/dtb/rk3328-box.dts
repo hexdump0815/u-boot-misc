@@ -9,8 +9,8 @@
 
 / {
 
-	model = "Rockchip RK3318 Box";
-        compatible = "rockchip,rk3318-box", "rockchip,rk3328";
+	model = "Rockchip RK3328 Box";
+        compatible = "rockchip,rk3328-box", "rockchip,rk3328";
 
 	chosen {
 		stdout-path = "serial2:1500000n8";
