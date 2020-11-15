@@ -1,0 +1,12 @@
+diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
+index f8f529435b..92c6fe0d7a 100644
+--- a/arch/arm/dts/Makefile
++++ b/arch/arm/dts/Makefile
+@@ -107,6 +107,7 @@ dtb-$(CONFIG_ROCKCHIP_RK3308) += \
+ 	rk3308-roc-cc.dtb
+ 
+ dtb-$(CONFIG_ROCKCHIP_RK3328) += \
++	rk3328-box.dtb \
+ 	rk3328-evb.dtb \
+ 	rk3328-roc-cc.dtb \
+ 	rk3328-rock64.dtb \
