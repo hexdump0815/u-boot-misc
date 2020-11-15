@@ -99,3 +99,6 @@ cat u-boot-rk3328-ddrbin-spl.bin >> boot-rk3328-ddrbin-spl-aarch64.dd
 # creating boot blocks using the original emmc boot blocks and replacing the u-boot.img in them
 zcat /compile/doc/u-boot-misc/misc.rk3328/boot-block.dd/boot-t9-rk3328-original-emmc.dd.gz > boot-rk3328-ddrbin-legacy-atf-aarch64.dd
 dd if=u-boot-rk3328.img of=boot-rk3328-ddrbin-legacy-atf-aarch64.dd bs=512 seek=16384 conv=notrunc
+
+zcat /compile/doc/u-boot-misc/misc.rk3328/boot-block.dd/boot-h96max-rk3318-original-emmc.dd.gz > boot-rk3318-ddrbin-legacy-atf-aarch64.dd
+dd if=u-boot-rk3328.img of=boot-rk3318-ddrbin-legacy-atf-aarch64.dd bs=512 seek=16384 conv=notrunc
