@@ -11,4 +11,9 @@ then write the adjusted spl over the spl in it
 afterwards make sure that the first mbr partition on the sd card does not start before sector 40960 in order to not overwrite parts of the boot blocks.
 
 
-note: if booting this way still the dtb in the boot blocks is being used and not the one supplied in the /boot dir
+note: if booting this way by default (i.e. without a hack) still the dtb in the boot blocks is being used and not the one supplied in the /boot dir
+
+mem freq:
+h313-tv-box-dram-spl.dd - 600mhz - from 2gb x96q tv box
+h616-tv-box-dram-spl.dd - 648mhz - from 4gb x96q-max tv box
+h616-tv-box-696mhz-dram-spl.dd - 696mhz - from 4gb t95 tv box
