@@ -5425,14 +5425,14 @@
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
 //			opp-supported-hw = <0x2>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 		};
 
 		opp@1344000000 {
 			opp-hz = <0x0 0x501bd000>;
 			opp-microvolt = <0x111700>;
 			clock-latency-ns = <0x3b9b0>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 		};
 
 		opp@1512000000 {
@@ -5440,7 +5440,7 @@
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
 //			opp-supported-hw = <0x1>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 		};
 
 		opp@1608000000 {
@@ -5448,7 +5448,7 @@
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
 //			opp-supported-hw = <0x1>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 			status = "disabled";
 		};
 
@@ -5457,7 +5457,7 @@
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
 //			opp-supported-hw = <0x1>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 			status = "disabled";
 		};
 
@@ -5466,7 +5466,7 @@
 			opp-microvolt = <0x10c8e0>;
 			clock-latency-ns = <0x3b9b0>;
 //			opp-supported-hw = <0x1>;
-			opp-supported-hw = <0x4>;
+			opp-supported-hw = <0x3>;
 			status = "disabled";
 		};
 	};
@@ -5591,7 +5591,7 @@
 
 	memory@40000000 {
 		device_type = "memory";
-		reg = <0x0 0x40000000 0x0 0xc0000000>;
+		reg = <0x0 0x40000000 0x1 0x0>;
 	};
 
 	interrupt-controller@03020000 {
