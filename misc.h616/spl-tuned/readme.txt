@@ -15,5 +15,6 @@ note: if booting this way by default (i.e. without a hack) still the dtb in the 
 
 mem freq:
 h313-tv-box-dram-spl.dd - 600mhz - from 2gb x96q tv box
+h313-tv-box-1g-8g-dram-spl.dd - 600mhz - from 1gb x96q tv box
 h616-tv-box-dram-spl.dd - 648mhz - from 4gb x96q-max tv box
 h616-tv-box-696mhz-dram-spl.dd - 696mhz - from 4gb t95 tv box
