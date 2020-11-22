@@ -48,7 +48,7 @@ git clone https://github.com/hexdump0815/u-boot-misc.git
 # get the u-boot.bin from the build on the armv7l machine here
 scp armv7lmachine:/compile/source/u-boot-orangepi/u-boot.bin u-boot.fex
 cp u-boot-misc/misc.h616/sdk-files/bin/* .
-cp u-boot-misc/misc.h616/dts/sun50i-h313-x96q.dts .
+cp u-boot-misc/misc.h616/dtb/sun50i-h313-x96q.dts .
 u-boot-misc/misc.h616/sdk-files/tools/dtc -p 2048 -W no-unit_address_vs_reg -@ -O dtb -o sun50iw9p1-u-boot.dtb -b 0 sun50i-h313-x96q.dts
 unix2dos sys_config.fex
 u-boot-misc/misc.h616/sdk-files/tools/script sys_config.fex
