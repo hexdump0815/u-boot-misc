@@ -1,5 +1,5 @@
 diff --git a/arch/arm/dts/meson-g12a-sei510.dts b/arch/arm/dts/meson-g12a-sei510.dts
-index b00d0468c7..0226d2a5da 100644
+index b00d0468c7..7dd88470ad 100644
 --- a/arch/arm/dts/meson-g12a-sei510.dts
 +++ b/arch/arm/dts/meson-g12a-sei510.dts
 @@ -13,7 +13,7 @@
@@ -12,7 +12,7 @@ index b00d0468c7..0226d2a5da 100644
  	adc_keys {
  		compatible = "adc-keys";
 diff --git a/arch/arm/dts/meson-sm1-sei610.dts b/arch/arm/dts/meson-sm1-sei610.dts
-index 5ab139a34c..44ec88afc8 100644
+index 5ab139a34c..12036fe2e6 100644
 --- a/arch/arm/dts/meson-sm1-sei610.dts
 +++ b/arch/arm/dts/meson-sm1-sei610.dts
 @@ -13,7 +13,7 @@
@@ -25,10 +25,16 @@ index 5ab139a34c..44ec88afc8 100644
  	aliases {
  		serial0 = &uart_AO;
 diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index 8ee3a138e1..d72cd8929a 100644
+index 8ee3a138e1..8dca1f3416 100644
 --- a/configs/sei510_defconfig
 +++ b/configs/sei510_defconfig
-@@ -15,9 +15,7 @@ CONFIG_IDENT_STRING=" sei510"
+@@ -10,13 +10,11 @@ CONFIG_DM_GPIO=y
+ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" sei510"
++CONFIG_IDENT_STRING=" hexdump-g12a"
+ # CONFIG_PSCI_RESET is not set
  CONFIG_DEFAULT_DEVICE_TREE="meson-g12a-sei510"
  CONFIG_DEBUG_UART=y
  CONFIG_OF_BOARD_SETUP=y
@@ -37,7 +43,6 @@ index 8ee3a138e1..d72cd8929a 100644
  # CONFIG_CONSOLE_MUX is not set
  CONFIG_MISC_INIT_R=y
  # CONFIG_DISPLAY_CPUINFO is not set
- # CONFIG_CMD_BDI is not set
 @@ -81,3 +79,6 @@ CONFIG_VIDEO_DT_SIMPLEFB=y
  CONFIG_SPLASH_SCREEN=y
  CONFIG_SPLASH_SCREEN_ALIGN=y
@@ -46,10 +51,16 @@ index 8ee3a138e1..d72cd8929a 100644
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
 diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-index 43932b4c96..a1826f3959 100644
+index 43932b4c96..4d26c8ea69 100644
 --- a/configs/sei610_defconfig
 +++ b/configs/sei610_defconfig
-@@ -15,9 +15,7 @@ CONFIG_IDENT_STRING=" sei610"
+@@ -10,13 +10,11 @@ CONFIG_DM_GPIO=y
+ CONFIG_MESON_G12A=y
+ CONFIG_DEBUG_UART_BASE=0xff803000
+ CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" sei610"
++CONFIG_IDENT_STRING=" hexdump-sm1"
+ # CONFIG_PSCI_RESET is not set
  CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-sei610"
  CONFIG_DEBUG_UART=y
  CONFIG_OF_BOARD_SETUP=y
@@ -58,7 +69,6 @@ index 43932b4c96..a1826f3959 100644
  # CONFIG_CONSOLE_MUX is not set
  CONFIG_MISC_INIT_R=y
  # CONFIG_DISPLAY_CPUINFO is not set
- # CONFIG_CMD_BDI is not set
 @@ -81,3 +79,6 @@ CONFIG_VIDEO_DT_SIMPLEFB=y
  CONFIG_SPLASH_SCREEN=y
  CONFIG_SPLASH_SCREEN_ALIGN=y
@@ -67,27 +77,25 @@ index 43932b4c96..a1826f3959 100644
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index c895a24eca..d997352489 100644
+index c895a24eca..94601d4c81 100644
 --- a/include/configs/meson64.h
 +++ b/include/configs/meson64.h
-@@ -74,6 +74,10 @@
+@@ -74,6 +74,9 @@
  #endif
  
  #ifndef CONFIG_EXTRA_ENV_SETTINGS
-+/* the led system-status on is a hack to turn on the led as for some strange reason it does not
-+ * the usb start below makes sure a usb keyboard is available when the autoboot prompt starts
++/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts
 + * the stdin line is to disable the serial console as it might produce noise on the cmdline
 + * otherwise in some situations so that the system will hang in u-boot cmdline at boot */
  #define CONFIG_EXTRA_ENV_SETTINGS \
  	"stdin=" STDIN_CFG "\0" \
  	"stdout=" STDOUT_CFG "\0" \
-@@ -84,6 +88,19 @@
+@@ -84,6 +87,18 @@
  	"pxefile_addr_r=0x01080000\0" \
  	"ramdisk_addr_r=0x13000000\0" \
  	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
 +	"bootenv_addr_r=0x01080000\0" \
-+	"preboot=led system-status on; " \
-+		"usb start; " \
++	"preboot=usb start; " \
 +		"mmc dev 1; " \
 +		"setenv stdin usbkbd; " \
 +		"for target in 1 2;do " \

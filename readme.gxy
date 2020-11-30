@@ -28,9 +28,9 @@ mv u-boot u-boot-mainline-gxy
 cd u-boot-mainline-gxy
 git checkout v2020.10
 # add usb kbd and uEnv.txt support
-#patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt-and-own-strings.patch
+patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-usb-kbd-and-uenv-txt-and-own-strings.patch
 # add only uEnv.txt support
-patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-uenv-txt-and-own-strings.patch
+#patch -p1 < /compile/doc/u-boot-misc/misc.gxy/add-uenv-txt-and-own-strings.patch
 # s905x3 = sm1
 make sei610_defconfig
 # alternatively for s905x2 = g12a
