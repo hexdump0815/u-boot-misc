@@ -1,6 +1,16 @@
 # the below is relevant for g12a (s905x2), g12b (s922x) or sm1 (s905x3)
 # this is still wip - current status (tested on s905x2 / g12a - s10 max plus = a95x f2 tv box):
 # - fully native u-boot via meson64-toots and mainline atf works for s905x3 = sm1
+#   - just noticed: it does not really work well with mainline atf on sm1 - boot is ok, but psci assert
+#     ASSERT: lib/psci/psci_suspend.c:287
+#     BACKTRACE: START: assert
+#     0: EL3: 0x5104b1c
+#     1: EL3: 0x5105cc0
+#     2: EL3: 0x5102ccc
+#     3: EL3: 0x5101b38
+#     4: EL3: 0x5100174
+#     BACKTRACE: END: assert
+#   - as a result only the first cpu will be brought online -> legacy atf will be required for sm1 for now
 # - hdmi output / usb kbd input experiments (not yet fully working)
 #   - hdmi video works ok
 #   - some strange mmc error (maybe remove mmc2 and/or mmc0 from BOOT_TARGET_DEVICES in meson64.h?)
