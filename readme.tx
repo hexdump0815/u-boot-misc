@@ -1,0 +1,25 @@
+# some kind of upstream trees seem to be
+# https://github.com/thierryreding/u-boot.git
+# https://github.com/thierryreding/linux.git
+# other interesting links
+# https://elinux.org/Jetson/Nano/Upstream
+# https://forums.developer.nvidia.com/t/armbian-for-jetson-nano/75454/1
+# https://forum.armbian.com/topic/14172-how-to-enable-pwm-fan-on-jetson-nano/?tab=comments#comment-103160
+# https://pythops.com/post/create-your-own-image-for-jetson-nano-board
+# https://github.com/pythops/jetson-nano-image
+# https://pythops.com/post/compile-deeplearning-libraries-for-jetson-nano
+# https://dloghin.medium.com/raspberry-pi-4-or-jetson-nano-which-one-is-better-b0a9d185abb6
+
+
+u-boot:
+
+git clone https://gitlab.denx.de/u-boot/u-boot.git/
+mv u-boot u-boot-mainline-tx
+cd u-boot-mainline-tx
+git checkout v2020.10
+make p3450-0000_defconfig
+make
+# result: u-boot.bin
+
+# prepare it for imagebuilder/sonaremin
+to be done
