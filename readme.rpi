@@ -3,7 +3,7 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-rpi
 cd u-boot-mainline-rpi
-git checkout v2020.07
+git checkout v2020.10
 # only one of those depending on target
 make rpi_2_defconfig
 make rpi_3_32b_defconfig
@@ -26,3 +26,10 @@ mv u-boot u-boot-next-rpi
 cd u-boot-next-rpi
 git checkout rpi-next
 # everything else see above
+
+
+# some old links
+https://andrei.gherzan.ro/linux/uboot-on-rpi/
+https://www.raspberrypi.org/forums/viewtopic.php?t=244785
+https://github.com/agherzan/u-boot/commits/ag/rpi4
+https://github.com/agherzan/meta-raspberrypi/pull/437
