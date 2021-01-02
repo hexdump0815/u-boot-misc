@@ -1,0 +1,28 @@
+arm trusted firmware:
+
+git clone https://github.com/apritzel/arm-trusted-firmware.git
+mv arm-trusted-firmware arm-trusted-firmware-h616
+cd arm-trusted-firmware-h616
+git checkout h616-beta
+make realclean
+make PLAT=sun50i_h616 DEBUG=1 bl31
+# result: build/sun50i_h616/debug/bl31.bin
+cp build/sun50i_h616/debug/bl31.bin build/sun50i_h616/debug/h616-bl31.bin
+cd ..
+
+u-boot:
+
+git clone https://github.com/jernejsk/u-boot.git
+mv u-boot u-boot-mainline-h616
+cd u-boot-mainline-h616
+git checkout t95
+# get atf from aft build
+cp ../arm-trusted-firmware-h616/build/sun50i_h616/debug/bl31.bin .
+make t95_defconfig
+make
+# result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-allwinner_h616-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-aarch64.dd
+cp u-boot.bin h616-u-boot.bin
