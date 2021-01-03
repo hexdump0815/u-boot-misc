@@ -16,9 +16,19 @@ git clone https://github.com/jernejsk/u-boot.git
 mv u-boot u-boot-mainline-h616
 cd u-boot-mainline-h616
 git checkout t95
+# some boxes seem to have a broken sd card detection - see:
+# https://forum.armbian.com/topic/3945-mmc-no-card-present-error-on-allwinner-boards/
+# so lets create another config with it disabled for those
+cp /compile/doc/u-boot-misc/misc.h616/tx6s_defconfig configs
+cp /compile/doc/u-boot-misc/misc.h616/sun50i-h616-tx6s.dts arch/arm/dts
+patch -p1 < /compile/doc/u-boot-misc/misc.h616/tx6s-dtb.patch
+
 # get atf from aft build
 cp ../arm-trusted-firmware-h616/build/sun50i_h616/debug/bl31.bin .
 make t95_defconfig
+# in case one gets: Trying to boot from MMC1 - MMC: no card present
+# it might be worth to try
+#make tx6s_defconfig
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
 
