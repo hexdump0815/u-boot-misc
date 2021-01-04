@@ -84,6 +84,17 @@ dd if=/dev/zero of=boot-rk3328-tpl-spl-aarch64.dd bs=512 count=64
 cat u-boot-rockchip.bin >> boot-rk3328-tpl-spl-aarch64.dd
 
 
+# note for the procedure below:
+# in case the ddr.bin from emmc from a certain box should be used it might be dumped
+# out from there via dd - it seems to start with "52 4b 33 32" and to end with
+# "ff ff ff ff af be ad de" in hexdump -C - at least that worked well for a rk3328 box
+#
+# some repos for possible ddr.bin files:
+# https://github.com/rockchip-linux/rkbin/tree/master/bin/rk33
+# https://github.com/armbian/rkbin/tree/master/rk33
+# https://github.com/ayufan-rock64/rkbin/tree/master/rk33
+# https://github.com/Kwiboo/rkbin/tree/libreelec-cleanup/rk33
+#
 # creating boot blocks using an original legacy ddr.bin with maybe better dram timing
 tools/mkimage -n rk3328 -T rksd -d /compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15.bin u-boot-rk3328-ddrbin-spl.bin
 cat spl/u-boot-spl.bin >> u-boot-rk3328-ddrbin-spl.bin
