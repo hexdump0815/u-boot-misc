@@ -68,7 +68,7 @@
 
 &mmc0 {
 	vmmc-supply = <&reg_dcdce>;
-//	cd-gpios = <&pio 8 10 GPIO_ACTIVE_LOW>;	/* PI10 */
+	cd-gpios = <&pio 8 16 GPIO_ACTIVE_LOW>;	/* PI16 */
 	bus-width = <4>;
 	status = "okay";
 };
