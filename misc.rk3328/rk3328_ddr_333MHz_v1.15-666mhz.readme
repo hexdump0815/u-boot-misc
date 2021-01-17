@@ -1,0 +1,21 @@
+this is the rk3328_ddr_333MHz_v1.15.bin file with the memory frequency increased
+from the default 333mhz to 666mhz using a hex editor (ghex) following this idea:
+
+  https://forum.libreelec.tv/thread/10140-latest-libreelec-for-rockchip-rk3229/?postID=132388#post132388
+
+i.e. below 01 4d = 333 and 02 9a = 666 ... this essentially doubles the memory
+bandwidth and most probably can also be used to change it to other frequencies
+
+--- rk3328_ddr_333MHz_v1.15.bin-hexdump	2021-01-17 09:30:07.127669046 +0100
++++ rk3328_ddr_333MHz_v1.15-666mhz.bin-hexdump	2021-01-17 09:30:24.064069818 +0100
+@@ -1086,8 +1086,8 @@
+ 000043d0  31 39 30 34 32 38 0a 00  45 52 52 0a 00 4f 55 54  |190428..ERR..OUT|
+ 000043e0  0a 00 53 52 58 0a 00 49  6e 0a 00 6c 6e 0a 00 44  |..SRX..In..ln..D|
+ 000043f0  44 52 20 76 65 72 73 69  6f 6e 00 00 78 56 34 12  |DR version..xV4.|
+-00004400  00 00 00 00 00 00 00 00  4d 01 4d 01 4d 01 4d 01  |........M.M.M.M.|
+-00004410  4d 01 4d 01 60 e3 16 21  5d 00 0d 00 00 00 00 00  |M.M.`..!].......|
++00004400  00 00 00 00 00 00 00 00  9a 02 9a 02 9a 02 9a 02  |................|
++00004410  9a 02 9a 02 60 e3 16 21  5d 00 0d 00 00 00 00 00  |....`..!].......|
+ 00004420  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+ 00004430  77 00 00 00 88 00 00 00  79 00 00 00 79 00 00 00  |w.......y...y...|
+ 00004440  87 00 00 00 97 00 00 00  87 00 00 00 78 00 00 00  |............x...|
