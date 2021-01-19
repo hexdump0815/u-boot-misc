@@ -12,8 +12,8 @@
 #include <dt-bindings/leds/common.h>
 
 / {
-	model = "Tanix TX6S TV Box";
-	compatible = "oranth,tanix-tx6s", "allwinner,sun50i-h616";
+	model = "Shenzhen Amediatech Technology Co., Ltd X96Q TV Box";
+	compatible = "amediatech,x96q", "allwinner,sun50i-h616";
 
 	aliases {
 		ethernet0 = &emac1;
@@ -26,23 +26,22 @@
 		stdout-path = "serial0:115200n8";
 	};
 
-// there is no led on this box
-//	leds {
-//		compatible = "gpio-leds";
-//
-//		power {
-//			function = LED_FUNCTION_POWER;
-//			color = <LED_COLOR_ID_BLUE>;
-//			gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
-//			default-state = "on";
-//		};
-//
-//		status {
-//			function = LED_FUNCTION_STATUS;
-//			color = <LED_COLOR_ID_RED>;
-//			gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
-//		};
-//	};
+	leds {
+		compatible = "gpio-leds";
+
+		power {
+			function = LED_FUNCTION_POWER;
+			color = <LED_COLOR_ID_BLUE>;
+			gpios = <&pio 7 6 GPIO_ACTIVE_HIGH>; /* PH6 */
+			default-state = "on";
+		};
+
+		status {
+			function = LED_FUNCTION_STATUS;
+			color = <LED_COLOR_ID_RED>;
+			gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
+		};
+	};
 
 	reg_vcc5v: vcc5v {
 		/* board wide 5V supply directly from the USB-C socket */
@@ -97,7 +96,7 @@
 
 &mmc0 {
 	vmmc-supply = <&reg_dcdce>;
-	cd-gpios = <&pio 8 16 GPIO_ACTIVE_LOW>;	/* PI16 */
+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
 	bus-width = <4>;
 	status = "okay";
 };
