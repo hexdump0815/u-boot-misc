@@ -26,6 +26,8 @@ cp /compile/doc/u-boot-misc/misc.h616/sun50i-h616-tx6s.dts arch/arm/dts
 cp /compile/doc/u-boot-misc/misc.h616/sun50i-h313-x96q.dts arch/arm/dts
 cp /compile/doc/u-boot-misc/misc.h616/sun50i-h616.dtsi arch/arm/dts
 patch -p1 < /compile/doc/u-boot-misc/misc.h616/tx6s-x96q-dtb.patch
+# add usb support
+patch -p1 < /compile/doc/u-boot-misc/misc.h616/add-usb-support.patch
 
 # get atf from aft build
 cp ../arm-trusted-firmware-h616/build/sun50i_h616/debug/bl31.bin .
