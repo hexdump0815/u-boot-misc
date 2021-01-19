@@ -481,7 +481,7 @@
 		};
 
 		emac1: ethernet@5030000 {
-			compatible = "allwinner,sun50i-h616-emac1";
+			compatible = "allwinner,sun50i-h616-emac";
 			syscon = <&syscon 1>;
 			reg = <0x05030000 0x10000>;
 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
