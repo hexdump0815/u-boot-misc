@@ -31,6 +31,8 @@ git checkout v2018.05-sun50iw9
 patch -p1 < /compile/doc/u-boot-misc/misc.h616-legacy/load-dtb-from-default-fdt-addr.patch
 # add some more defconfig options
 patch -p1 < /compile/doc/u-boot-misc/misc.h616-legacy/add-some-more-defconfig-options.patch
+# make bootargs provided via APPEND in extlinux.conf actually work - see patch for details
+patch -p1 < /compile/doc/u-boot-misc/misc.h616-legacy/fix-bootparam-transmission.patch
 make orangepi_zero2_defconfig
 make
 # result: u-boot.bin = u-boot-sun50iw9p1.bin

@@ -5261,11 +5261,11 @@
 		phandle = <0x17a>;
 	};
 
-	chosen {
-		bootargs = "earlyprintk=sunxi-uart,0x05000000 earlycon=uart,mmio32,0x5000000 console=tty1 console=ttyS0,115200 root=/dev/mmcblk1p2 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1";
+//	chosen {
+//		bootargs = "earlyprintk=sunxi-uart,0x05000000 earlycon=uart,mmio32,0x5000000 console=tty1 console=ttyS0,115200 root=/dev/mmcblk1p2 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1";
 //		linux,initrd-end = <0x00 0x49fff358>;
 //		linux,initrd-start = <0x00 0x4943a000>;
-	};
+//	};
 
 //	firmware {
 //

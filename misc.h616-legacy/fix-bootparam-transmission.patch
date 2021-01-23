@@ -1,0 +1,60 @@
+it took me quite some time to realize that the bsp u-boot (most probably
+due to its armv7 origin) seems to send the bootparams via atags but the
+kernel only reads them from the transmitted dtb. due to this the kernel
+always ignored all bootargs provided via APPEND in the extlinux.conf file
+and instead only read the ones provided in the loaded dtb.
+
+this patch is an ugly hack trying to fix this by adding the content of
+the bootargs to the dtb transmitted to the kernel and is in large parts
+stolen from the vxworks code in this u-boot.
+
+diff --git a/arch/arm/lib/bootm.c b/arch/arm/lib/bootm.c
+index b207d348..b49a9fb8 100644
+--- a/arch/arm/lib/bootm.c
++++ b/arch/arm/lib/bootm.c
+ 	announce_and_cleanup(fake);
+@@ -417,6 +420,44 @@ int do_bootm_linux(int flag, int argc, char * const argv[],
+ 	if (flag & BOOTM_STATE_OS_BD_T || flag & BOOTM_STATE_OS_CMDLINE)
+ 		return -1;
+ 
++	int ret;
++	char *bootline;
++	images->ft_addr = (char *) 0x43000000;
++	ulong of_size = images->ft_len;
++	char **of_flat_tree = &images->ft_addr;
++	struct lmb *lmb = &images->lmb;
++
++	if (*of_flat_tree) {
++		boot_fdt_add_mem_rsv_regions(lmb, *of_flat_tree);
++
++		ret = boot_relocate_fdt(lmb, of_flat_tree, &of_size);
++		if (ret < 0) {
++			printf("## ERROR relocate: %s : %s\n", __func__,
++			       fdt_strerror(ret));
++		}
++
++		/* Update ethernet nodes */
++		fdt_fixup_ethernet(*of_flat_tree);
++
++		ret = fdt_add_subnode(*of_flat_tree, 0, "chosen");
++		if ((ret >= 0 || ret == -FDT_ERR_EXISTS)) {
++			bootline = env_get("bootargs");
++			if (bootline) {
++				ret = fdt_find_and_setprop(*of_flat_tree,
++						"/chosen", "bootargs",
++						bootline,
++						strlen(bootline) + 1, 1);
++				if (ret < 0) {
++					printf("## ERROR find: %s : %s\n", __func__,
++					       fdt_strerror(ret));
++				}
++			}
++		} else {
++			printf("## ERROR add: %s : %s\n", __func__,
++			       fdt_strerror(ret));
++		}
++	}
++
+ 	if (flag & BOOTM_STATE_OS_PREP) {
+ 		boot_prep_linux(images);
+ 		return 0;
