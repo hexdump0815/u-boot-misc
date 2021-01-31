@@ -107,6 +107,16 @@ dd if=u-boot.itb of=u-boot-rk3328-ddrbin-spl.bin bs=512 seek=16320 conv=notrunc
 dd if=/dev/zero of=boot-rk3328-ddrbin-spl-aarch64.dd bs=512 count=64
 cat u-boot-rk3328-ddrbin-spl.bin >> boot-rk3328-ddrbin-spl-aarch64.dd
 
+# creating boot blocks using a hacked to 666mhz legacy ddr.bin which might work or not on some boxes
+tools/mkimage -n rk3328 -T rksd -d /compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15-666mhz.bin u-boot-rk3328-ddrbin-666mhz-spl.bin
+cat spl/u-boot-spl.bin >> u-boot-rk3328-ddrbin-666mhz-spl.bin
+dd if=u-boot.itb of=u-boot-rk3328-ddrbin-666mhz-spl.bin bs=512 seek=448 conv=notrunc
+dd if=u-boot.itb of=u-boot-rk3328-ddrbin-666mhz-spl.bin bs=512 seek=16320 conv=notrunc
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rk3328-ddrbin-666mhz-spl-aarch64.dd bs=512 count=64
+cat u-boot-rk3328-ddrbin-666mhz-spl.bin >> boot-rk3328-ddrbin-666mhz-spl-aarch64.dd
+
 
 # creating boot blocks using the original emmc boot blocks and replacing the u-boot.img in them
 zcat /compile/doc/u-boot-misc/misc.rk3328/boot-block.dd/boot-t9-rk3328-original-emmc.dd.gz > boot-rk3328-ddrbin-legacy-atf-aarch64.dd
