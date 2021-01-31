@@ -1,15 +1,24 @@
-diff --git a/include/configs/rockchip-common.h b/include/configs/rockchip-common.h
-index 68e1105a4b..4b733ac356 100644
---- a/include/configs/rockchip-common.h
-+++ b/include/configs/rockchip-common.h
-@@ -14,8 +14,8 @@
- /* First try to boot from SD (index 0), then eMMC (index 1) */
- #if CONFIG_IS_ENABLED(CMD_MMC)
- 	#define BOOT_TARGET_MMC(func) \
--		func(MMC, mmc, 0) \
--		func(MMC, mmc, 1)
-+		func(MMC, mmc, 1) \
-+		func(MMC, mmc, 0)
- #else
- 	#define BOOT_TARGET_MMC(func)
- #endif
+diff --git a/arch/arm/dts/rk3328-u-boot.dtsi b/arch/arm/dts/rk3328-u-boot.dtsi
+index 1633558264..f5ea6f14df 100644
+--- a/arch/arm/dts/rk3328-u-boot.dtsi
++++ b/arch/arm/dts/rk3328-u-boot.dtsi
+@@ -5,13 +5,16 @@
+ 
+ / {
+ 	aliases {
+-		mmc0 = &emmc;
+-		mmc1 = &sdmmc;
++//		mmc0 = &emmc;
++//		mmc1 = &sdmmc;
++		mmc0 = &sdmmc;
++		mmc1 = &emmc;
+ 		spi0 = &spi0;
+ 	};
+ 
+ 	chosen {
+-		u-boot,spl-boot-order = &emmc, &sdmmc;
++//		u-boot,spl-boot-order = &emmc, &sdmmc;
++		u-boot,spl-boot-order = &sdmmc, &emmc;
+ 	};
+ 
+ 	dmc: dmc {

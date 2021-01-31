@@ -6,7 +6,7 @@ index 7667bb037b..d0dc115850 100644
  CONFIG_SPL_TINY_MEMSET=y
  CONFIG_TPL_TINY_MEMSET=y
  CONFIG_ERRNO_STR=y
-+CONFIG_BOOTDELAY=5
++CONFIG_BOOTDELAY=3
 +CONFIG_USE_PREBOOT=y
 diff --git a/include/configs/rk3328_common.h b/include/configs/rk3328_common.h
 index 407e5d2931..04e2157474 100644
@@ -17,7 +17,7 @@ index 407e5d2931..04e2157474 100644
  	"fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
  	"partitions=" PARTS_DEFAULT \
 +	"bootenv_addr_r=0x00600000\0" \
-+	"preboot=for target in 1 0;do " \
++	"preboot=for target in 0 1;do " \
 +		"for prefix in / /boot/;do " \
 +			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \
 +				"load mmc ${target}:1 ${bootenv_addr_r} ${prefix}uEnv.txt; " \
