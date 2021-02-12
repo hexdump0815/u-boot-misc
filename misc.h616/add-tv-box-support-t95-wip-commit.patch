@@ -254,32 +254,6 @@ index 3d02a3f7aa..838973bdda 100644
  			#address-cells = <1>;
  			#size-cells = <0>;
  		};
-@@ -441,6 +448,25 @@
- 			};
- 		};
- 
-+		emac1: ethernet@5030000 {
-+			compatible = "allwinner,sun50i-h616-emac";
-+			syscon = <&syscon>;
-+			reg = <0x05030000 0x10000>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu RST_BUS_EMAC1>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu CLK_BUS_EMAC1>;
-+			clock-names = "stmmaceth";
-+			status = "disabled";
-+
-+			mdio2: mdio {
-+				compatible = "snps,dwmac-mdio";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		rtc: rtc@7000000 {
- 			compatible = "allwinner,sun50i-h616-rtc",
- 				     "allwinner,sun50i-h6-rtc";
 diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
 index 54d3d81692..56e78f706c 100644
 --- a/arch/arm/mach-sunxi/Kconfig
