@@ -45,7 +45,7 @@ index 27eeab71ec..8390daca67 100644
  / {
  	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
 -	model = "Khadas VIM2";
-+	model = "hexdump usbkbd/hdmi u-boot gxl";
++	model = "hexdump usbkbd/hdmi u-boot gxm";
  
  	aliases {
  		serial0 = &uart_AO;
@@ -91,7 +91,7 @@ index 771632c782..ee14f3de75 100644
  CONFIG_SPI=y
  CONFIG_DM_SPI=y
  CONFIG_MESON_SPIFC=y
-@@ -64,3 +61,10 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
+@@ -64,3 +61,8 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
  CONFIG_USB_GADGET_DWC2_OTG=y
  CONFIG_USB_GADGET_DOWNLOAD=y
  CONFIG_OF_LIBFDT_OVERLAY=y
@@ -100,8 +100,6 @@ index 771632c782..ee14f3de75 100644
 +CONFIG_USB_KEYBOARD=y
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
-+CONFIG_LED=y
-+CONFIG_LED_GPIO=y
 diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
 index 48e8800ce4..ba47358582 100644
 --- a/configs/libretech-cc_defconfig
@@ -162,6 +160,14 @@ index 50138aa3ac..d270d76df5 100644
  CONFIG_MISC_INIT_R=y
  # CONFIG_DISPLAY_CPUINFO is not set
  # CONFIG_CMD_BDI is not set
+@@ -30,7 +29,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
+ CONFIG_CMD_REGULATOR=y
+ CONFIG_OF_CONTROL=y
+ CONFIG_DEFAULT_DEVICE_TREE="meson-gxm-s912-libretech-pc"
+-CONFIG_ENV_IS_IN_SPI_FLASH=y
+ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SARADC_MESON=y
+ CONFIG_DM_KEYBOARD=y
 @@ -50,9 +46,10 @@ CONFIG_POWER_DOMAIN=y
  CONFIG_MESON_GX_VPU_POWER_DOMAIN=y
  CONFIG_DM_REGULATOR_FIXED=y
@@ -176,14 +182,12 @@ index 50138aa3ac..d270d76df5 100644
  CONFIG_SPI=y
  CONFIG_DM_SPI=y
  CONFIG_MESON_SPIFC=y
-@@ -74,3 +71,7 @@ CONFIG_SYS_WHITE_ON_BLACK=y
+@@ -74,3 +71,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
  CONFIG_VIDEO_MESON=y
  CONFIG_VIDEO_DT_SIMPLEFB=y
  CONFIG_OF_LIBFDT_OVERLAY=y
 +CONFIG_DISPLAY_BOARDINFO_LATE=y
 +CONFIG_BOOTDELAY=5
-+CONFIG_LED=y
-+CONFIG_LED_GPIO=y
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
 index 50707a3197..9163a5ee72 100644
 --- a/include/configs/meson64.h

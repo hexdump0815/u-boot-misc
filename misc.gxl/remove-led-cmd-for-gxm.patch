@@ -1,0 +1,22 @@
+--- include/configs/meson64.h.org	2021-02-27 21:14:17.571062530 +0100
++++ include/configs/meson64.h	2021-02-27 21:14:49.455119588 +0100
+@@ -76,8 +76,7 @@
+ #endif
+ 
+ #ifndef CONFIG_EXTRA_ENV_SETTINGS
+-/* the led system-status on is a hack to turn on the led as for some strange reason it does not
+- * the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
++/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
+ #define CONFIG_EXTRA_ENV_SETTINGS \
+ 	"stdin=" STDIN_CFG "\0" \
+ 	"stdout=" STDOUT_CFG "\0" \
+@@ -89,8 +88,7 @@
+ 	"ramdisk_addr_r=0x13000000\0" \
+ 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
+ 	"bootenv_addr_r=0x01080000\0" \
+-	"preboot=led system-status on; " \
+-		"usb start; " \
++	"preboot=usb start; " \
+ 		"for target in 0 1;do " \
+ 		"for prefix in / /boot/;do " \
+ 			"if test -e mmc ${target}:1 ${prefix}uEnv.txt;then " \

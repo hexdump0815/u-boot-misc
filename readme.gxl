@@ -42,7 +42,9 @@ patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-uenv-txt-and-own-strin
 # the libretech-cc_defconfig works quite well for s905w and s905x and
 # supports hdmi video output well too
 make libretech-cc_defconfig
-# for gxm
+# for gxm the add-uenv-txt-and-own-strings.patch works well for serial and hdmi/usbkbd
+# and this patch is required to remove the led cmd
+# patch -p0 < /compile/doc/u-boot-misc/misc.gxl/remove-led-cmd-for-gxm.patch
 # make libretech-s912-pc_defconfig
 make
 cp u-boot.bin gxl-u-boot.bin
