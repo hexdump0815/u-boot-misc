@@ -3,7 +3,10 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-rpi
 cd u-boot-mainline-rpi
-git checkout v2020.10
+git checkout v2021.04
+# add-fdt overlay addr to be able to load dtbo files
+# sadly this did not work - resulted in: "failed on fdt_overlay_apply(): FDT_ERR_NOTFOUND"
+#patch -p1 < /compile/doc/u-boot-misc/misc.rpi/add-fdt-overlay-addr.patch
 # only one of those depending on target
 make rpi_2_defconfig
 make rpi_3_32b_defconfig
