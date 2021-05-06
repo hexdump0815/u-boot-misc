@@ -1,0 +1,30 @@
+inspired by: http://u-boot.10912.n7.nabble.com/PATCH-sunxi-add-fdtoverlay-addr-r-environment-variable-td441902.html
+
+diff --git a/include/configs/rpi.h b/include/configs/rpi.h
+index 834f1cd236..bf4b3680cb 100644
+--- a/include/configs/rpi.h
++++ b/include/configs/rpi.h
+@@ -153,10 +153,10 @@
+  * more than ~700M away from the start of the kernel image but this number can
+  * be larger OR smaller depending on e.g. the 'vmalloc=xxxM' command line
+  * parameter given to the kernel. So reserving memory from low to high
+- * satisfies this constraint again. Reserving 1M at 0x02600000-0x02700000 for
+- * the DTB leaves rest of the free RAM to the initrd starting at 0x02700000.
++ * satisfies this constraint again. Reserving 1M at 0x02600000-0x02800000 for
++ * the DTB leaves rest of the free RAM to the initrd starting at 0x02800000.
+  * Even with the smallest possible CPU-GPU memory split of the CPU getting
+- * only 64M, the remaining 25M starting at 0x02700000 should allow quite
++ * only 64M, the remaining 24M starting at 0x02800000 should allow quite
+  * large initrds before they start colliding with U-Boot.
+  */
+ #define ENV_MEM_LAYOUT_SETTINGS \
+@@ -166,7 +166,8 @@
+ 	"scriptaddr=0x02400000\0" \
+ 	"pxefile_addr_r=0x02500000\0" \
+ 	"fdt_addr_r=0x02600000\0" \
+-	"ramdisk_addr_r=0x02700000\0"
++	"fdtoverlay_addr_r=0x02700000\0" \
++	"ramdisk_addr_r=0x02800000\0"
+ 
+ #if CONFIG_IS_ENABLED(CMD_MMC)
+ 	#define BOOT_TARGET_MMC(func) \
