@@ -11,6 +11,7 @@ git checkout v2021.04
 make rpi_2_defconfig
 make rpi_3_32b_defconfig
 make rpi_3_defconfig
+make rpi_3_b_plus_defconfig
 make rpi_4_32b_defconfig
 make rpi_4_defconfig
 make
