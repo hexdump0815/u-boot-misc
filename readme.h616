@@ -1,9 +1,9 @@
 arm trusted firmware:
 
-git clone https://github.com/apritzel/arm-trusted-firmware.git
+git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-h616
 cd arm-trusted-firmware-h616
-git checkout h616-v1
+git checkout v2.5
 make realclean
 make PLAT=sun50i_h616 DEBUG=1 bl31
 # result: build/sun50i_h616/debug/bl31.bin
@@ -12,45 +12,49 @@ cd ..
 
 u-boot:
 
-git clone https://github.com/apritzel/u-boot.git
-mv u-boot u-boot-mainline-h616
-cd u-boot-mainline-h616
-# git commit 4de1753d1294883c51e0dfc1357f1dc296bd76dd on the h616-usb branch
-git checkout h616-usb
-# add tv box support
-patch -p1 < /compile/doc/u-boot-misc/misc.h616/add-tv-box-support-t95-wip-commit.patch
-# some boxes seem to have a different sd card detection gpio
-# so lets create another config with it adjusted for those
-cp /compile/doc/u-boot-misc/misc.h616/tx6s_defconfig configs
-cp /compile/doc/u-boot-misc/misc.h616/x96q_defconfig configs
-cp /compile/doc/u-boot-misc/misc.h616/sun50i-h616-tx6s.dts arch/arm/dts
-cp /compile/doc/u-boot-misc/misc.h616/sun50i-h313-x96q.dts arch/arm/dts
-patch -p1 < /compile/doc/u-boot-misc/misc.h616/tx6s-x96q-dtb.patch
-# clk init for hdmi
-patch -p1 < /compile/doc/u-boot-misc/misc.h616/v2-sunxi-spl-Fix-H616-clock-initialization.patch
+#git clone https://gitlab.denx.de/u-boot/u-boot.git/
+#mv u-boot u-boot-h616
+git clone https://gitlab.denx.de/u-boot/custodians/u-boot-sunxi
+mv u-boot-sunxi u-boot-h616
+cd u-boot-h616
+git checkout 647b392bf20614006917d5fcd3390347a668eee5
+# INFO: based on warpme minimyth2 patches from https://github.com/warpme/minimyth2
+#       at commit 1c71b1bad4a5d04b8b4d7948f1c356575fb50f99
+# minimyth2 h616 patches
+for i in /compile/doc/u-boot-misc/misc.h616/minimyth2-patches/*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
 
 # get atf from aft build
 cp ../arm-trusted-firmware-h616/build/sun50i_h616/debug/bl31.bin .
-make x96q_defconfig
-# in case one gets: Trying to boot from MMC1 - MMC: no card present
-# it might be worth to try
-#make tx6s_defconfig
+make tanix_tx6s_defconfig
+# other tv boxes
+#make t95_defconfig
+#make x96_mate_defconfig
 # orange pi zero 2
 #make orangepi_zero2_defconfig
+# required now: apt-get install swig libpython3-dev python3-dev
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
-
-# prepare it for imagebuilder/sonaremin x96q
-dd if=/dev/zero of=boot-allwinner_h313-x96q-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h313-x96q-aarch64.dd
-cp u-boot.bin h313-x96q-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h313-x96q-u-boot-sunxi-with-spl.bin
 
 # prepare it for imagebuilder/sonaremin tx6s
 dd if=/dev/zero of=boot-allwinner_h616-tx6s-aarch64.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-tx6s-aarch64.dd
 cp u-boot.bin h616-tx6s-u-boot.bin
 cp u-boot-sunxi-with-spl.bin h616-tx6s-u-boot-sunxi-with-spl.bin
+
+# prepare it for imagebuilder/sonaremin x96mate
+dd if=/dev/zero of=boot-allwinner_h616-x96mate-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-x96mate-aarch64.dd
+cp u-boot.bin h616-x96mate-u-boot.bin
+cp u-boot-sunxi-with-spl.bin h616-x96mate-u-boot-sunxi-with-spl.bin
+
+# prepare it for imagebuilder/sonaremin t95
+dd if=/dev/zero of=boot-allwinner_h616-t95-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-t95-aarch64.dd
+cp u-boot.bin h616-t95-u-boot.bin
+cp u-boot-sunxi-with-spl.bin h616-t95-u-boot-sunxi-with-spl.bin
 
 # prepare it for imagebuilder/sonaremin opizero2
 dd if=/dev/zero of=boot-allwinner_h616-opizero2-aarch64.dd bs=1024 count=8
