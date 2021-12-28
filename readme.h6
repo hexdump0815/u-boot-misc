@@ -1,3 +1,6 @@
+important: so far this newer v2021.10 version results in system instability for me
+           better use the older v2020.07 until this is resolved
+
 arm trusted firmware:
 
 git clone https://github.com/ARM-software/arm-trusted-firmware.git
