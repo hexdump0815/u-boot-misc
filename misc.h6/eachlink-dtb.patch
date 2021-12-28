@@ -1,12 +1,12 @@
 diff --git a/arch/arm/dts/Makefile b/arch/arm/dts/Makefile
-index d8846df1bd..beee25795f 100644
+index fc16a57e60..15e2555b46 100644
 --- a/arch/arm/dts/Makefile
 +++ b/arch/arm/dts/Makefile
-@@ -542,6 +542,7 @@ dtb-$(CONFIG_MACH_SUN50I_H6) += \
- 	sun50i-h6-beelink-gs1.dtb \
+@@ -642,6 +642,7 @@ dtb-$(CONFIG_MACH_SUN50I_H6) += \
  	sun50i-h6-orangepi-lite2.dtb \
  	sun50i-h6-orangepi-one-plus.dtb \
+ 	sun50i-h6-pine-h64.dtb \
 +	sun50i-h6-eachlink-h6-mini.dtb \
- 	sun50i-h6-pine-h64.dtb
- dtb-$(CONFIG_MACH_SUN50I) += \
- 	sun50i-a64-amarula-relic.dtb \
+ 	sun50i-h6-tanix-tx6.dtb
+ dtb-$(CONFIG_MACH_SUN50I_H616) += \
+ 	sun50i-h616-orangepi-zero2.dtb

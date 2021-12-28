@@ -3,7 +3,7 @@ arm trusted firmware:
 git clone https://github.com/ARM-software/arm-trusted-firmware.git
 mv arm-trusted-firmware arm-trusted-firmware-h6
 cd arm-trusted-firmware-h6
-git checkout v2.3
+git checkout v2.6
 # optional patch for my noname h6 tv box which hung during the axp805 probe otherwise
 #patch -p1 < /compile/doc/u-boot-misc/misc.h6/h6-noname-tv-box-atf-hack.patch
 make realclean
@@ -17,7 +17,7 @@ u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-h6
 cd u-boot-mainline-h6
-git checkout v2020.07
+git checkout v2021.10
 # get atf from aft build
 cp ../arm-trusted-firmware-h6/build/sun50i_h6/debug/bl31.bin .
 # add eachlink-h6-mini dtb
@@ -26,11 +26,12 @@ cp /compile/doc/u-boot-misc/misc.h6/eachlink_h6_mini_defconfig configs/eachlink_
 patch -p1 < /compile/doc/u-boot-misc/misc.h6/eachlink-dtb.patch
 # add uEnv.txt support
 patch -p1 < /compile/doc/u-boot-misc/misc.h6/add-uenv-txt.patch
-# patch to make my noname h6 tv box work until it will end up in mainline u-boot
-patch -p1 < /compile/doc/u-boot-misc/misc.h6/misc-tests/test-15.patch
+# patch to make my noname h6 tv box work until it will end up in mainline u-boot - seems no longer required
+#patch -p1 < /compile/doc/u-boot-misc/misc.h6/misc-tests/test-15.patch
 make eachlink_h6_mini_defconfig
 # orangepi one plus
 #make orangepi_one_plus_defconfig
+# required now: apt-get install swig libpython3-dev python3-dev
 make
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
 
