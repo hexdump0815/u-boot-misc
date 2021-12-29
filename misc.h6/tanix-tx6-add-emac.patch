@@ -1,0 +1,39 @@
+diff --git a/arch/arm/dts/sun50i-h6-tanix-tx6.dts b/arch/arm/dts/sun50i-h6-tanix-tx6.dts
+index be81330db1..af054d2cfb 100644
+--- a/arch/arm/dts/sun50i-h6-tanix-tx6.dts
++++ b/arch/arm/dts/sun50i-h6-tanix-tx6.dts
+@@ -13,6 +13,7 @@
+ 	compatible = "oranth,tanix-tx6", "allwinner,sun50i-h6";
+ 
+ 	aliases {
++		ethernet0 = &emac;
+ 		serial0 = &uart0;
+ 	};
+ 
+@@ -55,6 +56,12 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	phy-mode = "rmii";
++	phy-handle = <&ext_rmii_phy>;
++	status = "okay";
++};
++
+ &dwc3 {
+ 	status = "okay";
+ };
+@@ -67,6 +74,13 @@
+ 	status = "okay";
+ };
+ 
++&mdio {
++	ext_rmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
++};
++
+ &gpu {
+ 	mali-supply = <&reg_vdd_cpu_gpu>;
+ 	status = "okay";

@@ -1,0 +1,78 @@
+diff --git a/plat/allwinner/sun50i_h6/sunxi_power.c b/plat/allwinner/sun50i_h6/sunxi_power.c
+index 443015bac..c810c57ff 100644
+--- a/plat/allwinner/sun50i_h6/sunxi_power.c
++++ b/plat/allwinner/sun50i_h6/sunxi_power.c
+@@ -53,41 +53,41 @@ int axp_write(uint8_t reg, uint8_t val)
+ 	return ret;
+ }
+ 
+-static int axp805_probe(void)
+-{
+-	int ret;
+-
+-	/* Switch the AXP805 to master/single-PMIC mode. */
+-	ret = axp_write(0xff, 0x0);
+-	if (ret)
+-		return ret;
+-
+-	ret = axp_check_id();
+-	if (ret)
+-		return ret;
+-
+-	return 0;
+-}
++//static int axp805_probe(void)
++//{
++//	int ret;
++//
++//	/* Switch the AXP805 to master/single-PMIC mode. */
++//	ret = axp_write(0xff, 0x0);
++//	if (ret)
++//		return ret;
++//
++//	ret = axp_check_id();
++//	if (ret)
++//		return ret;
++//
++//	return 0;
++//}
+ 
+ int sunxi_pmic_setup(uint16_t socid, const void *fdt)
+ {
+-	int ret;
+-
+-	INFO("PMIC: Probing AXP805 on I2C\n");
+-
+-	ret = sunxi_init_platform_r_twi(SUNXI_SOC_H6, false);
+-	if (ret)
+-		return ret;
+-
+-	/* initialise mi2cv driver */
+-	i2c_init((void *)SUNXI_R_I2C_BASE);
+-
+-	ret = axp805_probe();
+-	if (ret)
+-		return ret;
+-
+-	pmic = AXP805;
+-	axp_setup_regulators(fdt);
++//	int ret;
++//
++//	INFO("PMIC: Probing AXP805 on I2C\n");
++//
++//	ret = sunxi_init_platform_r_twi(SUNXI_SOC_H6, false);
++//	if (ret)
++//		return ret;
++//
++//	/* initialise mi2cv driver */
++//	i2c_init((void *)SUNXI_R_I2C_BASE);
++//
++//	ret = axp805_probe();
++//	if (ret)
++//		return ret;
++//
++//	pmic = AXP805;
++//	axp_setup_regulators(fdt);
+ 
+ 	return 0;
+ }
