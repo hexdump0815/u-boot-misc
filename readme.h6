@@ -57,8 +57,8 @@ make orangepi_one_plus_defconfig
 make -j 4
 
 # prepare orange pi one plus for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-orangepi_one_plus_h6-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-orangepi_one_plus_h6-aarch64.dd
+dd if=/dev/zero of=boot-orangepi_one_plus-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-orangepi_one_plus-aarch64.dd
 cp u-boot.bin orangepi_one_plus-u-boot.bin
 
 # tanix tx6
