@@ -1,12 +1,23 @@
 u-boot:
 
+# inspiration for latest try: https://github.com/archlinuxarm/PKGBUILDs/blob/master/alarm/uboot-raspberrypi
+# bootloader: https://github.com/archlinuxarm/PKGBUILDs/blob/master/alarm/raspberrypi-bootloader
+# firmware tools: https://github.com/archlinuxarm/PKGBUILDs/blob/master/alarm/raspberrypi-firmware
+# firmware: https://github.com/archlinuxarm/PKGBUILDs/tree/master/alarm/firmware-raspberrypi
+# PKGBUILDs commit used for the above: 53b7fd411908db95afc9f2c020e37d1beb61abd4
+# links:
+# - https://gist.github.com/XSystem252/d274cd0af836a72ff42d590d59647928
+# - https://gist.github.com/yogaxpto/9495fb9f76a6321aa483e0f73d4ffaf2
+# - https://archlinuxarm.org/forum/viewtopic.php?t=14672#p64313
+
 git clone https://gitlab.denx.de/u-boot/u-boot.git/
 mv u-boot u-boot-mainline-rpi
 cd u-boot-mainline-rpi
-git checkout v2021.04
+git checkout v2022.01
 # add-fdt overlay addr to be able to load dtbo files
 # sadly this did not work - resulted in: "failed on fdt_overlay_apply(): FDT_ERR_NOTFOUND"
 #patch -p1 < /compile/doc/u-boot-misc/misc.rpi/add-fdt-overlay-addr.patch
+patch -p1 < /compile/doc/u-boot-misc/misc.rpi/0001-rpi-increase-space-for-kernel.patch
 # only one of those depending on target
 make rpi_2_defconfig
 make rpi_3_32b_defconfig

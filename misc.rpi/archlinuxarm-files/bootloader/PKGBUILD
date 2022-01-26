@@ -1,0 +1,35 @@
+# Maintainer: Kevin Mihelich <kevin@archlinuxarm.org>
+# Maintainer: graysky <graysky@archlinux.us>
+
+buildarch=28
+
+pkgbase=raspberrypi-bootloader
+pkgname=('raspberrypi-bootloader'
+         'raspberrypi-bootloader-x')
+pkgver=20220124
+pkgrel=1
+_commit=9c04ed2c1ad06a615d8e6479806ab252dbbeb95a
+arch=('any')
+url="https://github.com/raspberrypi/firmware"
+license=('custom')
+options=(!strip)
+source=("bootloader-${_commit:0:10}.tar.gz::https://github.com/raspberrypi/firmware/archive/${_commit}.tar.gz")
+md5sums=('771df976350f44f0f6ae8deb24e9a7ba')
+
+package_raspberrypi-bootloader() {
+  pkgdesc="Bootloader files for Raspberry Pi"
+  replaces=('raspberrypi-firmware-bootloader')
+
+  mkdir -p "${pkgdir}"/boot
+  cp "${srcdir}"/firmware-${_commit}/boot/{*.dat,*.bin,*.elf} "${pkgdir}"/boot
+  rm "${pkgdir}"/boot/{start{_,4}x.elf,fixup{_,4}x.dat}
+}
+
+package_raspberrypi-bootloader-x() {
+  pkgdesc="Bootloader with extra codecs for Raspberry Pi"
+  depends=('raspberrypi-bootloader')
+  replaces=('raspberrypi-firmware-bootloader-x')
+
+  mkdir -p "${pkgdir}"/boot
+  cp "${srcdir}"/firmware-${_commit}/boot/{start{_,4}x.elf,fixup{_,4}x.dat} "${pkgdir}"/boot
+}
