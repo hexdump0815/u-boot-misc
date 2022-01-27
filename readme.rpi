@@ -34,6 +34,15 @@ make
 # - kernel.img for the rest
 # or set kernel=u-boot.bin - maybe in the corresponding section (ex: [pi4]) - in config.txt
 
+# for bootloader files see misc.rpi/archlinuxarm-files/bootloader
+
+# working config.txt based on https://wiki.debian.org/RaspberryPi4
+enable_uart=1
+arm_64bit=1
+upstream_kernel=1
+#http://lists.infradead.org/pipermail/linux-rpi-kernel/2020-November/007906.html
+#disable_fw_kms_setup=1
+
 u-boot-next - development version:
 
 git clone https://github.com/mbgg/u-boot
