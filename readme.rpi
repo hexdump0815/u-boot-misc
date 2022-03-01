@@ -35,6 +35,30 @@ make
 # or set kernel=u-boot.bin - maybe in the corresponding section (ex: [pi4]) - in config.txt
 
 # for bootloader files see misc.rpi/archlinuxarm-files/bootloader
+# the files currently used are:
+dtb_commit=fb0bfa6a669745578041e838fc73cc17e8c543c9
+wget https://github.com/raspberrypi/firmware/raw/${dtb_commit}/boot/bcm2710-rpi-3-b.dtb
+wget https://github.com/raspberrypi/firmware/raw/${dtb_commit}/boot/bcm2710-rpi-3-b-plus.dtb
+wget https://github.com/raspberrypi/firmware/raw/${dtb_commit}/boot/bcm2710-rpi-cm3.dtb
+wget https://github.com/raspberrypi/firmware/raw/${dtb_commit}/boot/bcm2711-rpi-4-b.dtb
+boot_commit=9c04ed2c1ad06a615d8e6479806ab252dbbeb95a
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/bootcode.bin
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup4cd.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup4.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup4db.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup4x.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup_cd.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup_db.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/fixup_x.dat
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start4cd.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start4db.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start4.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start4x.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start_cd.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start_db.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start.elf
+wget https://github.com/raspberrypi/firmware/raw/${boot_commit}/boot/start_x.elf
 
 # working config.txt based on https://wiki.debian.org/RaspberryPi4
 enable_uart=1
