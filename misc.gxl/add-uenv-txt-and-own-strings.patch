@@ -1,20 +1,42 @@
-diff --git a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-index e8348b2728..b45c2feee9 100644
---- a/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm/dts/meson-gxl-s905x-libretech-cc.dts
-@@ -14,7 +14,7 @@
+diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
+index 221f5d52b49..1f33c3911c5 100644
+--- a/configs/libretech-cc_defconfig
++++ b/configs/libretech-cc_defconfig
+@@ -13,7 +13,7 @@ CONFIG_MESON_GXL=y
+ CONFIG_SYS_LOAD_ADDR=0x1000000
+ CONFIG_DEBUG_UART_BASE=0xc81004c0
+ CONFIG_DEBUG_UART_CLOCK=24000000
+-CONFIG_IDENT_STRING=" libretech-cc"
++CONFIG_IDENT_STRING=" hexdump-gxl"
+ CONFIG_DEBUG_UART=y
+ CONFIG_REMAKE_ELF=y
+ CONFIG_FIT=y
+@@ -79,3 +79,8 @@ CONFIG_VIDEO_BMP_RLE8=y
+ CONFIG_BMP_16BPP=y
+ CONFIG_BMP_24BPP=y
+ CONFIG_BMP_32BPP=y
++CONFIG_DISPLAY_BOARDINFO_LATE=y
++CONFIG_BOOTDELAY=5
++CONFIG_USE_PREBOOT=y
++CONFIG_LED=y
++CONFIG_LED_GPIO=y
+diff --git a/dts/upstream/src/arm64/amlogic/meson-gxl-s905x-libretech-cc.dts b/dts/upstream/src/arm64/amlogic/meson-gxl-s905x-libretech-cc.dts
+index 401064b0428..cc409116f34 100644
+--- a/dts/upstream/src/arm64/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/dts/upstream/src/arm64/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -15,7 +15,7 @@
  / {
  	compatible = "libretech,aml-s905x-cc", "amlogic,s905x",
  		     "amlogic,meson-gxl";
 -	model = "Libre Computer AML-S905X-CC";
-+	model = "hexdump serial u-boot gxl";
++	model = "hexdump usbkbd/hdmi u-boot gxl";
  
  	aliases {
  		serial0 = &uart_AO;
-@@ -55,17 +55,18 @@
+@@ -63,17 +63,18 @@
  		compatible = "gpio-leds";
  
- 		system {
+ 		led-system {
 -			label = "librecomputer:system-status";
 +//			label = "librecomputer:system-status";
 +			label = "system-status";
@@ -23,135 +45,36 @@ index e8348b2728..b45c2feee9 100644
  			panic-indicator;
  		};
  
--		blue {
+-		led-blue {
 -			label = "librecomputer:blue";
 -			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
 -			linux,default-trigger = "heartbeat";
 -		};
-+//		blue {
-+//			label = "librecomputer:blue";
-+//			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
-+//			linux,default-trigger = "heartbeat";
-+//		};
++// 		led-blue {
++// 			label = "librecomputer:blue";
++// 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
++// 			linux,default-trigger = "heartbeat";
++// 		};
  	};
  
  	memory@0 {
-diff --git a/arch/arm/dts/meson-gxm-khadas-vim2.dts b/arch/arm/dts/meson-gxm-khadas-vim2.dts
-index 27eeab71ec..8390daca67 100644
---- a/arch/arm/dts/meson-gxm-khadas-vim2.dts
-+++ b/arch/arm/dts/meson-gxm-khadas-vim2.dts
-@@ -13,7 +13,7 @@
- 
- / {
- 	compatible = "khadas,vim2", "amlogic,s912", "amlogic,meson-gxm";
--	model = "Khadas VIM2";
-+	model = "hexdump u-boot gxm";
- 
- 	aliases {
- 		serial0 = &uart_AO;
-diff --git a/arch/arm/dts/meson-gxm-s912-libretech-pc.dts b/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
-index 444c249863..c2800a9028 100644
---- a/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
-+++ b/arch/arm/dts/meson-gxm-s912-libretech-pc.dts
-@@ -12,7 +12,7 @@
- / {
- 	compatible = "libretech,aml-s912-pc", "amlogic,s912",
- 		     "amlogic,meson-gxm";
--	model = "Libre Computer AML-S912-PC";
-+	model = "hexdump u-boot gxm";
- 
- 	typec2_vbus: regulator-typec2_vbus {
- 		compatible = "regulator-fixed";
-diff --git a/configs/khadas-vim2_defconfig b/configs/khadas-vim2_defconfig
-index 771632c782..ee14f3de75 100644
---- a/configs/khadas-vim2_defconfig
-+++ b/configs/khadas-vim2_defconfig
-@@ -7,7 +7,7 @@ CONFIG_MESON_GXM=y
- CONFIG_NR_DRAM_BANKS=1
- CONFIG_DEBUG_UART_BASE=0xc81004c0
- CONFIG_DEBUG_UART_CLOCK=24000000
--CONFIG_IDENT_STRING=" khadas-vim2"
-+CONFIG_IDENT_STRING=" hexdump-gxm"
- CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_CONSOLE_MUX=y
-@@ -64,3 +61,6 @@ CONFIG_USB_GADGET_PRODUCT_NUM=0xfada
- CONFIG_USB_GADGET_DWC2_OTG=y
- CONFIG_USB_GADGET_DOWNLOAD=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_DISPLAY_BOARDINFO_LATE=y
-+CONFIG_BOOTDELAY=5
-+CONFIG_USE_PREBOOT=y
-diff --git a/configs/libretech-cc_defconfig b/configs/libretech-cc_defconfig
-index 48e8800ce4..ba47358582 100644
---- a/configs/libretech-cc_defconfig
-+++ b/configs/libretech-cc_defconfig
-@@ -7,7 +7,7 @@ CONFIG_MESON_GXL=y
- CONFIG_NR_DRAM_BANKS=1
- CONFIG_DEBUG_UART_BASE=0xc81004c0
- CONFIG_DEBUG_UART_CLOCK=24000000
--CONFIG_IDENT_STRING=" libretech-cc"
-+CONFIG_IDENT_STRING=" hexdump-gxl"
- CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_MISC_INIT_R=y
-@@ -64,3 +62,8 @@ CONFIG_SYS_WHITE_ON_BLACK=y
- CONFIG_VIDEO_MESON=y
- CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_DISPLAY_BOARDINFO_LATE=y
-+CONFIG_BOOTDELAY=5
-+CONFIG_USE_PREBOOT=y
-+CONFIG_LED=y
-+CONFIG_LED_GPIO=y
-diff --git a/configs/libretech-s912-pc_defconfig b/configs/libretech-s912-pc_defconfig
-index 50138aa3ac..d270d76df5 100644
---- a/configs/libretech-s912-pc_defconfig
-+++ b/configs/libretech-s912-pc_defconfig
-@@ -9,11 +9,10 @@ CONFIG_MESON_GXM=y
- CONFIG_NR_DRAM_BANKS=1
- CONFIG_DEBUG_UART_BASE=0xc81004c0
- CONFIG_DEBUG_UART_CLOCK=24000000
--CONFIG_IDENT_STRING=" libretech-s912-pc"
-+CONFIG_IDENT_STRING=" hexdump-gxm"
- CONFIG_DEBUG_UART=y
- CONFIG_OF_BOARD_SETUP=y
- CONFIG_USE_PREBOOT=y
--CONFIG_PREBOOT="usb start"
- CONFIG_MISC_INIT_R=y
- # CONFIG_DISPLAY_CPUINFO is not set
- # CONFIG_CMD_BDI is not set
-@@ -30,7 +29,6 @@ CONFIG_CMD_USB_MASS_STORAGE=y
- CONFIG_CMD_REGULATOR=y
- CONFIG_OF_CONTROL=y
- CONFIG_DEFAULT_DEVICE_TREE="meson-gxm-s912-libretech-pc"
--CONFIG_ENV_IS_IN_SPI_FLASH=y
- CONFIG_NET_RANDOM_ETHADDR=y
- CONFIG_SARADC_MESON=y
- CONFIG_DM_KEYBOARD=y
-@@ -74,3 +71,5 @@ CONFIG_SYS_WHITE_ON_BLACK=y
- CONFIG_VIDEO_MESON=y
- CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_OF_LIBFDT_OVERLAY=y
-+CONFIG_DISPLAY_BOARDINFO_LATE=y
-+CONFIG_BOOTDELAY=5
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index 50707a3197..9163a5ee72 100644
+index f3275b37a51..f41fddeae6e 100644
 --- a/include/configs/meson64.h
 +++ b/include/configs/meson64.h
-@@ -76,6 +76,8 @@
+@@ -145,6 +145,8 @@
  #endif
  
- #ifndef CONFIG_EXTRA_ENV_SETTINGS
+ #ifndef CFG_EXTRA_ENV_SETTINGS
 +/* the led system-status on is a hack to turn on the led as for some strange reason it does not
 + * the usb start below makes sure a usb keyboard is available when the autoboot prompt starts */
- #define CONFIG_EXTRA_ENV_SETTINGS \
+ #define CFG_EXTRA_ENV_SETTINGS \
  	"stdin=" STDIN_CFG "\0" \
  	"stdout=" STDOUT_CFG "\0" \
-@@ -86,6 +90,17 @@
- 	"pxefile_addr_r=0x01080000\0" \
- 	"ramdisk_addr_r=0x13000000\0" \
- 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
+@@ -159,6 +161,17 @@
+ 	"ramdisk_addr_r=" RAMDISK_ADDR_R "\0" \
+ 	"fdtfile=" FDTFILE_NAME "\0" \
+ 	"dfu_alt_info=fitimage ram " KERNEL_ADDR_R " 0x4000000 \0" \
 +	"bootenv_addr_r=0x01080000\0" \
 +	"preboot=led system-status on; " \
 +		"usb start; " \

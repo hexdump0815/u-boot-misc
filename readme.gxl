@@ -13,48 +13,147 @@
 # but not for gxbb (s905), g1a (s905x2), g1b (s922x) or sm1 (s905x3)
 # update: gxm (s912): hdmi video output for u-boot and usb keyboard work too with this exact same setup :)
 
-
 cd /compile/source
 
-
-# building atf
-git clone https://github.com/ARM-software/arm-trusted-firmware.git
-mv arm-trusted-firmware arm-trusted-firmware-gxl
+# arm trusted firmware:
+git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-gxl
 cd arm-trusted-firmware-gxl
-git checkout v2.3
+git checkout v2.13.0
 make realclean
 make PLAT=gxl DEBUG=1 bl31
 # result: build/gxl/debug/bl31.bin
 cp build/gxl/debug/bl31.bin build/gxl/debug/gxl-bl31.bin
 cd ..
 
-
-# building u-boot
-git clone https://gitlab.denx.de/u-boot/u-boot.git/
-mv u-boot u-boot-mainline-gxl
-cd u-boot-mainline-gxl
-git checkout v2020.07
+# u-boot:
+git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-gxl
+cd u-boot-gxl
+git checkout v2025.04
 # add usb kbd and uEnv.txt support and set some own string instead
 # of libretech-cc to make clear this is modified
 patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-uenv-txt-and-own-strings.patch
 # use this patch instead if serial console is wanted instead of hdmi/usbkbd
 #patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-uenv-txt-and-own-strings.patch
+# get atf from aft build
+cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin .
+make clean
 # the libretech-cc_defconfig works quite well for s905w and s905x and
 # supports hdmi video output well too
 make libretech-cc_defconfig
-# for gxm the add-uenv-txt-and-own-strings.patch works well for serial and hdmi/usbkbd
-# and this patch is required to remove the led cmd
-# patch -p0 < /compile/doc/u-boot-misc/misc.gxl/remove-led-cmd-for-gxm.patch
-# make libretech-s912-pc_defconfig
+# required now: apt-get install swig libpython3-dev python3-dev python3-setuptools libgnutls28-dev
 make
-cp u-boot.bin gxl-u-boot.bin
-# for gxm - but should be about the same as gxl-u-boot.bin and thus could also be ommited
-# cp u-boot.bin gxm-u-boot.bin
+# result: u-boot.bin
+# the resulting u-boot.bin can be used to chainload it from a legacy u-boot - example:
+#fatload mmc 0 0x01000000 u-boot.bin
+#go 0x01000000
+cp u-boot.bin gxl-tv-box-u-boot.bin
+# for gxm: should be about the same as gxl-u-boot.bin and thus could also be ommited
+cp u-boot.bin gxm-tv-box-u-boot.bin
 cd ..
 
-# the resulting u-boot.bin can be used to chainload it from a legacy u-boot - example:
-fatload mmc 0 0x01000000 u-boot.bin
-go 0x01000000
+# get and build gxlimg
+git clone https://github.com/repk/gxlimg.git
+cd gxlimg
+make
+cd ..
+
+# boot block creation - all the below cases were trested and verified to work
+
+# getting the trees containing the blobs required to assemble the boot block
+mkdir u-boot-gxl-blob-sources
+cd u-boot-gxl-blob-sources
+git clone --depth 1 https://github.com/BayLibre/u-boot.git -b libretech-ac u-boot-baylibre-libretech-ac
+git clone --depth 1 https://github.com/BayLibre/u-boot.git -b libretech-cc u-boot-baylibre-libretech-cc
+git clone --depth 1 https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 u-boot-amlogic-baylibre-20170606
+git clone --depth 1 https://github.com/khadas/u-boot -b Vim u-boot-khadas-vim
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/khadas-vim2_fip_20180207.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/khadas-vim_fip_20180207.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-ac_fip_20180418.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-ac_fip_20181030.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20170606.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20180418.tar.gz
+wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/p212_fip_20170606.tar.gz
+cd ..
+
+mkdir u-boot-workdir-gxl-libre-bl2-atf
+cd u-boot-workdir-gxl-libre-bl2-atf
+
+# combining libretech blx and self built u-boot/atf
+# in case the extracted bl2 (see below) does not work, try the libre one - see https://github.com/repk/gxlimg/issues/6
+# this bl2 might also result in a higher memory timing (933mhz) than the original bl2 of the box - this
+# can be positive and give a bit better performance or negative resulting in instability of the system
+# update: the performance gain due to the higher memory speed seems to be neglectable in real life
+cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
+../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
+tar xzf ../u-boot-gxl-blob-sources/libretech-cc_fip_20170606.tar.gz
+./fip/blx_fix.sh fip/gxl/bl2_acs.bin zero_tmp fip/gxl/bl2_zero.bin fip/gxl/bl21.bin fip/gxl/bl21_zero.bin bl2_new.bin bl2
+../gxlimg/gxlimg -t bl2 -s bl2_new.bin bl2.bin.enc
+../gxlimg/gxlimg -t bl3x -c fip/gxl/bl30.bin ./bl30.enc
+# u-boot-dtb.bin is the result of a mainline u-boot build for gxl
+../gxlimg/gxlimg -t bl3x -c ../u-boot-gxl/u-boot-dtb.bin u-boot.bin.enc
+../gxlimg/gxlimg -t fip --bl2 ./bl2.bin.enc --bl30 ./bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-libre-bl2-atf
+
+# prepare it for imagebuilder gxl
+dd if=/dev/zero of=boot-amlogic_gxl_libre-bl2-atf-aarch64.dd bs=512 count=1
+cat gxl-boot.bin-libre-bl2-atf >> boot-amlogic_gxl_libre-bl2-atf-aarch64.dd
+
+cd ..
+
+mkdir u-boot-workdir-gxl-a95x-r2-atf
+cd u-boot-workdir-gxl-a95x-r2-atf
+
+# extract the boot stages from the dump (in misc.gxl/dump-in.dd are some example dumps)
+zcat /compile/doc/u-boot-misc/misc.gxl/dump-in.dd/s905w-a95x-r2.dd.gz > dump-in.dd
+mkdir images
+../gxlimg/gxlimg -e dump-in.dd images
+# the first one can give an error like "error: amlcblk.c(592): Cannot read fd 3: Success"
+# if the dump is too small, but this is not a problem as we have our own bl33 = u-boot
+../gxlimg/gxlimg -t bl3x -d ./images/bl33.enc ./images/bl33.bin
+../gxlimg/gxlimg -t bl3x -d ./images/bl31.enc ./images/bl31.bin
+../gxlimg/gxlimg -t bl3x -d ./images/bl30.enc ./images/bl30.bin
+../gxlimg/gxlimg -t bl2 -u ./images/bl2.sign ./images/bl2.bin
+
+# combining extracted blx and self built u-boot/atf
+# u-boot-dtb.bin is the result of a mainline u-boot build for gxl
+../gxlimg/gxlimg -t bl3x -c ../u-boot-gxl/u-boot-dtb.bin u-boot.bin.enc
+cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
+../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
+# we reuse bl2, bl30 from the extracted boot block, bl33 is the new mainline u-boot with mainline atf as bl31
+../gxlimg/gxlimg -t fip --bl2 ./images/bl2.sign --bl30 ./images/bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-a95x-r2-atf
+
+# prepare it for imagebuilder gxl
+dd if=/dev/zero of=boot-amlogic_gxl_a95x-r2-atf-aarch64.dd bs=512 count=1
+cat gxl-boot.bin-a95x-r2-atf >> boot-amlogic_gxl_a95x-r2-atf-aarch64.dd
+
+cd ..
+
+mkdir u-boot-workdir-gxm-nexbox-a1
+cd u-boot-workdir-gxm-nexbox-a1
+
+# extract the boot stages from the dump (in misc.gxl/dump-in.dd are some example dumps)
+zcat /compile/doc/u-boot-misc/misc.gxl/dump-in.dd/s912-nexbox-a1.dd.gz > dump-in.dd
+mkdir images
+../gxlimg/gxlimg -e dump-in.dd images
+# the first one can give an error like "error: amlcblk.c(592): Cannot read fd 3: Success"
+# if the dump is too small, but this is not a problem as we have our own bl33 = u-boot
+../gxlimg/gxlimg -t bl3x -d ./images/bl33.enc ./images/bl33.bin
+../gxlimg/gxlimg -t bl3x -d ./images/bl31.enc ./images/bl31.bin
+../gxlimg/gxlimg -t bl3x -d ./images/bl30.enc ./images/bl30.bin
+../gxlimg/gxlimg -t bl2 -u ./images/bl2.sign ./images/bl2.bin
+
+# combining extracted blx and self built u-boot
+# u-boot-dtb.bin is the result of a mainline u-boot build for gxl
+../gxlimg/gxlimg -t bl3x -c ../u-boot-gxl/u-boot-dtb.bin u-boot.bin.enc
+# we reuse bl2, bl30, bl31 from the extracted boot block, bl33 is the new mainline u-boot
+../gxlimg/gxlimg -t fip --bl2 ./images/bl2.sign --bl30 ./images/bl30.enc --bl31 ./images/bl31.enc --bl33 ./u-boot.bin.enc ./gxm-boot.bin-nexbox-a1
+
+# prepare it for imagebuilder gxl
+dd if=/dev/zero of=boot-amlogic_gxm_nexbox-a1-aarch64.dd bs=512 count=1
+cat gxm-boot.bin-nexbox-a1 >> boot-amlogic_gxm_nexbox-a1-aarch64.dd
+
+
+# starting from here are older notes, which might or might not be
+# relevant anymore - just want to keep them around just in case ...
 
 # u-boot config options to play with maybe - see https://www.codedbearder.com/posts/mainline-linux-on-tx3-mini/
 CONFIG_NR_DRAM_BANKS=2
@@ -83,35 +182,6 @@ CONFIG_USE_PREBOOT=y
 # it but for some reason i did not find it did not show anything on the hdmi screen - but in the
 # end the libretech-cc_defconfig works very well for the p281 in u-boot as well
 
-# get and build gxlimg
-git clone https://github.com/repk/gxlimg.git
-cd gxlimg
-make
-cd ..
-
-
-# boot block creation - all the below cases were trested and verified to work
-
-# getting the trees containing the blobs required to assemble the boot block
-cd /compile/source/u-boot-gxl-blob-sources
-git clone --depth 1 https://github.com/BayLibre/u-boot.git -b libretech-ac u-boot-baylibre-libretech-ac
-git clone --depth 1 https://github.com/BayLibre/u-boot.git -b libretech-cc u-boot-baylibre-libretech-cc
-git clone --depth 1 https://github.com/BayLibre/u-boot.git -b n-amlogic-openlinux-20170606 u-boot-amlogic-baylibre-20170606
-git clone --depth 1 https://github.com/khadas/u-boot -b Vim u-boot-khadas-vim
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/khadas-vim2_fip_20180207.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/khadas-vim_fip_20180207.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-ac_fip_20180418.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-ac_fip_20181030.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20170606.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20180418.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/p212_fip_20170606.tar.gz
-cd ..
-
-
-mkdir u-boot-workdir-gxl
-cd u-boot-workdir-gxl
-
-
 # getting an emmc/nand boot block dump to extract some blobs from it
 # emmc case
 # dump beginning of emmc into a file
@@ -126,7 +196,7 @@ dd if=emmc-start-dump.dd of=dump-in.dd bs=512 skip=1
 # 0x4000000 - some free area in ram to read from, 0x1 0x400 write 1024 512byte blocks starting at block 1
 amlnf rom_read 0x4000000 0x0 0x800000
 mmc write 0x4000000 0x1 0x400
-# afterwards drump the sd card into a file
+# afterwards dump the sd card into a file
 dd if=/dev/sd-card-device of=nand-start-dump.dd bs=512 count=1024
 # strip the first 512 byte from it
 dd if=nand-start-dump.dd of=dump-in.dd bs=512 skip=1
@@ -141,56 +211,6 @@ bl31 - atf (arm trusted firmware) - can be extracted from original boot or self 
 bl32 - trusted firmware - usually not used on gxl
 bl33 - u-boot - self compiled from mainline u-boot
 # -> https://gitlab.denx.de/u-boot/u-boot
-
-# extract the boot stages from the dump (in misc.gxl/dump-in.dd are some example dumps for testing)
-mkdir images/
-../gxlimg/gxlimg -e dump-in.dd images
-# the first one can give an error like "error: amlcblk.c(592): Cannot read fd 3: Success"
-# if the dump is too small, but this is not a problem as we have our own bl33 = u-boot
-../gxlimg/gxlimg -t bl3x -d ./images/bl33.enc ./images/bl33.bin
-../gxlimg/gxlimg -t bl3x -d ./images/bl31.enc ./images/bl31.bin
-../gxlimg/gxlimg -t bl3x -d ./images/bl30.enc ./images/bl30.bin
-../gxlimg/gxlimg -t bl2 -u ./images/bl2.sign ./images/bl2.bin
-
-# building a new u-boot image from it:
-cd images
-# u-boot-dtb.bin is the result of a mainline u-boot build for gxl
-../../gxlimg/gxlimg -t bl3x -c ../../u-boot-mainline-gxl/u-boot-dtb.bin u-boot.bin.enc
-# we reuse bl2, bl30, bl31 from the extracted boot block, bl33 is the new mainline u-boot
-../../gxlimg/gxlimg -t fip --bl2 ./bl2.sign --bl30 ./bl30.enc --bl31 ./bl31.enc --bl33 ./u-boot.bin.enc ./gxl-boot.bin
-
-# prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-amlogic_gxl-aarch64.dd bs=512 count=1
-cat gxl-boot.bin >> boot-amlogic_gxl-aarch64.dd
-
-# in case the self built atf should be used, use the following instead of the last gxlimg command above
-cp ../../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
-../../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
-../../gxlimg/gxlimg -t fip --bl2 ./bl2.sign --bl30 ./bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-atf
-
-# prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-amlogic_gxl_atf-aarch64.dd bs=512 count=1
-cat gxl-boot.bin-atf >> boot-amlogic_gxl_atf-aarch64.dd
-
-# in case the extracted bl2 does not work, try the libre one - see https://github.com/repk/gxlimg/issues/6
-# this bl2 might also result in a higher memory timing (933mhz) than the original bl2 of the box - this
-# can be positive and give a bit better performance or negative resulting in instability of the system
-# update: the performance gain due to the higher memory speed seems to be neglectable in real life
-# https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20170606.tar.gz
-tar xzf /compile/source/u-boot-gxl-blob-sources/libretech-cc_fip_20170606.tar.gz
-./fip/blx_fix.sh fip/gxl/bl2_acs.bin zero_tmp fip/gxl/bl2_zero.bin fip/gxl/bl21.bin fip/gxl/bl21_zero.bin bl2_new.bin bl2
-../../gxlimg/gxlimg -t bl2 -s bl2_new.bin bl2.bin.enc
-../../gxlimg/gxlimg -t fip --bl2 ./bl2.bin.enc --bl30 ./bl30.enc --bl31 ./bl31.enc --bl33 ./u-boot.bin.enc ./gxl-boot.bin-libre-bl2
-# the above should work, i.e. bl2 from the libretech-cc tar, bl3* extracted and u-boot-dtb.bin self compiled
-
-# combining the last two special cases: libretech bl2 and self built atf
-cp ../../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
-../../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
-# https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/libretech-cc_fip_20170606.tar.gz
-tar xzf libretech-cc_fip_20170606.tar.gz
-./fip/blx_fix.sh fip/gxl/bl2_acs.bin zero_tmp fip/gxl/bl2_zero.bin fip/gxl/bl21.bin fip/gxl/bl21_zero.bin bl2_new.bin bl2
-../../gxlimg/gxlimg -t bl2 -s bl2_new.bin bl2.bin.enc
-../../gxlimg/gxlimg -t fip --bl2 ./bl2.bin.enc --bl30 ./bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-libre-bl2-atf
 
 # note: sometimes bl301 seems to be separate
 #       see https://freenode.irclog.whitequark.org/linux-amlogic/2020-06-29#27376080
