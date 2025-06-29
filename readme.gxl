@@ -1,18 +1,3 @@
-# gxm-experiments-branch:
-# see https://github.com/repk/gxlimg/issues/8
-# -initially it was not working as i was testing it with my usb patches in place
-#  - the disable the serial console to avoid input noise from it
-#  - i used a hdmi debug dongle so could not see the hdmi screen
-#  - result: no output - removing my patches made it work on serial console
-#    - vim2 defconfig does not seem to see the sd card (most probably dtb issue)
-#    - libretech-s912-pc defconfig sees both but looks like ethernet is not working in linux then
-#    - the "Unhandled Exception in EL3." error still remains with v2.3 mainline gxl atf
-#    - still to be tested: does it still work with a real hdmi monitor connected?
-
-# the below is relevant for gxl (s905x, s905w, etc.), maybe works on gxm (s912) too (untested)
-# but not for gxbb (s905), g1a (s905x2), g1b (s922x) or sm1 (s905x3)
-# update: gxm (s912): hdmi video output for u-boot and usb keyboard work too with this exact same setup :)
-
 cd /compile/source
 
 # arm trusted firmware:
@@ -22,7 +7,7 @@ git checkout v2.13.0
 make realclean
 make PLAT=gxl DEBUG=1 bl31
 # result: build/gxl/debug/bl31.bin
-cp build/gxl/debug/bl31.bin build/gxl/debug/gxl-bl31.bin
+cp build/gxl/debug/bl31.bin build/gxl/debug/gxl-bl31.bin-atf
 cd ..
 
 # u-boot:
@@ -83,8 +68,8 @@ cd u-boot-workdir-gxl-libre-bl2-atf
 # this bl2 might also result in a higher memory timing (933mhz) than the original bl2 of the box - this
 # can be positive and give a bit better performance or negative resulting in instability of the system
 # update: the performance gain due to the higher memory speed seems to be neglectable in real life
-cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
-../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
+cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin gxl-bl31.bin-atf
+../gxlimg/gxlimg -t bl3x -c gxl-bl31.bin-atf bl31.img.enc-atf
 tar xzf ../u-boot-gxl-blob-sources/libretech-cc_fip_20170606.tar.gz
 ./fip/blx_fix.sh fip/gxl/bl2_acs.bin zero_tmp fip/gxl/bl2_zero.bin fip/gxl/bl21.bin fip/gxl/bl21_zero.bin bl2_new.bin bl2
 ../gxlimg/gxlimg -t bl2 -s bl2_new.bin bl2.bin.enc
@@ -116,8 +101,8 @@ mkdir images
 # combining extracted blx and self built u-boot/atf
 # u-boot-dtb.bin is the result of a mainline u-boot build for gxl
 ../gxlimg/gxlimg -t bl3x -c ../u-boot-gxl/u-boot-dtb.bin u-boot.bin.enc
-cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin bl31.bin-atf
-../gxlimg/gxlimg -t bl3x -c bl31.bin-atf bl31.img.enc-atf
+cp ../arm-trusted-firmware-gxl/build/gxl/debug/bl31.bin gxl-bl31.bin-atf
+../gxlimg/gxlimg -t bl3x -c gxl-bl31.bin-atf bl31.img.enc-atf
 # we reuse bl2, bl30 from the extracted boot block, bl33 is the new mainline u-boot with mainline atf as bl31
 ../gxlimg/gxlimg -t fip --bl2 ./images/bl2.sign --bl30 ./images/bl30.enc --bl31 ./bl31.img.enc-atf --bl33 ./u-boot.bin.enc ./gxl-boot.bin-a95x-r2-atf
 
@@ -218,3 +203,19 @@ bl33 - u-boot - self compiled from mainline u-boot
 
 # write new boot block to sd card or emmc
 dd if=./gxl-boot.bin of=/dev/sd-card-device bs=512 seek=1
+
+# some very old and most probably no longer relevant note:
+# gxm-experiments-branch:
+# see https://github.com/repk/gxlimg/issues/8
+# -initially it was not working as i was testing it with my usb patches in place
+#  - the disable the serial console to avoid input noise from it
+#  - i used a hdmi debug dongle so could not see the hdmi screen
+#  - result: no output - removing my patches made it work on serial console
+#    - vim2 defconfig does not seem to see the sd card (most probably dtb issue)
+#    - libretech-s912-pc defconfig sees both but looks like ethernet is not working in linux then
+#    - the "Unhandled Exception in EL3." error still remains with v2.3 mainline gxl atf
+#    - still to be tested: does it still work with a real hdmi monitor connected?
+
+# the below is relevant for gxl (s905x, s905w, etc.), maybe works on gxm (s912) too (untested)
+# but not for gxbb (s905), g1a (s905x2), g1b (s922x) or sm1 (s905x3)
+# update: gxm (s912): hdmi video output for u-boot and usb keyboard work too with this exact same setup :)
