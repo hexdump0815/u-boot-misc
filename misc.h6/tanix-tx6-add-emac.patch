@@ -1,16 +1,16 @@
-diff --git a/arch/arm/dts/sun50i-h6-tanix-tx6.dts b/arch/arm/dts/sun50i-h6-tanix-tx6.dts
-index be81330db1..af054d2cfb 100644
---- a/arch/arm/dts/sun50i-h6-tanix-tx6.dts
-+++ b/arch/arm/dts/sun50i-h6-tanix-tx6.dts
-@@ -13,6 +13,7 @@
- 	compatible = "oranth,tanix-tx6", "allwinner,sun50i-h6";
+diff --git a/arch/arm/dts/sun50i-h6-tanix.dtsi b/arch/arm/dts/sun50i-h6-tanix.dtsi
+index bb7de37c0d5..615f6adfe87 100644
+--- a/arch/arm/dts/sun50i-h6-tanix.dtsi
++++ b/arch/arm/dts/sun50i-h6-tanix.dtsi
+@@ -10,6 +10,7 @@
  
+ / {
  	aliases {
 +		ethernet0 = &emac;
  		serial0 = &uart0;
  	};
  
-@@ -55,6 +56,12 @@
+@@ -92,6 +93,12 @@
  	status = "okay";
  };
  
@@ -23,8 +23,8 @@ index be81330db1..af054d2cfb 100644
  &dwc3 {
  	status = "okay";
  };
-@@ -67,6 +74,13 @@
- 	status = "okay";
+@@ -119,6 +126,13 @@
+ 	};
  };
  
 +&mdio {
@@ -34,6 +34,6 @@ index be81330db1..af054d2cfb 100644
 +	};
 +};
 +
- &gpu {
- 	mali-supply = <&reg_vdd_cpu_gpu>;
- 	status = "okay";
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
