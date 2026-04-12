@@ -13,10 +13,10 @@ index f0da46d863c..914f16b2c46 100644
  #define CFG_I2C_MVTWSI_BASE2 SUNXI_R_TWI_BASE
  #endif
 diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index ba1b1541437..bdad9284acf 100644
+index e979ee4a2cc..0231d7bba44 100644
 --- a/arch/arm/mach-sunxi/Kconfig
 +++ b/arch/arm/mach-sunxi/Kconfig
-@@ -845,6 +845,15 @@ config I2C1_ENABLE
+@@ -936,6 +936,15 @@ config I2C1_ENABLE
  	---help---
  	See I2C0_ENABLE help text.
  
@@ -29,14 +29,14 @@ index ba1b1541437..bdad9284acf 100644
 +	See I2C0_ENABLE help text.
 +endif
 +
- if SUNXI_GEN_SUN6I || SUN50I_GEN_H6
+ if SUNXI_GEN_SUN6I || SUN50I_GEN_H6 || SUNXI_GEN_NCAT2
  config R_I2C_ENABLE
  	bool "Enable the PRCM I2C/TWI controller"
 diff --git a/arch/arm/mach-sunxi/board.c b/arch/arm/mach-sunxi/board.c
-index 701899ee4b2..4ca99cfe300 100644
+index 432b1c10f92..6309271a491 100644
 --- a/arch/arm/mach-sunxi/board.c
 +++ b/arch/arm/mach-sunxi/board.c
-@@ -475,6 +475,7 @@ void board_init_f(ulong dummy)
+@@ -487,6 +487,7 @@ void board_init_f(ulong dummy)
  	/* Needed early by sunxi_board_init if PMU is enabled */
  	i2c_init_board();
  	i2c_init(CONFIG_SYS_I2C_SPEED, CONFIG_SYS_I2C_SLAVE);
@@ -45,13 +45,13 @@ index 701899ee4b2..4ca99cfe300 100644
  	sunxi_board_init();
  }
 diff --git a/arch/arm/mach-sunxi/clock_sun50i_h6.c b/arch/arm/mach-sunxi/clock_sun50i_h6.c
-index b424a7893ea..b1957e38389 100644
+index 80004f13a1e..a4afb706630 100644
 --- a/arch/arm/mach-sunxi/clock_sun50i_h6.c
 +++ b/arch/arm/mach-sunxi/clock_sun50i_h6.c
-@@ -50,6 +50,10 @@ void clock_init_safe(void)
- 	 * DRAM initialization code.
- 	 */
- 	writel(MBUS_CLK_SRC_PLL6X2 | MBUS_CLK_M(3), &ccm->mbus_cfg);
+@@ -72,6 +72,10 @@ void clock_init_safe(void)
+ 		writel(MBUS_CLK_SRC_PLL6X2 | MBUS_CLK_M(3),
+ 		       ccm + CCU_H6_MBUS_CFG);
+ 	}
 +
 +	writel(0x10001, 0x030017ac);
 +	writel(0x50, 0x0300a028);
@@ -60,7 +60,7 @@ index b424a7893ea..b1957e38389 100644
  
  void clock_init_uart(void)
 diff --git a/board/sunxi/board.c b/board/sunxi/board.c
-index c7a2205ed61..08cbe81dcf0 100644
+index 954a8715075..2f9252014de 100644
 --- a/board/sunxi/board.c
 +++ b/board/sunxi/board.c
 @@ -109,6 +109,17 @@ void i2c_init_board(void)
@@ -81,7 +81,7 @@ index c7a2205ed61..08cbe81dcf0 100644
  #ifdef CONFIG_R_I2C_ENABLE
  #ifdef CONFIG_MACH_SUN50I
  	clock_twi_onoff(5, 1);
-@@ -550,6 +561,7 @@ static void sunxi_spl_store_dram_size(phys_addr_t dram_size)
+@@ -564,6 +575,7 @@ static void sunxi_spl_store_dram_size(phys_addr_t dram_size)
  void sunxi_board_init(void)
  {
  	int power_failed = 0;
@@ -89,7 +89,7 @@ index c7a2205ed61..08cbe81dcf0 100644
  
  #ifdef CONFIG_LED_STATUS
  	if (IS_ENABLED(CONFIG_SPL_DRIVERS_MISC))
-@@ -643,6 +655,23 @@ void sunxi_board_init(void)
+@@ -660,6 +672,23 @@ void sunxi_board_init(void)
  		clock_set_pll1(get_board_sys_clk());
  	else
  		printf("Failed to set core voltage! Can't set CPU frequency\n");
@@ -114,10 +114,10 @@ index c7a2205ed61..08cbe81dcf0 100644
  #endif /* CONFIG_XPL_BUILD */
  
 diff --git a/drivers/net/sun8i_emac.c b/drivers/net/sun8i_emac.c
-index 0da182d9f4c..d652b82010c 100644
+index 41c52f56d7a..39da380a493 100644
 --- a/drivers/net/sun8i_emac.c
 +++ b/drivers/net/sun8i_emac.c
-@@ -905,6 +905,11 @@ static const struct emac_variant emac_variant_h6 = {
+@@ -900,6 +900,11 @@ static const struct emac_variant emac_variant_h6 = {
  	.support_rmii		= true,
  };
  
@@ -129,7 +129,7 @@ index 0da182d9f4c..d652b82010c 100644
  static const struct udevice_id sun8i_emac_eth_ids[] = {
  	{ .compatible = "allwinner,sun8i-a83t-emac",
  	  .data = (ulong)&emac_variant_a83t },
-@@ -918,6 +923,8 @@ static const struct udevice_id sun8i_emac_eth_ids[] = {
+@@ -913,6 +918,8 @@ static const struct udevice_id sun8i_emac_eth_ids[] = {
  	  .data = (ulong)&emac_variant_a64 },
  	{ .compatible = "allwinner,sun50i-h6-emac",
  	  .data = (ulong)&emac_variant_h6 },
@@ -139,7 +139,7 @@ index 0da182d9f4c..d652b82010c 100644
  };
  
 diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 37ea93715d1..22e25b5956e 100644
+index fd357ab0d4e..b025666e641 100644
 --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
 +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
 @@ -737,6 +737,7 @@ static const struct sunxi_pinctrl_desc __maybe_unused sun50i_h6_r_pinctrl_desc =
@@ -151,10 +151,10 @@ index 37ea93715d1..22e25b5956e 100644
  	{ "gpio_out",	1 },
  	{ "mmc0",	2 },	/* PF0-PF5 */
 diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi b/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
-index cdce3dcb8ec..c9bf7a7c659 100644
+index ceedae9e399..7d5094e7a25 100644
 --- a/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
 +++ b/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
-@@ -289,6 +289,14 @@
+@@ -304,6 +304,14 @@
  				bias-pull-up;
  			};
  
@@ -169,7 +169,7 @@ index cdce3dcb8ec..c9bf7a7c659 100644
  			/omit-if-no-ref/
  			spi0_pins: spi0-pins {
  				pins = "PC0", "PC2", "PC4";
-@@ -693,6 +701,25 @@
+@@ -708,6 +716,25 @@
  			status = "disabled";
  		};
  

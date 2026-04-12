@@ -3,8 +3,6 @@ cd /compile/source
 # arm trusted firmware:
 git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-h616
 cd arm-trusted-firmware-h616
-# for the v2025.04 case:
-#git checkout v2.13.0
 git checkout v2.14.0
 make realclean
 make PLAT=sun50i_h616 DEBUG=1 bl31
@@ -15,8 +13,6 @@ cd ..
 # u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-h616
 cd u-boot-h616
-# for the v2025.04 case:
-#git checkout v2025.04
 git checkout v2026.04
 # patches for h313/h616/h618
 for i in /compile/doc/u-boot-misc/misc.h616/patches/v2026.04/*.patch; do
@@ -27,18 +23,11 @@ done
 cp ../arm-trusted-firmware-h616/build/sun50i_h616/debug/bl31.bin .
 make clean
 make transpeed-8k618-t_defconfig
-# tanix tx6s
-#make tanix_tx6s_defconfig
 # other tv boxes
-#make tanix_tx1_defconfig
 #make x96_mate_defconfig
-# orange pi zero
-#make orangepi_zero2_defconfig
-#make orangepi_zero2w_defconfig
-#make orangepi_zero3_defconfig
 # own additions:
 # required now: apt-get install swig libpython3-dev python3-dev python3-setuptools libgnutls28-dev
-make
+make -j 4
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
 
 # prepare it for imagebuilder transpeed-8k618-t
@@ -47,38 +36,8 @@ cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-transpeed-8k618-t-aarch64.d
 cp u-boot.bin h616-transpeed-8k618-t-u-boot.bin
 cp u-boot-sunxi-with-spl.bin h616-transpeed-8k618-t-u-boot-sunxi-with-spl.bin
 
-# prepare it for imagebuilder tanix_tx6s
-dd if=/dev/zero of=boot-allwinner_h616-tanix_tx6s-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-tanix_tx6s-aarch64.dd
-cp u-boot.bin h616-tanix_tx6s-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h616-tanix_tx6s-u-boot-sunxi-with-spl.bin
-
-# prepare it for imagebuilder tanix_tx1
-dd if=/dev/zero of=boot-allwinner_h616-tanix_tx1-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-tanix_tx1-aarch64.dd
-cp u-boot.bin h616-tanix_tx1-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h616-tanix_tx1-u-boot-sunxi-with-spl.bin
-
 # prepare it for imagebuilder x96_mate
 dd if=/dev/zero of=boot-allwinner_h616-x96_mate-aarch64.dd bs=1024 count=8
 cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-x96_mate-aarch64.dd
 cp u-boot.bin h616-x96_mate-u-boot.bin
 cp u-boot-sunxi-with-spl.bin h616-x96_mate-u-boot-sunxi-with-spl.bin
-
-# prepare it for imagebuilder orangepi_zero2
-dd if=/dev/zero of=boot-allwinner_h616-orangepi_zero2-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-orangepi_zero2-aarch64.dd
-cp u-boot.bin h616-orangepi_zero2-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h616-orangepi_zero2-u-boot-sunxi-with-spl.bin
-
-# prepare it for imagebuilder orangepi_zero2w
-dd if=/dev/zero of=boot-allwinner_h616-orangepi_zero2w-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-orangepi_zero2w-aarch64.dd
-cp u-boot.bin h616-orangepi_zero2w-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h616-orangepi_zero2w-u-boot-sunxi-with-spl.bin
-
-# prepare it for imagebuilder orangepi_zero3
-dd if=/dev/zero of=boot-allwinner_h616-orangepi_zero3-aarch64.dd bs=1024 count=8
-cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-orangepi_zero3-aarch64.dd
-cp u-boot.bin h616-orangepi_zero3-u-boot.bin
-cp u-boot-sunxi-with-spl.bin h616-orangepi_zero3-u-boot-sunxi-with-spl.bin

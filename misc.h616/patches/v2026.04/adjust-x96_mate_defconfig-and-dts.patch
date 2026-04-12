@@ -1,0 +1,63 @@
+diff --git a/configs/x96_mate_defconfig b/configs/x96_mate_defconfig
+index c0628370df9..bb6dc3ac6de 100644
+--- a/configs/x96_mate_defconfig
++++ b/configs/x96_mate_defconfig
+@@ -18,8 +18,12 @@ CONFIG_SPL_I2C=y
+ CONFIG_SPL_SYS_I2C_LEGACY=y
+ CONFIG_SYS_I2C_MVTWSI=y
+ CONFIG_SYS_I2C_SLAVE=0x7f
+-CONFIG_SYS_I2C_SPEED=400000
+ CONFIG_SUPPORT_EMMC_BOOT=y
+ CONFIG_AXP305_POWER=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_OHCI_HCD=y
++CONFIG_SYS_I2C_SPEED=100000
++CONFIG_SUN8I_EMAC=y
++CONFIG_I2C3_ENABLE=y
++CONFIG_PHY_REALTEK=y
++CONFIG_USB_MUSB_GADGET=y
+diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h616-x96-mate.dts b/dts/upstream/src/arm64/allwinner/sun50i-h616-x96-mate.dts
+index 085f3e4e8ea..0e0cf890ebd 100644
+--- a/dts/upstream/src/arm64/allwinner/sun50i-h616-x96-mate.dts
++++ b/dts/upstream/src/arm64/allwinner/sun50i-h616-x96-mate.dts
+@@ -50,6 +50,17 @@
+ 	status = "okay";
+ };
+ 
++&emac1 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&rmii_pins>;
++       phy-mode = "rmii";
++       phy-handle = <&rmii_phy>;
++       phy-supply = <&reg_aldo1>;
++       allwinner,rx-delay-ps = <3100>;
++       allwinner,tx-delay-ps = <700>;
++       status = "okay";
++};
++
+ &gpu {
+ 	mali-supply = <&reg_dcdcc>;
+ 	status = "okay";
+@@ -59,9 +70,21 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++       status = "okay";
++};
++
++&mdio1 {
++       rmii_phy: ethernet-phy@1 {
++               compatible = "ethernet-phy-ieee802.3-c22";
++               reg = <1>;
++       };
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_dcdce>;
+-	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
++//	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
++	broken-cd;
+ 	disable-wp;
+ 	bus-width = <4>;
+ 	status = "okay";

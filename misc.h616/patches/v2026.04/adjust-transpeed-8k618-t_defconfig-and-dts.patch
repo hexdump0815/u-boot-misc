@@ -21,17 +21,13 @@ index e4bf5e8efd3..11ddd535064 100644
 +CONFIG_I2C3_ENABLE=y
 +CONFIG_USB_MUSB_GADGET=y
 diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts b/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
-index efe0faa252f..733201cc186 100644
+index efe0faa252f..0efa1c85d73 100644
 --- a/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
 +++ b/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
-@@ -78,9 +78,32 @@
+@@ -69,6 +69,17 @@
  	status = "okay";
  };
  
-+&i2c3 {
-+       status = "okay";
-+};
-+
 +&emac1 {
 +       pinctrl-names = "default";
 +       pinctrl-0 = <&rmii_pins>;
@@ -40,6 +36,17 @@ index efe0faa252f..733201cc186 100644
 +       phy-supply = <&reg_aldo1>;
 +       allwinner,rx-delay-ps = <3100>;
 +       allwinner,tx-delay-ps = <700>;
++       status = "okay";
++};
++
+ &gpu {
+ 	mali-supply = <&reg_dcdc1>;
+ 	status = "okay";
+@@ -78,9 +89,21 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
 +       status = "okay";
 +};
 +
