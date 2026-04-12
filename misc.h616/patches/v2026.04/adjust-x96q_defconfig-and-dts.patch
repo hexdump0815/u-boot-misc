@@ -1,0 +1,64 @@
+diff --git a/configs/x96q_defconfig b/configs/x96q_defconfig
+index 59f01aae4eb..8293ff03a84 100644
+--- a/configs/x96q_defconfig
++++ b/configs/x96q_defconfig
+@@ -19,9 +19,12 @@ CONFIG_R_I2C_ENABLE=y
+ CONFIG_SPL_I2C=y
+ CONFIG_SPL_SYS_I2C_LEGACY=y
+ CONFIG_SYS_I2C_MVTWSI=y
+-CONFIG_SYS_I2C_SPEED=400000
+ CONFIG_SUPPORT_EMMC_BOOT=y
+ CONFIG_SUN8I_EMAC=y
+ CONFIG_AXP305_POWER=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_OHCI_HCD=y
++CONFIG_SYS_I2C_SPEED=100000
++CONFIG_I2C3_ENABLE=y
++CONFIG_PHY_REALTEK=y
++CONFIG_USB_MUSB_GADGET=y
+diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h313-x96q.dts b/dts/upstream/src/arm64/allwinner/sun50i-h313-x96q.dts
+index b2275eb3d55..6654698f0d6 100644
+--- a/dts/upstream/src/arm64/allwinner/sun50i-h313-x96q.dts
++++ b/dts/upstream/src/arm64/allwinner/sun50i-h313-x96q.dts
+@@ -72,7 +72,16 @@
+ 	status = "okay";
+ };
+ 
+-/* TODO: EMAC1 connected to AC200 PHY */
++&emac1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&rmii_pins>;
++	phy-mode = "rmii";
++	phy-handle = <&rmii_phy>;
++	phy-supply = <&reg_aldo1>;
++	allwinner,rx-delay-ps = <3100>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
+ 
+ &gpu {
+ 	mali-supply = <&reg_dcdcc>;
+@@ -83,10 +92,22 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++	status = "okay";
++};
++
++&mdio1 {
++	rmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++	};
++};
++
+ &mmc0 {
+ 	/* microSD */
+ 	vmmc-supply = <&reg_aldo1>;
+-	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
++//	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;	/* PF6 */
++	broken-cd;
+ 	disable-wp;
+ 	bus-width = <4>;
+ 	status = "okay";
