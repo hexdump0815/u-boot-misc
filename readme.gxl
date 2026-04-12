@@ -3,9 +3,9 @@ cd /compile/source
 # arm trusted firmware:
 git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-gxl
 cd arm-trusted-firmware-gxl
-git checkout v2.13.0
+git checkout v2.14.0
 make realclean
-make PLAT=gxl DEBUG=1 bl31
+make -j 4 PLAT=gxl DEBUG=1 bl31
 # result: build/gxl/debug/bl31.bin
 cp build/gxl/debug/bl31.bin build/gxl/debug/gxl-bl31.bin-atf
 cd ..
@@ -13,7 +13,7 @@ cd ..
 # u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-gxl
 cd u-boot-gxl
-git checkout v2025.04
+git checkout v2026.04
 # add usb kbd and uEnv.txt support and set some own string instead
 # of libretech-cc to make clear this is modified
 patch -p1 < /compile/doc/u-boot-misc/misc.gxl/add-usb-kbd-uenv-txt-and-own-strings.patch
@@ -26,7 +26,7 @@ make clean
 # supports hdmi video output well too
 make libretech-cc_defconfig
 # required now: apt-get install swig libpython3-dev python3-dev python3-setuptools libgnutls28-dev
-make
+make -j 4
 # result: u-boot.bin
 # the resulting u-boot.bin can be used to chainload it from a legacy u-boot - example:
 #fatload mmc 0 0x01000000 u-boot.bin
