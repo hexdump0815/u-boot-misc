@@ -70,6 +70,16 @@ cp u-boot-sunxi-with-spl.bin h616-tanix_tx1-u-boot-sunxi-with-spl.bin
 
 # other mainline supported devices
 make clean
+make longanpi-3h_defconfig
+make -j 4
+
+# prepare longanpi-3h for imagebuilder
+dd if=/dev/zero of=boot-allwinner_h616-longanpi-3h-aarch64.dd bs=1024 count=8
+cat u-boot-sunxi-with-spl.bin >> boot-allwinner_h616-longanpi-3h-aarch64.dd
+cp u-boot.bin h616-longanpi-3h-u-boot.bin
+cp u-boot-sunxi-with-spl.bin h616-longanpi-3h-u-boot-sunxi-with-spl.bin
+
+make clean
 make orangepi_zero2_defconfig
 make -j 4
 
