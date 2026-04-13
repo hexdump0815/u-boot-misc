@@ -1,5 +1,6 @@
-arm trusted firmware:
+cd /compile/source
 
+# arm trusted firmware:
 git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-h6
 cd arm-trusted-firmware-h6
 # if the current atf version v2.6 results in instability, maybe try the older working version
@@ -16,8 +17,7 @@ cp build/sun50i_h6/debug/bl31.bin build/sun50i_h6/debug/h6-bl31.bin
 #cp build/sun50i_h6/debug/bl31.bin build/sun50i_h6/debug/h6-noname-bl31.bin
 cd ..
 
-u-boot:
-
+# u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-h6
 cd u-boot-h6
 git checkout v2026.04
