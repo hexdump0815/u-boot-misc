@@ -1,0 +1,15 @@
+based on the armbian patch 1002-2.14-rk3399-PMUSRAM_RSIZE-8k-16k.patch
+
+diff --git a/plat/rockchip/rk3328/rk3328_def.h b/plat/rockchip/rk3328/rk3328_def.h
+index 60055e846..6e6eb47f3 100644
+--- a/plat/rockchip/rk3328/rk3328_def.h
++++ b/plat/rockchip/rk3328/rk3328_def.h
+@@ -59,7 +59,7 @@
+ 
+ #define PMUSRAM_BASE		INTMEM_BASE
+ #define PMUSRAM_SIZE		SIZE_K(4)
+-#define PMUSRAM_RSIZE		SIZE_K(4)
++#define PMUSRAM_RSIZE		SIZE_K(8)
+ 
+ #define VOP_BASE		0xff370000
+ #define VOP_SIZE		SIZE_K(16)
