@@ -56,12 +56,32 @@ export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_v1.16.bin
 make rk3318-box_defconfig
 # required: apt-get -y install python3-pyelftools
 make -j 4
-cp u-boot.bin rk3328-u-boot.bin
-cp u-boot-rockchip.bin rk3328-u-boot-rockchip.bin
+cp u-boot.bin rk3328-v1.16-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.16-u-boot-rockchip.bin
 
 # prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rk3328-ddrbin-spl-aarch64.dd bs=512 count=64
-cat rk3328-u-boot-rockchip.bin >> boot-rk3328-ddrbin-spl-aarch64.dd
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.16-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.16-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.16-spl-aarch64.dd
+
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15.bin
+make rk3318-box_defconfig
+make -j 4
+cp u-boot.bin rk3328-v1.15-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.15-u-boot-rockchip.bin
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.15-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.15-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.15-spl-aarch64.dd
+
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15-666mhz.bin
+make rk3318-box_defconfig
+make -j 4
+cp u-boot.bin rk3328-v1.15-666mhz-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.15-666mhz-u-boot-rockchip.bin
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.15-666mhz-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.15-666mhz-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.15-666mhz-spl-aarch64.dd
 
 # === old stuff below ===
 
