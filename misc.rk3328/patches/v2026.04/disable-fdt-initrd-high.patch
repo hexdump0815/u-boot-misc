@@ -1,0 +1,13 @@
+keeping those enabled resulted in boot failures as also warned by u-boot
+
+--- a/include/configs/rk3318-box.h.org	2026-04-18 23:48:01.813200669 +0200
++++ b/include/configs/rk3318-box.h	2026-04-18 23:48:14.741154276 +0200
+@@ -20,8 +20,6 @@
+         "stdout=serial,vidconsole\0" \
+         "stderr=serial,vidconsole\0" \
+         "fdtfile=" CONFIG_DEFAULT_FDT_FILE "\0" \
+-        "fdt_high=0xffffffffffffffff\0" \
+-        "initrd_high=0xffffffffffffffff\0" \
+         "boot_targets=" BOOT_TARGETS "\0"
+ 
+ 

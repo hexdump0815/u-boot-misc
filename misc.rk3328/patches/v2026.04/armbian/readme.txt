@@ -1,5 +1,5 @@
 those patches were taken from https://github.com/armbian/build at commit
-4fc054501a118ad34bed0b65b52de198290afac5
+ef5966af47bda682e68555c120df3429fa253bae
 
 all credits for them go to armbian
 

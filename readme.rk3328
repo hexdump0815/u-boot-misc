@@ -1,14 +1,11 @@
 cd /compile/source
 
 # arm trusted firmware:
-# atf is only used in case the full mainline bootblocks are written to disk
-# otherwise the legacy atf from emmc will be used
 git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-rk3328
 cd arm-trusted-firmware-rk3328
 # v2.14.0 results in "region `PMUSRAM' overflowed by 8 bytes"
 # see: https://libera.catirclogs.org/linux-rockchip/2025-10-22#
 # also: https://github.com/ARM-software/tf-issues/issues/650
-# maybe patch 01-fix-building-under-gcc15.patch helps too?
 # so lets use v2.13.0 for now
 git checkout v2.13.0
 # patches for rk3328/rk3318
@@ -24,13 +21,20 @@ cd ..
 # u-boot:
 git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-mainline-rk3328
 cd u-boot-mainline-rk3328
-# armbian patches are based on v2025.10 so lets use that version for now
-git checkout v2025.10
+# armbian patches are based on v2026.04 so lets use that version for now
+git checkout v2026.04
 # patches for rk3328/rk3318
-for i in /compile/doc/u-boot-misc/misc.rk3328/patches/v2025.10/armbian/*.patch; do
+for i in /compile/doc/u-boot-misc/misc.rk3328/patches/v2026.04/armbian/*.patch; do
   echo === $i
   patch -p1 < $i
 done
+# copy dts and dtsi files
+cp -v /compile/doc/u-boot-misc/misc.rk3328/dtb/rk3328-box-u-boot.dtsi arch/arm/dts/rk3318-box-u-boot.dtsi
+cp -v /compile/doc/u-boot-misc/misc.rk3328/dtb/rk3328-box.dts dts/upstream/src/arm64/rockchip/rk3318-box.dts
+# copy u-boot defconfig
+cp -v /compile/doc/u-boot-misc/misc.rk3328/misc/rk3318-box_defconfig configs/rk3318-box_defconfig
+# remove fdt_high and initrd_high from the env as it resulted in boot failures otherwise
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/patches/v2026.04/disable-fdt-initrd-high.patch
 # use atf from atf build
 export BL31=../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf
 export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_v1.16.bin
