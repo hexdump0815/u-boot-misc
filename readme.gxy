@@ -62,18 +62,6 @@ cd ..
 
 # boot block creation
 
-# getting the trees containing the blobs required to assemble the boot block
-mkdir /compile/source/u-boot-gxy-blob-sources
-cd /compile/source/u-boot-gxy-blob-sources
-git clone --depth 1 https://github.com/khadas/u-boot.git -b khadas-vims-v2015.01 u-boot-khadas-vim3
-git clone --depth 1 https://github.com/BayLibre/u-boot.git -b buildroot-openlinux-20180418 u-boot-baylibre-20180418
-git clone --depth 1 https://github.com/BayLibre/u-boot.git -b buildroot-openlinux-4.9-g12a-201904 u-boot-baylibre-4.9-g12a-201904
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/blx_fix_g12a.sh
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/odroid-n2_fip_20190220.tar.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/u-boot.bin.odroid-n2_2019.07-rc3-00022-g47bebaa4a3.gz
-wget https://github.com/BayLibre/u-boot/releases/download/v2017.11-libretech-cc/s400_fip_20181003.tar.gz
-cd ..
-
 mkdir u-boot-workdir-gxy
 cd u-boot-workdir-gxy
 
@@ -82,11 +70,9 @@ git clone https://github.com/LibreELEC/amlogic-boot-fip
 
 # assembls the u-boot boot image - original atf case - sm1
 mkdir data
-# alternative s905x3 = sm1
-# cp -r amlogic-boot-fip/sei610/* data
-# alternatively for s905x2 = g12a
-# cp -r amlogic-boot-fip/sei510/* data
 cp amlogic-boot-fip/odroid-c4/* data
+# alternative
+# cp amlogic-boot-fip/sei610/* data
 cp /compile/doc/u-boot-misc/misc.gxy/acs-x96-air-2-16.bin.gz data/acs.bin.gz
 gunzip -f data/acs.bin.gz
 ../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
@@ -109,7 +95,7 @@ rm -rf data
 
 # assembls the u-boot boot image - mainline atf case - g12a
 mkdir data
-cp amlogic-boot-fip/odroid-c4/* data
+cp amlogic-boot-fip/sei510/* data
 cp ../arm-trusted-firmware-gxy/build/g12a/debug/bl31.bin data/bl31.bin-atf
 # use the header of he original bl31.img
 dd if=data/bl31.img of=data/bl31.img-atf bs=512 count=1
@@ -160,7 +146,7 @@ rm -rf data
 
 # assembls the u-boot boot image - mainline atf case - g12a
 mkdir data
-cp amlogic-boot-fip/odroid-c4/* data
+cp amlogic-boot-fip/sei510/* data
 cp ../arm-trusted-firmware-gxy/build/g12a/debug/bl31.bin data/bl31.bin-atf
 # use the header of he original bl31.img
 dd if=data/bl31.img of=data/bl31.img-atf bs=512 count=1
