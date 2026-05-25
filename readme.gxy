@@ -73,6 +73,13 @@ mkdir data
 cp amlogic-boot-fip/odroid-c4/* data
 # alternative
 # cp amlogic-boot-fip/sei610/* data
+# to get the acs memory timings dump /dev/mmcblkXboot0 or the beginning of /dev/mmcblkX
+# and dd edit out the part which looks like the regular acs.bin in hexdump -C
+#
+# example: some x96 air 2g/16g tv box
+# dd if=mmcblk2boot0.dd of=tmp.dd bs=1 skip=61952 status=progress
+# dd if=tmp.dd of=acs-x96-air-2-16.bin bs=1 count=4112 status=progress
+# rm -f tmp.dd
 cp /compile/doc/u-boot-misc/misc.gxy/acs-x96-air-2-16.bin.gz data/acs.bin.gz
 gunzip -f data/acs.bin.gz
 ../meson64-tools/pkg --type bl30 --output bl30.pkg data/bl30.bin data/bl301.bin
