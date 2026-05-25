@@ -17,6 +17,16 @@ https://github.com/BayLibre/u-boot
 https://github.com/repk/gxlimg
 https://github.com/repk/gxlimg/issues/6
 
+some devices come with secure boot enabled and that can happen in two ways:
+- the hw bootloader will only load a properly signed bootblock, without
+  a proper signature it gets simply ignored
+- on top of the above the bootblock might also be encrypted, which is
+  visible by kind of random data of the bootblock vs. a visible @AML in there
+
+the only way i have so far found to see if secure boot is enabled or not is
+via the serial log:
+- secure boot enabled: NOTICE:  BL31: G12A secure boot!
+- secure boot not enabled: NOTICE:  BL31: G12A normal boot!
 
 # create a bootable sd card with a recovery image
 # from: https://www.cnx-software.com/2016/11/19/how-to-create-a-bootable-recovery-sd-card-for-amlogic-tv-boxes/
@@ -27,6 +37,7 @@ format sd-card fat 32 (mkfs.vfat -F32 /dev/sd-card-device)
 
 sudo dd if=aml_sdc_burn.UBOOT of=/dev/sd-card-device bs=1 count=442
 sudo dd if=aml_sdc_burn.UBOOT of=/dev/sd-card-device seek=1 skip=1 bs=512
+(use aml_sdc_burn.UBOOT.ENC instead in case secure boot is enabled)
 
 cp aml_sdc_burn.ini aml_sdc_burn.UBOOT [device-mount-point] 
 cp aml-upgrade-package.img [device-mount-point]/aml_upgrade_package.img
