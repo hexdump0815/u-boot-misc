@@ -1,0 +1,155 @@
+From patchwork Sat Nov  8 05:38:08 2025
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Patchwork-Submitter: Dang Huynh via B4 Relay
+ <devnull+dang.huynh.mainlining.org@kernel.org>
+X-Patchwork-Id: 2162561
+X-Patchwork-Delegate: ykai007@gmail.com
+Return-Path: <u-boot-bounces@lists.denx.de>
+X-Original-To: incoming@patchwork.ozlabs.org
+Delivered-To: patchwork-incoming@legolas.ozlabs.org
+Authentication-Results: legolas.ozlabs.org;
+	dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.a=rsa-sha256
+ header.s=k20201202 header.b=HIZ1GwCZ;
+	dkim-atps=neutral
+Authentication-Results: legolas.ozlabs.org;
+ spf=pass (sender SPF authorized) smtp.mailfrom=lists.denx.de
+ (client-ip=2a01:238:438b:c500:173d:9f52:ddab:ee01; helo=phobos.denx.de;
+ envelope-from=u-boot-bounces@lists.denx.de; receiver=patchwork.ozlabs.org)
+Received: from phobos.denx.de (phobos.denx.de
+ [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1))
+	(No client certificate requested)
+	by legolas.ozlabs.org (Postfix) with ESMTPS id 4d3bnt0Fqqz1yMd
+	for <incoming@patchwork.ozlabs.org>; Sun,  9 Nov 2025 00:08:02 +1100 (AEDT)
+Received: from h2850616.stratoserver.net (localhost [IPv6:::1])
+	by phobos.denx.de (Postfix) with ESMTP id B35A283EE3;
+	Sat,  8 Nov 2025 14:06:13 +0100 (CET)
+Authentication-Results: phobos.denx.de;
+ dmarc=pass (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: phobos.denx.de;
+ spf=pass smtp.mailfrom=u-boot-bounces@lists.denx.de
+Authentication-Results: phobos.denx.de;
+	dkim=pass (2048-bit key;
+ unprotected) header.d=kernel.org header.i=@kernel.org header.b="HIZ1GwCZ";
+	dkim-atps=neutral
+Received: by phobos.denx.de (Postfix, from userid 109)
+ id C368783E8E; Sat,  8 Nov 2025 06:38:36 +0100 (CET)
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on phobos.denx.de
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+ DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+ RCVD_IN_DNSWL_BLOCKED,RCVD_IN_VALIDITY_CERTIFIED_BLOCKED,
+ RCVD_IN_VALIDITY_RPBL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+ autolearn_force=no version=3.4.2
+Received: from sea.source.kernel.org (sea.source.kernel.org [172.234.252.31])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+ (No client certificate requested)
+ by phobos.denx.de (Postfix) with ESMTPS id B9C3883E83
+ for <u-boot@lists.denx.de>; Sat,  8 Nov 2025 06:38:30 +0100 (CET)
+Authentication-Results: phobos.denx.de; dmarc=pass (p=quarantine dis=none)
+ header.from=kernel.org
+Authentication-Results: phobos.denx.de; spf=pass
+ smtp.mailfrom=devnull+dang.huynh.mainlining.org@kernel.org
+Received: from smtp.kernel.org (transwarp.subspace.kernel.org [100.75.92.58])
+ by sea.source.kernel.org (Postfix) with ESMTP id 47CD7445B6;
+ Sat,  8 Nov 2025 05:38:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2008EC4CEF7;
+ Sat,  8 Nov 2025 05:38:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+ s=k20201202; t=1762580308;
+ bh=ZJQrfdjrMrda6LSSzIBT+j/j+KVn/faL/TNhtFTQ4lU=;
+ h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+ b=HIZ1GwCZ4A7VrMscIdRf/wZ3aUh6BM9+W4JT3X4t8gopy+2LyxMCLMMBNczzZzQWh
+ 89wc67b1eC0hC2uT4L7tfESbqnPSJ9ZTex4d06+ZXSWuHUbp0DBtiRP5t/0QTiEQ8g
+ zKS5gnkFb41+3JoyfvOxLI1CN6H6ga/pnsHJWc0epgJO94m6jI5BDpsY+d+FnCTZoe
+ ddV2aPyjLzSBFHX72NxmU7Z0yDHXuO+IT0aTm0Xw9fkDpC3vgdbV5x99XbBcbfQ+sk
+ 1f43MePIbjWky9pKmd00EA3rAb6j+UB5V+9EsKnxlKHl7reMErpexT3wS3talXyodv
+ 4Yq1l5U8tsTvw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org
+ (localhost.localdomain [127.0.0.1])
+ by smtp.lore.kernel.org (Postfix) with ESMTP id 18358CD1288;
+ Sat,  8 Nov 2025 05:38:28 +0000 (UTC)
+From: Dang Huynh via B4 Relay <devnull+dang.huynh.mainlining.org@kernel.org>
+Date: Sat, 08 Nov 2025 12:38:08 +0700
+Subject: [PATCH v6 12/12] clk: rockchip: rk3568: Use assigned VPLL clock
+ when possible
+MIME-Version: 1.0
+Message-Id: <20251108-vop2-pt2-v6-12-d04c699262fb@mainlining.org>
+References: <20251108-vop2-pt2-v6-0-d04c699262fb@mainlining.org>
+In-Reply-To: <20251108-vop2-pt2-v6-0-d04c699262fb@mainlining.org>
+To: u-boot@lists.denx.de
+Cc: Anatolij Gustschin <ag.dev.uboot@gmail.com>,
+ Simon Glass <sjg@chromium.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>,
+ Kever Yang <kever.yang@rock-chips.com>, Tom Rini <trini@konsulko.com>,
+ Svyatoslav Ryhel <clamor95@gmail.com>, Alexander Graf <agraf@csgraf.de>,
+ Alper Nebi Yasak <alpernebiyasak@gmail.com>, Ondrej Jirman <megi@xff.cz>,
+ Ion Agorria <ion@agorria.com>,
+ Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+ Dragan Simic <dsimic@manjaro.org>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Peter Robinson <pbrobinson@gmail.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+ Lukasz Majewski <lukma@denx.de>, Sean Anderson <seanga2@gmail.com>,
+ Piotr Zalewski <pZ010001011111@proton.me>,
+ Dang Huynh <dang.huynh@mainlining.org>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1762580305; l=1072;
+ i=dang.huynh@mainlining.org; s=20250917; h=from:subject:message-id;
+ bh=YxEY3Xma9RY2BCcT6VkDypXiPdcF8vPSl/CwSJeinL4=;
+ b=W70RC/N8SgwCL5Xlm+lVkcU2Rn1XqJfcc63smqC92VDuvC7AWCe1+Wi5Y0Pc0f7m0cO1SkBpa
+ qsXn0LFbVNZAGXTCny6GG7OTIr1gvWWRs9yPP5He8VgXFvW8WT7NrIN
+X-Developer-Key: i=dang.huynh@mainlining.org; a=ed25519;
+ pk=RyzH4CL4YU/ItXYUurA51EVBidfx4lIy8/E4EKRJCUk=
+X-Endpoint-Received: by B4 Relay for dang.huynh@mainlining.org/20250917
+ with auth_id=526
+X-Original-From: Dang Huynh <dang.huynh@mainlining.org>
+X-Mailman-Approved-At: Sat, 08 Nov 2025 14:06:07 +0100
+X-BeenThere: u-boot@lists.denx.de
+X-Mailman-Version: 2.1.39
+Precedence: list
+List-Id: U-Boot discussion <u-boot.lists.denx.de>
+List-Unsubscribe: <https://lists.denx.de/options/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <https://lists.denx.de/pipermail/u-boot/>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <https://lists.denx.de/listinfo/u-boot>,
+ <mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Reply-To: dang.huynh@mainlining.org
+Errors-To: u-boot-bounces@lists.denx.de
+Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
+
+From: Dang Huynh <dang.huynh@mainlining.org>
+
+This matches how VPLL is configured under Linux and avoid weird
+behaviors when VPLL is reconfigured under Linux.
+
+Signed-off-by: Dang Huynh <dang.huynh@mainlining.org>
+---
+ drivers/clk/rockchip/clk_rk3568.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/rockchip/clk_rk3568.c b/drivers/clk/rockchip/clk_rk3568.c
+index 533031caead..cd0e24d77dc 100644
+--- a/drivers/clk/rockchip/clk_rk3568.c
++++ b/drivers/clk/rockchip/clk_rk3568.c
+@@ -1820,7 +1820,11 @@ static ulong rk3568_dclk_vop_set_clk(struct rk3568_clk_priv *priv,
+ 			     ((div - 1) << DCLK0_VOP_DIV_SHIFT));
+ 		rk3568_pmu_pll_set_rate(priv, HPLL, div * rate);
+ 	} else if (sel == DCLK_VOP_SEL_VPLL) {
+-		div = DIV_ROUND_UP(RK3568_VOP_PLL_LIMIT_FREQ, rate);
++		if (priv->vpll_hz)
++			div = DIV_ROUND_UP(priv->vpll_hz, rate);
++		else
++			div = DIV_ROUND_UP(RK3568_VOP_PLL_LIMIT_FREQ, rate);
++
+ 		rk_clrsetreg(&cru->clksel_con[conid],
+ 			     DCLK0_VOP_DIV_MASK | DCLK0_VOP_SEL_MASK,
+ 			     (DCLK_VOP_SEL_VPLL << DCLK0_VOP_SEL_SHIFT) |

@@ -7,11 +7,23 @@ git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-mainline-rk3566
 cd u-boot-mainline-rk3566
 # armbian patches are based on v2026.04 so lets use that version for now
 git checkout v2026.04
-# patches for rk3566
+# armbian patches for rk3566
 for i in /compile/doc/u-boot-misc/misc.rk3566/patches/v2026.04/armbian/*.patch; do
   echo === $i
   patch -p1 < $i
 done
+# minimyth2 patches for rk3566
+for i in /compile/doc/u-boot-misc/misc.rk3566/patches/v2026.04/minimyth2/*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
+# add hdmi support
+for i in /compile/doc/u-boot-misc/misc.rk3566/patches/v2026.04/hdmi-support/*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
+
+# h96max-v56 build
 # use legacy bl31 and ddr init
 export BL31=/compile/doc/u-boot-misc/misc.rk3566/misc/rk3568_bl31_v1.44.elf
 export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3566/misc/rk3568_ddr_1560MHz_v1.21.bin
@@ -24,3 +36,19 @@ cp u-boot-rockchip.bin rk3566-h96max-v56-u-boot-rockchip.bin
 # prepare it for imagebuilder/sonaremin
 dd if=/dev/zero of=boot-rk3566-h96max-v56-aarch64.dd bs=512 count=64
 cat rk3566-h96max-v56-u-boot-rockchip.bin >> boot-rk3566-h96max-v56-aarch64.dd
+
+# x96-x6 build
+# undo the recovery button patch for now
+patch -p1 -R < /compile/doc/u-boot-misc/misc.rk3566/patches/v2026.04/armbian/0003-rockchip-boot-mode-tune-download-key-for-h96-tvbox-3566.patch
+# use legacy bl31 and ddr init
+export BL31=/compile/doc/u-boot-misc/misc.rk3566/misc/rk3568_bl31_v1.45.elf
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3566/misc/rk3566_ddr_1056MHz_v1.23.bin
+make x96-x6-rk3566_defconfig
+# required: apt-get -y install python3-pyelftools
+make -j 4
+cp u-boot.bin rk3566-x96-x6-u-boot.bin
+cp u-boot-rockchip.bin rk3566-x96-x6-u-boot-rockchip.bin
+
+# prepare it for imagebuilder/sonaremin
+dd if=/dev/zero of=boot-rk3566-x96-x6-aarch64.dd bs=512 count=64
+cat rk3566-x96-x6-u-boot-rockchip.bin >> boot-rk3566-x96-x6-aarch64.dd

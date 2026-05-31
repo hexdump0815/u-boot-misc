@@ -1,0 +1,38 @@
+--- a/configs/h96max-v56_defconfig
++++ b/configs/h96max-v56_defconfig
+@@ -83,3 +83,16 @@
+ CONFIG_USB_GADGET_DOWNLOAD=y
+ CONFIG_USB_FUNCTION_ROCKUSB=y
+ CONFIG_ERRNO_STR=y
++# disable the u-boot logo
++# CONFIG_VIDEO_LOGO is not set
++# set own localversion
++CONFIG_LOCALVERSION=" hexdump-rk3566"
++# enable usb keyboard and hdmi
++CONFIG_PHY_ROCKCHIP_INNO_DSIDPHY=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_VIDEO=y
++CONFIG_DISPLAY=y
++CONFIG_VIDEO_ROCKCHIP=y
++CONFIG_DISPLAY_ROCKCHIP_HDMI=y
++CONFIG_VIDEO_BRIDGE=y
++CONFIG_VIDEO_REMOVE=y
+--- a/configs/x96-x6-rk3566_defconfig
++++ b/configs/x96-x6-rk3566_defconfig
+@@ -98,3 +98,16 @@
+ CONFIG_USB_DWC3_GENERIC=y
+ CONFIG_ERRNO_STR=y
+ CONFIG_OF_LIBFDT_OVERLAY=y
++# disable the u-boot logo
++# CONFIG_VIDEO_LOGO is not set
++# set own localversion
++CONFIG_LOCALVERSION=" hexdump-rk3566"
++# enable usb keyboard and hdmi
++CONFIG_PHY_ROCKCHIP_INNO_DSIDPHY=y
++CONFIG_USB_KEYBOARD=y
++CONFIG_VIDEO=y
++CONFIG_DISPLAY=y
++CONFIG_VIDEO_ROCKCHIP=y
++CONFIG_DISPLAY_ROCKCHIP_HDMI=y
++CONFIG_VIDEO_BRIDGE=y
++CONFIG_VIDEO_REMOVE=y
