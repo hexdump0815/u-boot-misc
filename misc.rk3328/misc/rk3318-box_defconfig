@@ -119,5 +119,5 @@ CONFIG_SPL_TINY_MEMSET=y
 CONFIG_ERRNO_STR=y
 # disable the u-boot logo
 # CONFIG_VIDEO_LOGO is not set
-# add efi support - not working yet properly on hdmi
+# add efi support
 CONFIG_EFI=y
