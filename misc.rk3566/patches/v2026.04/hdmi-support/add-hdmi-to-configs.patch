@@ -19,12 +19,10 @@
 +CONFIG_VIDEO_REMOVE=y
 --- a/configs/x96-x6-rk3566_defconfig
 +++ b/configs/x96-x6-rk3566_defconfig
-@@ -98,3 +98,16 @@
+@@ -98,3 +98,14 @@
  CONFIG_USB_DWC3_GENERIC=y
  CONFIG_ERRNO_STR=y
  CONFIG_OF_LIBFDT_OVERLAY=y
-+# disable the u-boot logo
-+# CONFIG_VIDEO_LOGO is not set
 +# set own localversion
 +CONFIG_LOCALVERSION=" hexdump-rk3566"
 +# enable usb keyboard and hdmi
