@@ -1,0 +1,197 @@
+diff --git a/arch/arm/include/asm/arch-sunxi/i2c.h b/arch/arm/include/asm/arch-sunxi/i2c.h
+index f0da46d863c..914f16b2c46 100644
+--- a/arch/arm/include/asm/arch-sunxi/i2c.h
++++ b/arch/arm/include/asm/arch-sunxi/i2c.h
+@@ -13,6 +13,9 @@
+ #ifdef CONFIG_I2C1_ENABLE
+ #define CFG_I2C_MVTWSI_BASE1	SUNXI_TWI1_BASE
+ #endif
++#ifdef CONFIG_I2C3_ENABLE
++#define CONFIG_I2C_MVTWSI_BASE3	SUNXI_TWI3_BASE
++#endif
+ #ifdef CONFIG_R_I2C_ENABLE
+ #define CFG_I2C_MVTWSI_BASE2 SUNXI_R_TWI_BASE
+ #endif
+diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+index e979ee4a2cc..0231d7bba44 100644
+--- a/arch/arm/mach-sunxi/Kconfig
++++ b/arch/arm/mach-sunxi/Kconfig
+@@ -936,6 +936,15 @@ config I2C1_ENABLE
+ 	---help---
+ 	See I2C0_ENABLE help text.
+ 
++if MACH_SUN50I_H616
++config I2C3_ENABLE
++	bool "Enable I2C/TWI controller 3"
++	default n
++	select CMD_I2C
++	---help---
++	See I2C0_ENABLE help text.
++endif
++
+ if SUNXI_GEN_SUN6I || SUN50I_GEN_H6 || SUNXI_GEN_NCAT2
+ config R_I2C_ENABLE
+ 	bool "Enable the PRCM I2C/TWI controller"
+diff --git a/arch/arm/mach-sunxi/board.c b/arch/arm/mach-sunxi/board.c
+index 432b1c10f92..6309271a491 100644
+--- a/arch/arm/mach-sunxi/board.c
++++ b/arch/arm/mach-sunxi/board.c
+@@ -487,6 +487,7 @@ void board_init_f(ulong dummy)
+ 	/* Needed early by sunxi_board_init if PMU is enabled */
+ 	i2c_init_board();
+ 	i2c_init(CONFIG_SYS_I2C_SPEED, CONFIG_SYS_I2C_SLAVE);
++	i2c_set_bus_num(0);
+ #endif
+ 	sunxi_board_init();
+ }
+diff --git a/arch/arm/mach-sunxi/clock_sun50i_h6.c b/arch/arm/mach-sunxi/clock_sun50i_h6.c
+index 80004f13a1e..a4afb706630 100644
+--- a/arch/arm/mach-sunxi/clock_sun50i_h6.c
++++ b/arch/arm/mach-sunxi/clock_sun50i_h6.c
+@@ -72,6 +72,10 @@ void clock_init_safe(void)
+ 		writel(MBUS_CLK_SRC_PLL6X2 | MBUS_CLK_M(3),
+ 		       ccm + CCU_H6_MBUS_CFG);
+ 	}
++
++	writel(0x10001, 0x030017ac);
++	writel(0x50, 0x0300a028);
++	writel(0x20, 0x0300a040);
+ }
+ 
+ void clock_init_uart(void)
+diff --git a/board/sunxi/board.c b/board/sunxi/board.c
+index 954a8715075..2f9252014de 100644
+--- a/board/sunxi/board.c
++++ b/board/sunxi/board.c
+@@ -109,6 +109,17 @@ void i2c_init_board(void)
+ #endif
+ #endif
+ 
++#ifdef CONFIG_I2C3_ENABLE
++#if defined(CONFIG_MACH_SUN50I_H616)
++	sunxi_gpio_set_cfgpin(SUNXI_GPA(10), 2);
++	sunxi_gpio_set_cfgpin(SUNXI_GPA(11), 2);
++	sunxi_gpio_set_cfgpin(SUNXI_GPA(12), 2);
++	sunxi_gpio_set_pull(SUNXI_GPA(10), SUNXI_GPIO_PULL_UP);
++	sunxi_gpio_set_pull(SUNXI_GPA(11), SUNXI_GPIO_PULL_UP);
++	clock_twi_onoff(3, 1);
++#endif
++#endif
++
+ #ifdef CONFIG_R_I2C_ENABLE
+ #ifdef CONFIG_MACH_SUN50I
+ 	clock_twi_onoff(5, 1);
+@@ -564,6 +575,7 @@ static void sunxi_spl_store_dram_size(phys_addr_t dram_size)
+ void sunxi_board_init(void)
+ {
+ 	int power_failed = 0;
++	u8 data[2];
+ 
+ #ifdef CONFIG_LED_STATUS
+ 	if (IS_ENABLED(CONFIG_SPL_DRIVERS_MISC))
+@@ -660,6 +672,23 @@ void sunxi_board_init(void)
+ 		clock_set_pll1(get_board_sys_clk());
+ 	else
+ 		printf("Failed to set core voltage! Can't set CPU frequency\n");
++
++	i2c_set_bus_num(1);
++	data[0] = 0;
++	data[1] = 0;
++	i2c_write(0x10, 0xfe, 1, data, 2);
++	i2c_write(0x10, 2, 1, data, 2);
++	data[1] = 1;
++	i2c_write(0x10, 2, 1, data, 2);
++	data[1] = 0xf;
++	i2c_write(0x10, 0x16, 1, data, 2);
++	data[1] = 3;
++	i2c_write(0x10, 0x14, 1, data, 2);
++	data[1] = 0x60;
++	i2c_write(0x10, 0xfe, 1, data, 2);
++	data[0] = 0x08;
++	data[1] = 0x14;
++	i2c_write(0x10, 0, 1, data, 2);
+ }
+ #endif /* CONFIG_XPL_BUILD */
+ 
+diff --git a/drivers/net/sun8i_emac.c b/drivers/net/sun8i_emac.c
+index 41c52f56d7a..39da380a493 100644
+--- a/drivers/net/sun8i_emac.c
++++ b/drivers/net/sun8i_emac.c
+@@ -900,6 +900,11 @@ static const struct emac_variant emac_variant_h6 = {
+ 	.support_rmii		= true,
+ };
+ 
++static const struct emac_variant emac_variant_h616_1 = {
++	.syscon_offset		= 0x34,
++	.support_rmii		= true,
++};
++
+ static const struct udevice_id sun8i_emac_eth_ids[] = {
+ 	{ .compatible = "allwinner,sun8i-a83t-emac",
+ 	  .data = (ulong)&emac_variant_a83t },
+@@ -913,6 +918,8 @@ static const struct udevice_id sun8i_emac_eth_ids[] = {
+ 	  .data = (ulong)&emac_variant_a64 },
+ 	{ .compatible = "allwinner,sun50i-h6-emac",
+ 	  .data = (ulong)&emac_variant_h6 },
++	{ .compatible = "allwinner,sun50i-h616-emac1",
++	  .data = (ulong)&emac_variant_h616_1 },
+ 	{ }
+ };
+ 
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index fd357ab0d4e..b025666e641 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -737,6 +737,7 @@ static const struct sunxi_pinctrl_desc __maybe_unused sun50i_h6_r_pinctrl_desc =
+ 
+ static const struct sunxi_pinctrl_function sun50i_h616_pinctrl_functions[] = {
+ 	{ "emac0",	2 },	/* PI0-PI16 */
++	{ "emac1",	2 },	/* PA0-PA9 */
+ 	{ "gpio_in",	0 },
+ 	{ "gpio_out",	1 },
+ 	{ "mmc0",	2 },	/* PF0-PF5 */
+diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi b/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
+index ceedae9e399..7d5094e7a25 100644
+--- a/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
++++ b/dts/upstream/src/arm64/allwinner/sun50i-h616.dtsi
+@@ -304,6 +304,14 @@
+ 				bias-pull-up;
+ 			};
+ 
++			/omit-if-no-ref/
++			rmii_pins: rmii-pins {
++				pins = "PA0", "PA1", "PA2", "PA3", "PA4",
++				       "PA5", "PA6", "PA7", "PA8", "PA9";
++				function = "emac1";
++				drive-strength = <40>;
++			};
++
+ 			/omit-if-no-ref/
+ 			spi0_pins: spi0-pins {
+ 				pins = "PC0", "PC2", "PC4";
+@@ -708,6 +716,25 @@
+ 			status = "disabled";
+ 		};
+ 
++		emac1: ethernet@5030000 {
++			compatible = "allwinner,sun50i-h616-emac1";
++			syscon = <&syscon 1>;
++			reg = <0x05030000 0x10000>;
++			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu RST_BUS_EMAC1>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu CLK_BUS_EMAC1>;
++			clock-names = "stmmaceth";
++			status = "disabled";
++
++			mdio1: mdio {
++				compatible = "snps,dwmac-mdio";
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		usbotg: usb@5100000 {
+ 			compatible = "allwinner,sun50i-h616-musb",
+ 				     "allwinner,sun8i-h3-musb";

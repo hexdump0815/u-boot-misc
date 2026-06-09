@@ -1,0 +1,75 @@
+diff --git a/configs/transpeed-8k618-t_defconfig b/configs/transpeed-8k618-t_defconfig
+index e4bf5e8efd3..11ddd535064 100644
+--- a/configs/transpeed-8k618-t_defconfig
++++ b/configs/transpeed-8k618-t_defconfig
+@@ -19,9 +19,15 @@ CONFIG_SPL_I2C=y
+ CONFIG_SPL_SYS_I2C_LEGACY=y
+ CONFIG_SYS_I2C_MVTWSI=y
+ CONFIG_SYS_I2C_SLAVE=0x7f
+-CONFIG_SYS_I2C_SPEED=400000
+ CONFIG_SUPPORT_EMMC_BOOT=y
+ CONFIG_AXP313_POWER=y
+-CONFIG_AXP_DCDC3_VOLT=1360
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_OHCI_HCD=y
++# required for internal ethernet phy most probably
++CONFIG_AXP_DCDC3_VOLT=1500
++CONFIG_SYS_I2C_SPEED=100000
++CONFIG_SPL_I2C_SUPPORT=y
++CONFIG_PHY_REALTEK=y
++CONFIG_SUN8I_EMAC=y
++CONFIG_I2C3_ENABLE=y
++CONFIG_USB_MUSB_GADGET=y
+diff --git a/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts b/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
+index efe0faa252f..0efa1c85d73 100644
+--- a/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
++++ b/dts/upstream/src/arm64/allwinner/sun50i-h618-transpeed-8k618-t.dts
+@@ -69,6 +69,17 @@
+ 	status = "okay";
+ };
+ 
++&emac1 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&rmii_pins>;
++       phy-mode = "rmii";
++       phy-handle = <&rmii_phy>;
++       phy-supply = <&reg_aldo1>;
++       allwinner,rx-delay-ps = <3100>;
++       allwinner,tx-delay-ps = <700>;
++       status = "okay";
++};
++
+ &gpu {
+ 	mali-supply = <&reg_dcdc1>;
+ 	status = "okay";
+@@ -78,9 +89,21 @@
+ 	status = "okay";
+ };
+ 
++&i2c3 {
++       status = "okay";
++};
++
++&mdio1 {
++       rmii_phy: ethernet-phy@16 {
++               compatible = "ethernet-phy-ieee802.3-c22";
++               reg = <16>;
++       };
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_dldo1>;
+-	cd-gpios = <&pio 8 16 GPIO_ACTIVE_LOW>;	/* PI16 */
++//	cd-gpios = <&pio 8 16 GPIO_ACTIVE_LOW>;	/* PI16 */
++	broken-cd;
+ 	disable-wp;
+ 	bus-width = <4>;
+ 	status = "okay";
+@@ -92,6 +115,7 @@
+ 	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	non-removable;
++	max-frequency = <25000000>;
+ 	status = "okay";
+ 
+ 	sdio_wifi: wifi@1 {

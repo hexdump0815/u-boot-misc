@@ -67,7 +67,7 @@
 		compatible = "regulator-fixed";
 		gpio = <&gpio0 RK_PD6 GPIO_ACTIVE_LOW>;
 		pinctrl-names = "default";
-		pinctrl-0 = <&sdmmc0m1_gpio>;
+		pinctrl-0 = <&sdmmc0m1_pin>;
 		regulator-name = "vcc_sd";
 		regulator-always-on;
 		regulator-boot-on;
@@ -201,9 +201,37 @@
 	status = "okay";
 };
 
+&u2phy {
+	status = "okay";
+
+	u2phy_host: host-port {
+		status = "okay";
+	};
+
+	u2phy_otg: otg-port {
+		status = "okay";
+	};
+};
+
 &usb20_otg {
+	dr_mode = "host";
 	status = "okay";
 };
+
+/*
+&u3phy {
+	vbus-supply = <&vcc_host_vbus>;
+	status = "okay";
+};
+
+&u3phy_utmi {
+	status = "okay";
+};
+
+&u3phy_pipe {
+	status = "okay";
+};
+*/
 
 &usb_host0_ehci {
 	status = "okay";
@@ -212,6 +240,18 @@
 &usb_host0_ohci {
 	status = "okay";
 };
+
+&usbdrd3 {
+	dr_mode = "host";
+	status = "okay";
+};
+
+/*
+&usbdrd_dwc3 {
+	dr_mode = "host";
+	status = "okay";
+};
+*/
 
 &pinctrl {
 
@@ -261,3 +301,18 @@
        status = "okay";
 };
 
+&hdmi {
+	status = "okay";
+};
+
+&hdmiphy {
+	status = "okay";
+};
+
+&vop {
+	status = "okay";
+};
+
+&vop_mmu {
+	status = "okay";
+};

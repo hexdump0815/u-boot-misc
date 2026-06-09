@@ -1,0 +1,20 @@
+diff --git a/Makefile b/Makefile
+index c16e0a8..34324ac 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,7 +6,7 @@ CFLAGS = -c -g -I$(MBEDTLS)/include -I$(LZ4)/lib
+ LDFLAGS = -L$(MBEDTLS)/library -lmbedcrypto -L$(LZ4)/lib -llz4
+ 
+ $(MBEDTLS)/.built:
+-	$(MAKE) -C $(MBEDTLS) && \
++	$(MAKE) -C $(MBEDTLS) no_test && \
+ 	touch $(MBEDTLS)/.built
+ $(LZ4)/.built:
+ 	$(MAKE) -C $(LZ4) BUILD_SHARED=no && \
+@@ -40,4 +40,4 @@ clean:
+ 
+ install: bootmk bl2sig bl3sig bl30sig pkg
+ 	mkdir -p "$(PREFIX)"
+-	install -m 755 $^ "$(PREFIX)"
+\ No newline at end of file
++	install -m 755 $^ "$(PREFIX)"

@@ -1,126 +1,69 @@
-arm trusted firmware:
-# atf is only used in case the full mainline bootblocks are written to disk
-# otherwise the legacy atf from emmc will be used
-git clone https://github.com/ARM-software/arm-trusted-firmware.git
-mv arm-trusted-firmware arm-trusted-firmware-rk3328
+cd /compile/source
+
+# arm trusted firmware:
+git clone https://github.com/ARM-software/arm-trusted-firmware.git arm-trusted-firmware-rk3328
 cd arm-trusted-firmware-rk3328
-git checkout v2.3
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/atf-rk3328-efuse-init.patch
+# v2.14.0 results in "region `PMUSRAM' overflowed by 8 bytes"
+# see: https://libera.catirclogs.org/linux-rockchip/2025-10-22#
+# also: https://github.com/ARM-software/tf-issues/issues/650
+# so lets use v2.13.0 for now
+git checkout v2.13.0
+# patches for rk3328/rk3318
+for i in /compile/doc/u-boot-misc/misc.rk3328/patches/atf-v2.13.0/armbian/*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
 make realclean
-make PLAT=rk3328 DEBUG=1 bl31
+make -j 4 PLAT=rk3328 DEBUG=1 bl31
 # result: build/rk3328/debug/bl31/bl31.elf
 cd ..
 
-u-boot:
-
-git clone https://gitlab.denx.de/u-boot/u-boot.git/
-mv u-boot u-boot-mainline-rk3328
+# u-boot:
+git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-mainline-rk3328
 cd u-boot-mainline-rk3328
-git checkout v2020.10
-# add uEnv.txt support
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/add-uenv-txt.patch
-# change boot order to first check sd card and then emmc
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/change-boot-order.patch
-# add some additional functions for the recovery button at boot time - not used yet
-#patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/general-support-recovery-button.patch
-# add support for reading the efuse
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/rk3328-efuse-driver.patch
-# add support for the integrated eth phy used on most tv boxes
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/general-support-rmii-integrated-phy.patch
-# add support for fixed mac addr on second interface
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/general-set-eth1addr.patch
-# copy the rk3328-box dts* and defconfig from paolo sabatino to their place (org name rk3318-box)
-cp /compile/doc/u-boot-misc/misc.rk3328/dtb/* arch/arm/dts
-cp /compile/doc/u-boot-misc/misc.rk3328/rk3328-box_defconfig configs
-patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/add-new-dtb-to-Makefile.patch
-# get atf from aft build
-cp ../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf .
-#make evb-rk3328_defconfig
-make rk3328-box_defconfig
-make
-cp u-boot.bin rk3328-u-boot.bin
-
-# creating a u-boot on an sd card which is called from the loader on emmc
-# tested to be working on a t9 rk3328 tv box using the legacy emmc loader
-# this step for me only worked using the x86 binary of loaderimage on an x86 machine
-loaderimage --pack --uboot ./u-boot-dtb.bin u-boot-rk3328.img 0x200000
-# this is for the case that it is written directly to sd card
-# first dump the boot blocks from emmc to the sd card so that we have everything
-# around which the boot might need - do not overwrite the partition table on sd
-# (the seek/skip part)
-dd if=/dev/emmc of=/dev/sdcard bs=512 skip=1 seek=1 count=32767
-# then write the new mainline u-boot in the proper format to the right place
-dd if=u-boot-rk3328.img of=/dev/sdcard bs=512 seek=16384
-
-# see misc.rk3328-no-sd-boot/rockchip-u-boot/readme.txt for some notes on
-# writing the mainline u-boot image to emmc via rkdeveloptool if desired
-
-# below are old notes about writing the trust.img from emmc to sd card, which is
-# done automatically in the approach from above to just dump everything from emmc to sd card
-# first stage boot comes from emmc still and requires the original trust.img from emmc at 24576
-# i think it needs to be put there even on an sd card, i.e.
-#   dd if=/dev/emmc of=/dev/sdcard bs=1 skip=24576 seek=24576 count=8192
-# u-boot itself is new then and should best run from sd card (safer than overwriting the original stuff on emmc)
-
-
-# full mainline boot block writing (untested)
-
-
-# to sd card according to doc/README.rockchip
-#dd if=idbloader.img of=/dev/mmcblkx seek=64
-#dd if=u-boot.itb of=/dev/mmcblkx seek=16384
+# armbian patches are based on v2026.04 so lets use that version for now
+git checkout v2026.04
+# patches for rk3328/rk3318
+for i in /compile/doc/u-boot-misc/misc.rk3328/patches/v2026.04/armbian/*.patch; do
+  echo === $i
+  patch -p1 < $i
+done
+# copy dts and dtsi files
+cp -v /compile/doc/u-boot-misc/misc.rk3328/dtb/rk3328-box-u-boot.dtsi arch/arm/dts/rk3318-box-u-boot.dtsi
+cp -v /compile/doc/u-boot-misc/misc.rk3328/dtb/rk3328-box.dts dts/upstream/src/arm64/rockchip/rk3318-box.dts
+# copy u-boot defconfig
+cp -v /compile/doc/u-boot-misc/misc.rk3328/misc/rk3318-box_defconfig configs/rk3318-box_defconfig
+# remove fdt_high and initrd_high from the env as it resulted in boot failures otherwise
+patch -p1 < /compile/doc/u-boot-misc/misc.rk3328/patches/v2026.04/disable-fdt-initrd-high.patch
+# use atf from atf build
+export BL31=../arm-trusted-firmware-rk3328/build/rk3328/debug/bl31/bl31.elf
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_v1.16.bin
+make rk3318-box_defconfig
+# required: apt-get -y install python3-pyelftools
+make -j 4
+cp u-boot.bin rk3328-v1.16-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.16-u-boot-rockchip.bin
 
 # prepare it for imagebuilder/sonaremin
-#dd if=/dev/zero of=boot-rk3328-idbloader-aarch64.dd bs=512 count=64
-#cat idbloader.img >> boot-rk3328-idbloader-aarch64.dd
-#dd if=u-boot.itb of=boot-rk3328-idbloader-aarch64.dd seek=16384
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.16-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.16-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.16-spl-aarch64.dd
 
-
-# or according to doc/board/rockchip/rockchip.rst - should give the same result as above
-dd if=u-boot-rockchip.bin of=/dev/sdx seek=64
-
-# prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rk3328-tpl-spl-aarch64.dd bs=512 count=64
-cat u-boot-rockchip.bin >> boot-rk3328-tpl-spl-aarch64.dd
-
-
-# note for the procedure below:
-# in case the ddr.bin from emmc from a certain box should be used it might be dumped
-# out from there via dd - it seems to start with "52 4b 33 32" and to end with
-# "ff ff ff ff af be ad de" in hexdump -C - at least that worked well for a rk3328 box
-#
-# some repos for possible ddr.bin files:
-# https://github.com/rockchip-linux/rkbin/tree/master/bin/rk33
-# https://github.com/armbian/rkbin/tree/master/rk33
-# https://github.com/ayufan-rock64/rkbin/tree/master/rk33
-# https://github.com/Kwiboo/rkbin/tree/libreelec-cleanup/rk33
-#
-# creating boot blocks using an original legacy ddr.bin with maybe better dram timing
-tools/mkimage -n rk3328 -T rksd -d /compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15.bin u-boot-rk3328-ddrbin-spl.bin
-cat spl/u-boot-spl.bin >> u-boot-rk3328-ddrbin-spl.bin
-# 448 = 512-64 - i.e. at sector 512 (0x200) minus the 64 (0x40) we add in front later
-# 16320 = 16384-64 - i.e. at sector 16384 (0x8000) minus the 64 (0x40) we add in front later
-dd if=u-boot.itb of=u-boot-rk3328-ddrbin-spl.bin bs=512 seek=448 conv=notrunc
-dd if=u-boot.itb of=u-boot-rk3328-ddrbin-spl.bin bs=512 seek=16320 conv=notrunc
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15.bin
+make rk3318-box_defconfig
+make -j 4
+cp u-boot.bin rk3328-v1.15-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.15-u-boot-rockchip.bin
 
 # prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rk3328-ddrbin-spl-aarch64.dd bs=512 count=64
-cat u-boot-rk3328-ddrbin-spl.bin >> boot-rk3328-ddrbin-spl-aarch64.dd
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.15-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.15-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.15-spl-aarch64.dd
 
-# creating boot blocks using a hacked to 666mhz legacy ddr.bin which might work or not on some boxes
-tools/mkimage -n rk3328 -T rksd -d /compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15-666mhz.bin u-boot-rk3328-ddrbin-666mhz-spl.bin
-cat spl/u-boot-spl.bin >> u-boot-rk3328-ddrbin-666mhz-spl.bin
-dd if=u-boot.itb of=u-boot-rk3328-ddrbin-666mhz-spl.bin bs=512 seek=448 conv=notrunc
-dd if=u-boot.itb of=u-boot-rk3328-ddrbin-666mhz-spl.bin bs=512 seek=16320 conv=notrunc
+export ROCKCHIP_TPL=/compile/doc/u-boot-misc/misc.rk3328/rk3328_ddr_333MHz_v1.15-666mhz.bin
+make rk3318-box_defconfig
+make -j 4
+cp u-boot.bin rk3328-v1.15-666mhz-u-boot.bin
+cp u-boot-rockchip.bin rk3328-v1.15-666mhz-u-boot-rockchip.bin
 
 # prepare it for imagebuilder/sonaremin
-dd if=/dev/zero of=boot-rk3328-ddrbin-666mhz-spl-aarch64.dd bs=512 count=64
-cat u-boot-rk3328-ddrbin-666mhz-spl.bin >> boot-rk3328-ddrbin-666mhz-spl-aarch64.dd
-
-
-# creating boot blocks using the original emmc boot blocks and replacing the u-boot.img in them
-zcat /compile/doc/u-boot-misc/misc.rk3328/boot-block.dd/boot-t9-rk3328-original-emmc.dd.gz > boot-rk3328-ddrbin-legacy-atf-aarch64.dd
-dd if=u-boot-rk3328.img of=boot-rk3328-ddrbin-legacy-atf-aarch64.dd bs=512 seek=16384 conv=notrunc
-
-zcat /compile/doc/u-boot-misc/misc.rk3328/boot-block.dd/boot-h96max-rk3318-original-emmc.dd.gz > boot-rk3318-ddrbin-legacy-atf-aarch64.dd
-dd if=u-boot-rk3328.img of=boot-rk3318-ddrbin-legacy-atf-aarch64.dd bs=512 seek=16384 conv=notrunc
+dd if=/dev/zero of=boot-rk3328-ddrbin-v1.15-666mhz-spl-aarch64.dd bs=512 count=64
+cat rk3328-v1.15-666mhz-u-boot-rockchip.bin >> boot-rk3328-ddrbin-v1.15-666mhz-spl-aarch64.dd

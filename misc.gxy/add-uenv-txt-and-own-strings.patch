@@ -1,99 +1,105 @@
-diff --git a/arch/arm/dts/meson-g12a-sei510.dts b/arch/arm/dts/meson-g12a-sei510.dts
-index b00d0468c7..7dd88470ad 100644
---- a/arch/arm/dts/meson-g12a-sei510.dts
-+++ b/arch/arm/dts/meson-g12a-sei510.dts
-@@ -13,7 +13,7 @@
- 
- / {
- 	compatible = "seirobotics,sei510", "amlogic,g12a";
--	model = "SEI Robotics SEI510";
-+	model = "hexdump serial u-boot g12a";
- 
- 	adc_keys {
- 		compatible = "adc-keys";
-diff --git a/arch/arm/dts/meson-sm1-sei610.dts b/arch/arm/dts/meson-sm1-sei610.dts
-index 5ab139a34c..12036fe2e6 100644
---- a/arch/arm/dts/meson-sm1-sei610.dts
-+++ b/arch/arm/dts/meson-sm1-sei610.dts
-@@ -13,7 +13,7 @@
- 
- / {
- 	compatible = "seirobotics,sei610", "amlogic,sm1";
--	model = "SEI Robotics SEI610";
-+	model = "hexdump serial u-boot sm1";
- 
- 	aliases {
- 		serial0 = &uart_AO;
 diff --git a/configs/sei510_defconfig b/configs/sei510_defconfig
-index 8ee3a138e1..8dca1f3416 100644
+index 689c12e388f..0929420678a 100644
 --- a/configs/sei510_defconfig
 +++ b/configs/sei510_defconfig
-@@ -10,13 +10,11 @@ CONFIG_DM_GPIO=y
- CONFIG_MESON_G12A=y
+@@ -17,7 +17,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_SYS_LOAD_ADDR=0x1000000
  CONFIG_DEBUG_UART_BASE=0xff803000
  CONFIG_DEBUG_UART_CLOCK=24000000
 -CONFIG_IDENT_STRING=" sei510"
 +CONFIG_IDENT_STRING=" hexdump-g12a"
  # CONFIG_PSCI_RESET is not set
- CONFIG_DEFAULT_DEVICE_TREE="meson-g12a-sei510"
  CONFIG_DEBUG_UART=y
+ CONFIG_REMAKE_ELF=y
+@@ -25,8 +25,6 @@ CONFIG_FIT=y
+ CONFIG_FIT_SIGNATURE=y
+ CONFIG_FIT_VERBOSE=y
  CONFIG_OF_BOARD_SETUP=y
 -CONFIG_USE_PREBOOT=y
 -CONFIG_PREBOOT="run load_logo"
  # CONFIG_CONSOLE_MUX is not set
- CONFIG_MISC_INIT_R=y
  # CONFIG_DISPLAY_CPUINFO is not set
-@@ -81,3 +79,6 @@ CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_SPLASH_SCREEN=y
- CONFIG_SPLASH_SCREEN_ALIGN=y
- CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_MISC_INIT_R=y
+@@ -100,3 +98,6 @@ CONFIG_BMP_16BPP=y
+ CONFIG_BMP_24BPP=y
+ CONFIG_BMP_32BPP=y
+ CONFIG_LIBAVB=y
 +CONFIG_DISPLAY_BOARDINFO_LATE=y
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
 diff --git a/configs/sei610_defconfig b/configs/sei610_defconfig
-index 43932b4c96..4d26c8ea69 100644
+index 7f6488dfba0..ab6e903d8b2 100644
 --- a/configs/sei610_defconfig
 +++ b/configs/sei610_defconfig
-@@ -10,13 +10,11 @@ CONFIG_DM_GPIO=y
- CONFIG_MESON_G12A=y
+@@ -17,7 +17,7 @@ CONFIG_MESON_G12A=y
+ CONFIG_SYS_LOAD_ADDR=0x1000000
  CONFIG_DEBUG_UART_BASE=0xff803000
  CONFIG_DEBUG_UART_CLOCK=24000000
 -CONFIG_IDENT_STRING=" sei610"
 +CONFIG_IDENT_STRING=" hexdump-sm1"
  # CONFIG_PSCI_RESET is not set
- CONFIG_DEFAULT_DEVICE_TREE="meson-sm1-sei610"
  CONFIG_DEBUG_UART=y
+ CONFIG_REMAKE_ELF=y
+@@ -25,8 +25,6 @@ CONFIG_FIT=y
+ CONFIG_FIT_SIGNATURE=y
+ CONFIG_FIT_VERBOSE=y
  CONFIG_OF_BOARD_SETUP=y
 -CONFIG_USE_PREBOOT=y
 -CONFIG_PREBOOT="run load_logo"
  # CONFIG_CONSOLE_MUX is not set
- CONFIG_MISC_INIT_R=y
  # CONFIG_DISPLAY_CPUINFO is not set
-@@ -81,3 +79,6 @@ CONFIG_VIDEO_DT_SIMPLEFB=y
- CONFIG_SPLASH_SCREEN=y
- CONFIG_SPLASH_SCREEN_ALIGN=y
- CONFIG_OF_LIBFDT_OVERLAY=y
+ CONFIG_MISC_INIT_R=y
+@@ -100,3 +98,6 @@ CONFIG_BMP_16BPP=y
+ CONFIG_BMP_24BPP=y
+ CONFIG_BMP_32BPP=y
+ CONFIG_LIBAVB=y
 +CONFIG_DISPLAY_BOARDINFO_LATE=y
 +CONFIG_BOOTDELAY=5
 +CONFIG_USE_PREBOOT=y
+diff --git a/dts/upstream/src/arm64/amlogic/meson-g12a-sei510.dts b/dts/upstream/src/arm64/amlogic/meson-g12a-sei510.dts
+index f39fcabc763..925862a24a1 100644
+--- a/dts/upstream/src/arm64/amlogic/meson-g12a-sei510.dts
++++ b/dts/upstream/src/arm64/amlogic/meson-g12a-sei510.dts
+@@ -13,7 +13,7 @@
+ 
+ / {
+ 	compatible = "seirobotics,sei510", "amlogic,g12a";
+-	model = "SEI Robotics SEI510";
++	model = "hexdump usbkbd/hdmi u-boot g12a";
+ 
+ 	keys {
+ 		compatible = "adc-keys";
+diff --git a/dts/upstream/src/arm64/amlogic/meson-sm1-sei610.dts b/dts/upstream/src/arm64/amlogic/meson-sm1-sei610.dts
+index 024d2eb8e6e..82fe8aef614 100644
+--- a/dts/upstream/src/arm64/amlogic/meson-sm1-sei610.dts
++++ b/dts/upstream/src/arm64/amlogic/meson-sm1-sei610.dts
+@@ -13,7 +13,7 @@
+ 
+ / {
+ 	compatible = "seirobotics,sei610", "amlogic,sm1";
+-	model = "SEI Robotics SEI610";
++	model = "hexdump usbkbd/hdmi u-boot sm1";
+ 
+ 	aliases {
+ 		serial0 = &uart_AO;
 diff --git a/include/configs/meson64.h b/include/configs/meson64.h
-index c895a24eca..94601d4c81 100644
+index f3275b37a51..fca26346a20 100644
 --- a/include/configs/meson64.h
 +++ b/include/configs/meson64.h
-@@ -74,6 +74,9 @@
+@@ -145,6 +145,9 @@
  #endif
  
- #ifndef CONFIG_EXTRA_ENV_SETTINGS
+ #ifndef CFG_EXTRA_ENV_SETTINGS
 +/* the usb start below makes sure a usb keyboard is available when the autoboot prompt starts
 + * the stdin line is to disable the serial console as it might produce noise on the cmdline
 + * otherwise in some situations so that the system will hang in u-boot cmdline at boot */
- #define CONFIG_EXTRA_ENV_SETTINGS \
+ #define CFG_EXTRA_ENV_SETTINGS \
  	"stdin=" STDIN_CFG "\0" \
  	"stdout=" STDOUT_CFG "\0" \
-@@ -84,6 +87,18 @@
- 	"pxefile_addr_r=0x01080000\0" \
- 	"ramdisk_addr_r=0x13000000\0" \
- 	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" \
+@@ -159,6 +162,18 @@
+ 	"ramdisk_addr_r=" RAMDISK_ADDR_R "\0" \
+ 	"fdtfile=" FDTFILE_NAME "\0" \
+ 	"dfu_alt_info=fitimage ram " KERNEL_ADDR_R " 0x4000000 \0" \
 +	"bootenv_addr_r=0x01080000\0" \
 +	"preboot=usb start; " \
 +		"mmc dev 1; " \
@@ -110,61 +116,67 @@ index c895a24eca..94601d4c81 100644
  #endif
  
 diff --git a/include/configs/meson64_android.h b/include/configs/meson64_android.h
-index 8fff915b50..166faaa630 100644
+index d6ef0a83a68..89fe5d4a330 100644
 --- a/include/configs/meson64_android.h
 +++ b/include/configs/meson64_android.h
-@@ -10,122 +10,6 @@
- #define __MESON64_ANDROID_CONFIG_H
- 
+@@ -119,161 +119,6 @@
+ #define BOOT_CMD "bootm ${loadaddr};"
+ #endif
  
 -#define BOOTENV_DEV_FASTBOOT(devtypeu, devtypel, instance) \
 -	"bootcmd_fastboot=" \
--		"sm reboot_reason reason;" \
 -		"setenv run_fastboot 0;" \
 -		"if test \"${boot_source}\" = \"usb\"; then " \
 -			"echo Fastboot forced by usb rom boot;" \
 -			"setenv run_fastboot 1;" \
 -		"fi;" \
--		"if gpt verify mmc ${mmcdev} ${partitions}; then; " \
--		"else " \
--			"echo Broken MMC partition scheme;" \
--			"setenv run_fastboot 1;" \
+-		"if test \"${run_fastboot}\" -eq 0; then " \
+-			"if gpt verify mmc ${mmcdev} ${partitions}; then; " \
+-			"else " \
+-				"echo Broken MMC partition scheme;" \
+-				"setenv run_fastboot 1;" \
+-			"fi; " \
 -		"fi;" \
--		"if test \"${reason}\" = \"bootloader\" -o " \
--			"\"${reason}\" = \"fastboot\"; then " \
--			"echo Fastboot asked by reboot reason;" \
--			"setenv run_fastboot 1;" \
--		"fi;" \
--		"if test \"${skip_fastboot}\" -eq 1; then " \
--			"echo Fastboot skipped by environment;" \
--			"setenv run_fastboot 0;" \
--		"fi;" \
--		"if test \"${force_fastboot}\" -eq 1; then " \
--			"echo Fastboot forced by environment;" \
--			"setenv run_fastboot 1;" \
+-		"if test \"${run_fastboot}\" -eq 0; then " \
+-			"if bcb load " __stringify(CONFIG_FASTBOOT_FLASH_MMC_DEV) " " \
+-			CONTROL_PARTITION "; then " \
+-				"if bcb test command = bootonce-bootloader; then " \
+-					"echo BCB: Bootloader boot...; " \
+-					"bcb clear command; bcb store; " \
+-					"setenv run_fastboot 1;" \
+-				"elif bcb test command = boot-fastboot; then " \
+-					"echo BCB: fastboot userspace boot...; " \
+-					"setenv force_recovery 1;" \
+-				"fi; " \
+-			"else " \
+-				"echo Warning: BCB is corrupted or does not exist; " \
+-			"fi;" \
 -		"fi;" \
 -		"if test \"${run_fastboot}\" -eq 1; then " \
 -			"echo Running Fastboot...;" \
--			"fastboot 0;" \
+-			"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
 -		"fi\0"
 -
 -#define BOOTENV_DEV_NAME_FASTBOOT(devtypeu, devtypel, instance)	\
 -		"fastboot "
 -
--/* TOFIX: Run actual recovery instead of fastboot */
 -#define BOOTENV_DEV_RECOVERY(devtypeu, devtypel, instance) \
 -	"bootcmd_recovery=" \
 -		"pinmux dev pinctrl@14;" \
 -		"pinmux dev pinctrl@40;" \
--		"sm reboot_reason reason;" \
 -		"setenv run_recovery 0;" \
 -		"if run check_button; then " \
 -			"echo Recovery button is pressed;" \
 -			"setenv run_recovery 1;" \
--		"elif test \"${reason}\" = \"recovery\" -o " \
--			  "\"${reason}\" = \"update\"; then " \
--			"echo Recovery asked by reboot reason;" \
--			"setenv run_recovery 1;" \
+-		"fi; " \
+-		"if bcb load " __stringify(CONFIG_FASTBOOT_FLASH_MMC_DEV) " " \
+-		CONTROL_PARTITION "; then " \
+-			"if bcb test command = boot-recovery; then " \
+-				"echo BCB: Recovery boot...; " \
+-				"setenv run_recovery 1;" \
+-			"fi;" \
+-		"else " \
+-			"echo Warning: BCB is corrupted or does not exist; " \
 -		"fi;" \
 -		"if test \"${skip_recovery}\" -eq 1; then " \
 -			"echo Recovery skipped by environment;" \
@@ -176,7 +188,20 @@ index 8fff915b50..166faaa630 100644
 -		"fi;" \
 -		"if test \"${run_recovery}\" -eq 1; then " \
 -			"echo Running Recovery...;" \
--			"fastboot 0;" \
+-			"mmc dev ${mmcdev};" \
+-			"setenv bootargs \"${bootargs} androidboot.serialno=${serial#}\";" \
+-			AB_SELECT_SLOT \
+-			AB_SELECT_ARGS \
+-			AVB_VERIFY_CHECK \
+-			"part start mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_start;" \
+-			"part size mmc ${mmcdev} " RECOVERY_PARTITION "${slot_suffix} boot_size;" \
+-			"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+-				PREPARE_FDT \
+-				"echo Running Android Recovery...;" \
+-				BOOT_CMD \
+-			"fi;" \
+-			"echo Failed to boot Android...;" \
+-			"reset;" \
 -		"fi\0"
 -
 -#define BOOTENV_DEV_NAME_RECOVERY(devtypeu, devtypel, instance)	\
@@ -184,54 +209,74 @@ index 8fff915b50..166faaa630 100644
 -
 -#define BOOTENV_DEV_SYSTEM(devtypeu, devtypel, instance) \
 -	"bootcmd_system=" \
--		"echo Loading Android boot partition...;" \
+-		"echo Loading Android " BOOT_PARTITION " partition...;" \
 -		"mmc dev ${mmcdev};" \
--		"setenv bootargs ${bootargs} console=${console} androidboot.serialno=${serial#};" \
--		"part start mmc ${mmcdev} ${bootpart} boot_start;" \
--		"part size mmc ${mmcdev} ${bootpart} boot_size;" \
+-		"setenv bootargs ${bootargs} androidboot.serialno=${serial#};" \
+-		AB_SELECT_SLOT \
+-		AB_SELECT_ARGS \
+-		AVB_VERIFY_CHECK \
+-		"part start mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_start;" \
+-		"part size mmc ${mmcdev} " BOOT_PARTITION "${slot_suffix} boot_size;" \
 -		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+-			PREPARE_FDT \
+-			"setenv bootargs \"${bootargs} " AB_BOOTARGS "\"  ; " \
 -			"echo Running Android...;" \
--			"bootm ${loadaddr};" \
+-			BOOT_CMD \
 -		"fi;" \
--		"echo Failed to boot Android...;" \
--		"reset\0"
+-		"echo Failed to boot Android...;\0"
 -
 -#define BOOTENV_DEV_NAME_SYSTEM(devtypeu, devtypel, instance)	\
 -		"system "
+-
+-#define BOOTENV_DEV_PANIC(devtypeu, devtypel, instance) \
+-	"bootcmd_panic=" \
+-		"fastboot " __stringify(CONFIG_FASTBOOT_USB_DEV) "; " \
+-		"reset\0"
+-
+-#define BOOTENV_DEV_NAME_PANIC(devtypeu, devtypel, instance)	\
+-		"panic "
 -
 -#define BOOT_TARGET_DEVICES(func) \
 -	func(FASTBOOT, fastboot, na) \
 -	func(RECOVERY, recovery, na) \
 -	func(SYSTEM, system, na) \
+-	func(PANIC, panic, na) \
 -
 -#define PREBOOT_LOAD_LOGO \
--	"mmc dev ${mmcdev};" \
--	"part start mmc ${mmcdev} ${logopart} boot_start;" \
--	"part size mmc ${mmcdev} ${logopart} boot_size;" \
--	"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
+-	"if test \"${boot_source}\" != \"usb\" && " \
+-		"gpt verify mmc ${mmcdev} ${partitions}; then; " \
+-		"mmc dev ${mmcdev};" \
+-		"part start mmc ${mmcdev} " LOGO_PARTITION " boot_start;" \
+-		"part size mmc ${mmcdev} " LOGO_PARTITION " boot_size;" \
+-		"if mmc read ${loadaddr} ${boot_start} ${boot_size}; then " \
 -			"bmp display ${loadaddr} m m;" \
+-		"fi;" \
 -	"fi;"
 -
--#define CONFIG_EXTRA_ENV_SETTINGS                                     \
+-#define CFG_EXTRA_ENV_SETTINGS                                     \
+-	EXTRA_ANDROID_ENV_SETTINGS                                    \
 -	"partitions=" PARTS_DEFAULT "\0"                              \
 -	"mmcdev=2\0"                                                  \
--	"bootpart=1\0"                                                \
--	"logopart=2\0"                                                \
+-	"fastboot_raw_partition_bootloader=0x1 0xfff mmcpart 1\0"     \
+-	"fastboot_raw_partition_bootenv=0x0 0xfff mmcpart 2\0"        \
+-	ANDROIDBOOT_GET_CURRENT_SLOT_CMD                              \
+-	AVB_VERIFY_CMD                                                \
+-	"force_avb=0\0"                                               \
 -	"gpio_recovery=88\0"                                          \
 -	"check_button=gpio input ${gpio_recovery};test $? -eq 0;\0"   \
 -	"load_logo=" PREBOOT_LOAD_LOGO "\0"			      \
--	"console=/dev/ttyAML0\0"                                      \
--	"bootargs=no_console_suspend\0"                               \
 -	"stdin=" STDIN_CFG "\0"                                       \
 -	"stdout=" STDOUT_CFG "\0"                                     \
 -	"stderr=" STDOUT_CFG "\0"                                     \
--	"loadaddr=0x01000000\0"                                       \
+-	"dtboaddr=0x08200000\0"                                       \
+-	"loadaddr=0x01080000\0"                                       \
 -	"fdt_addr_r=0x01000000\0"                                     \
 -	"scriptaddr=0x08000000\0"                                     \
 -	"kernel_addr_r=0x01080000\0"                                  \
 -	"pxefile_addr_r=0x01080000\0"                                 \
 -	"ramdisk_addr_r=0x13000000\0"                                 \
--	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0" BOOTENV
+-	"fdtfile=amlogic/" CONFIG_DEFAULT_DEVICE_TREE ".dtb\0"        \
+-	BOOTENV
 -
  #include <configs/meson64.h>
  

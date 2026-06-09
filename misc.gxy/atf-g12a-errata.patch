@@ -1,0 +1,21 @@
+diff --git a/plat/amlogic/g12a/platform.mk b/plat/amlogic/g12a/platform.mk
+index 15658d340..5d41ae6f4 100644
+--- a/plat/amlogic/g12a/platform.mk
++++ b/plat/amlogic/g12a/platform.mk
+@@ -53,10 +53,15 @@ endif
+ # ------------------
+ 
+ # Enable all errata workarounds for Cortex-A53
+-ERRATA_A53_855873		:= 1
+ ERRATA_A53_819472		:= 1
+ ERRATA_A53_824069		:= 1
++ERRATA_A53_826319		:= 1
+ ERRATA_A53_827319		:= 1
++ERRATA_A53_835769		:= 1
++ERRATA_A53_836870		:= 1
++ERRATA_A53_843419		:= 1
++ERRATA_A53_855873		:= 1
++ERRATA_A53_1530924		:= 1
+ 
+ WORKAROUND_CVE_2017_5715	:= 0
+ 
