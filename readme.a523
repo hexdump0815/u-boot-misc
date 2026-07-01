@@ -1,28 +1,20 @@
-arm trusted firmware:
+# arm trusted firmware:
 
 git clone https://github.com/jernejsk/arm-trusted-firmware arm-trusted-firmware-a523
 cd arm-trusted-firmware-a523
-git checkout b5de74a685fb73b784e45bbbd18dd9a0c528d8b2
+git checkout a523-v4
 make realclean
 make PLAT=sun55i_a523 DEBUG=1 bl31
 # result: build/sun55i_a523/debug/bl31.bin
 cp build/sun55i_a523/debug/bl31.bin build/sun55i_a523/debug/a523-bl31.bin
 cd ..
 
-u-boot:
+# u-boot:
 
-#git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-a523
-git clone https://github.com/jernejsk/u-boot u-boot-a523
+git clone https://gitlab.denx.de/u-boot/u-boot.git u-boot-a523
 cd u-boot-a523
-git checkout 2ebdba9bbc547b1b0c84069a6487ece01eb4fdce
-# INFO: based on warpme minimyth2 patches from https://github.com/warpme/minimyth2
-#       at commit 3b24c3c5e75114c7377b54b753132c1aa1199df0
-# minimyth2 a523 patches
-for i in /compile/doc/u-boot-misc/misc.a523/minimyth2-patches/*.patch; do
-  echo === $i
-  patch -p1 < $i
-done
-
+# the last state that this was tested with
+git checkout f605dcee103c897b6f1a8873549a36949bd4e2a1
 # get atf from aft build
 cp ../arm-trusted-firmware-a523/build/sun55i_a523/debug/bl31.bin .
 # get the scp firmware
@@ -30,9 +22,10 @@ cp /compile/doc/u-boot-misc/misc.a523/scp.bin .
 make x96q_pro_plus_defconfig
 # other devices
 #make avaota_a1_defconfig
-#make radxa-a5e_defconfig
+#make orangepi_4a_defconfig
+#make radxa-cubie-a5e_defconfig
 # required now: apt-get install swig libpython3-dev python3-dev python3-setuptools libgnutls28-dev
-make
+make -j 4
 # result: u-boot-sunxi-with-spl.bin - dd with bs=1024 seek=8
 
 # prepare it for imagebuilder
